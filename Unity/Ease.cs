@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,8 +28,6 @@ namespace Naukri
         //
         InBounce, OutBounce, InOutBounce
     }
-
-
 
     public static class Ease
     {
