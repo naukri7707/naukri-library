@@ -5,9 +5,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Naukri.Reflaction
+namespace Naukri.Reflection
 {
-    public static class FastReflaction
+    public static class FastReflection
     {
         #region -- Property --
 
