@@ -76,6 +76,10 @@ public class Demo
 
 - `TextureFactory` 紋理工廠
 
+## Interpolation
+
+一些擴充的插值，可以直接調用對應的函式。也可以透過 `InterpolationType` 使用 `ByMethod()` 動態選擇對應插值。
+
 ## Singleton
 
 適用於 Unity 的單例模式
@@ -91,3 +95,11 @@ public class Demo
 ### `SingletonAsset`
 
 類似於 [`SingletonResource`](#SingletonResource) 但由於只作用於 UnityEditor，所以路徑中不須包含 `Resources` 資料夾。
+
+## Toast
+
+在螢幕的特定角落生成提示訊息。
+
+使用 `Toaster.Create()` 可以使用快速生成預設風格的訊息
+
+也可以透過建立 `Toast` 作為模板，並使用 `ToastManager` 來動態生成自定義風格的訊息，具體流程請參考預製物 `DefaultToast` 和 `DefaultToastManager`
