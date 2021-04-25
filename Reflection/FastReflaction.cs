@@ -7,29 +7,29 @@ using System.Reflection;
 
 namespace Naukri.Reflection
 {
+    #region -- Property --
+
+    /// <summary>
+    /// Getter 委派
+    /// </summary>
+    /// <typeparam name="TObject">實例型態</typeparam>
+    /// <typeparam name="TResult">取值型態</typeparam>
+    /// <param name="target">目標實例</param>
+    /// <returns></returns>
+    public delegate TResult GetterDelegate<TObject, TResult>(TObject target);
+
+    /// <summary>
+    /// Setter 委派
+    /// </summary>
+    /// <typeparam name="TObject">實例型態</typeparam>
+    /// <typeparam name="TValue">賦值型態</typeparam>
+    /// <param name="target">目標實例</param>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public delegate void SetterDelegate<TObject, TValue>(TObject target, TValue value);
+
     public static class FastReflection
     {
-        #region -- Property --
-
-        /// <summary>
-        /// Getter 委派
-        /// </summary>
-        /// <typeparam name="TObject">實例型態</typeparam>
-        /// <typeparam name="TResult">取值型態</typeparam>
-        /// <param name="target">目標實例</param>
-        /// <returns></returns>
-        public delegate TResult GetterDelegate<TObject, TResult>(TObject target);
-
-        /// <summary>
-        /// Setter 委派
-        /// </summary>
-        /// <typeparam name="TObject">實例型態</typeparam>
-        /// <typeparam name="TValue">賦值型態</typeparam>
-        /// <param name="target">目標實例</param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public delegate void SetterDelegate<TObject, TValue>(TObject target, TValue value);
-
         public static GetterDelegate<TObject, TValue> CreateGetterDelegate<TObject, TValue>(this PropertyInfo self)
         {
             var objectType = typeof(TObject);
