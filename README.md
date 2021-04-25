@@ -25,19 +25,19 @@ T dst = CastTo<T>.From(src);
 #### 使用範例
 
 ```cs
-public class Test
+public class Demo
 {
     public int src { get; set; } = 1;
 
-    GetterDelegate<Test, int> srcGetter;
+    GetterDelegate<Demo, int> srcGetter;
 
-    SetterDelegate<Test, int> srcSetter;
+    SetterDelegate<Demo, int> srcSetter;
 
-    void TestFunc()
+    private void Example()
     {
         var type = GetType();
-        srcGetter = type.GetProperty(nameof(src)).CreateGetterDelegate<Test, int>();
-        srcSetter = type.GetProperty(nameof(src)).CreateSetterDelegate<Test, int>();
+        srcGetter = type.GetProperty(nameof(src)).CreateGetterDelegate<Demo, int>();
+        srcSetter = type.GetProperty(nameof(src)).CreateSetterDelegate<Demo, int>();
         srcSetter.Invoke(this, 2);
         var dst = srcGetter.Invoke(this); // dst will be 2
     }
@@ -66,6 +66,20 @@ public class Test
 - `ForkName` 依照不同條件顯示不同欄位名稱
 - `ReadOnly` 使欄位唯讀
 
+## EventInvoker
+
+可以在 `EventInvoker` 面板中透過 Invoke 按鈕觸發對應的 `UnityEvent`，也可以設定熱鍵後在 runtime 透過熱鍵觸發事件。
+
+## Factory
+
+一些工廠函式
+
+- `TextureFactory` 紋理工廠
+
+## Interpolation
+
+一些擴充的插值，可以直接調用對應的函式。也可以透過 `InterpolationType` 使用 `ByMethod()` 動態選擇對應插值。
+
 ## Singleton
 
 適用於 Unity 的單例模式
@@ -81,3 +95,11 @@ public class Test
 ### `SingletonAsset`
 
 類似於 [`SingletonResource`](#SingletonResource) 但由於只作用於 UnityEditor，所以路徑中不須包含 `Resources` 資料夾。
+
+## Toast
+
+在螢幕的特定角落生成提示訊息。
+
+使用 `Toaster.Create()` 可以使用快速生成預設風格的訊息
+
+也可以透過建立 `Toast` 作為模板，並使用 `ToastManager` 來動態生成自定義風格的訊息，具體流程請參考預製物 `DefaultToast` 和 `DefaultToastManager`
