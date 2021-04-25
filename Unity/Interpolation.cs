@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Naukri
 {
-    public enum EaseType
+    public enum InterpolationType
     {
         Linear,
         //
@@ -29,73 +29,73 @@ namespace Naukri
         InBounce, OutBounce, InOutBounce
     }
 
-    public static class Ease
+    public static class Interpolation
     {
-        public static float ByMethod(float start, float end, float ratio, EaseType easeType)
+        public static float ByMethod(float start, float end, float ratio, InterpolationType interpolationType)
         {
-            switch (easeType)
+            switch (interpolationType)
             {
-                case EaseType.Linear:
+                case InterpolationType.Linear:
                     return Linear(start, end, ratio);
-                case EaseType.InSine:
+                case InterpolationType.InSine:
                     return InSine(start, end, ratio);
-                case EaseType.OutSine:
+                case InterpolationType.OutSine:
                     return OutSine(start, end, ratio);
-                case EaseType.InOutSine:
+                case InterpolationType.InOutSine:
                     return InOutSine(start, end, ratio);
-                case EaseType.InQuad:
+                case InterpolationType.InQuad:
                     return InQuad(start, end, ratio);
-                case EaseType.OutQuad:
+                case InterpolationType.OutQuad:
                     return OutQuad(start, end, ratio);
-                case EaseType.InOutQuad:
+                case InterpolationType.InOutQuad:
                     return InOutQuad(start, end, ratio);
-                case EaseType.InCubic:
+                case InterpolationType.InCubic:
                     return InCubic(start, end, ratio);
-                case EaseType.OutCubic:
+                case InterpolationType.OutCubic:
                     return OutCubic(start, end, ratio);
-                case EaseType.InOutCubic:
+                case InterpolationType.InOutCubic:
                     return InOutCubic(start, end, ratio);
-                case EaseType.InQuart:
+                case InterpolationType.InQuart:
                     return InQuart(start, end, ratio);
-                case EaseType.OutQuart:
+                case InterpolationType.OutQuart:
                     return OutQuart(start, end, ratio);
-                case EaseType.InOutQuart:
+                case InterpolationType.InOutQuart:
                     return InOutQuart(start, end, ratio);
-                case EaseType.InQuint:
+                case InterpolationType.InQuint:
                     return InQuint(start, end, ratio);
-                case EaseType.OutQuint:
+                case InterpolationType.OutQuint:
                     return OutQuint(start, end, ratio);
-                case EaseType.InOutQuint:
+                case InterpolationType.InOutQuint:
                     return InOutQuint(start, end, ratio);
-                case EaseType.InExpo:
+                case InterpolationType.InExpo:
                     return InExpo(start, end, ratio);
-                case EaseType.OutExpo:
+                case InterpolationType.OutExpo:
                     return OutExpo(start, end, ratio);
-                case EaseType.InOutExpo:
+                case InterpolationType.InOutExpo:
                     return InOutExpo(start, end, ratio);
-                case EaseType.InCirc:
+                case InterpolationType.InCirc:
                     return InCirc(start, end, ratio);
-                case EaseType.OutCirc:
+                case InterpolationType.OutCirc:
                     return OutCirc(start, end, ratio);
-                case EaseType.InOutCirc:
+                case InterpolationType.InOutCirc:
                     return InOutCirc(start, end, ratio);
-                case EaseType.InBack:
+                case InterpolationType.InBack:
                     return InBack(start, end, ratio);
-                case EaseType.OutBack:
+                case InterpolationType.OutBack:
                     return OutBack(start, end, ratio);
-                case EaseType.InOutBack:
+                case InterpolationType.InOutBack:
                     return InOutBack(start, end, ratio);
-                case EaseType.InElastic:
+                case InterpolationType.InElastic:
                     return InElastic(start, end, ratio);
-                case EaseType.OutElastic:
+                case InterpolationType.OutElastic:
                     return OutElastic(start, end, ratio);
-                case EaseType.InOutElastic:
+                case InterpolationType.InOutElastic:
                     return InOutElastic(start, end, ratio);
-                case EaseType.InBounce:
+                case InterpolationType.InBounce:
                     return InBounce(start, end, ratio);
-                case EaseType.OutBounce:
+                case InterpolationType.OutBounce:
                     return OutBounce(start, end, ratio);
-                case EaseType.InOutBounce:
+                case InterpolationType.InOutBounce:
                     return InOutBounce(start, end, ratio);
                 default:
                     return 0F;

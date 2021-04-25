@@ -22,22 +22,22 @@ namespace Naukri.Toast
         private float startActiveTime = float.MaxValue;
 
         [Header("Alpha"), DisplayName("Ease Type")]
-        public EaseType alphaEaseType;
+        public InterpolationType alphaEaseType;
 
         [Header("Moving"), DisplayName("Ease Type")]
-        public EaseType movingEaseType;
+        public InterpolationType movingEaseType;
 
         [DisplayName("Position Addition")]
         public Vector2 movingPosAddition;
 
         [Header("FadeIn"), DisplayName("Ease Type")]
-        public EaseType fadeInEaseType;
+        public InterpolationType fadeInEaseType;
 
         [DisplayName("Velocity")]
         public Vector2 fadeInVelocity;
 
         [Header("FadeOut"), DisplayName("Ease Type")]
-        public EaseType fadeOutEaseType;
+        public InterpolationType fadeOutEaseType;
 
         [DisplayName("Velocity")]
         public Vector2 fadeOutVelocity;
@@ -84,8 +84,8 @@ namespace Naukri.Toast
             var ratio = (Time.time - startStateTime) / manager.toastTransitionTime;
             CurrentPosition = new Vector2
             {
-                x = Ease.ByMethod(StartPosition.x, EndPosition.x, ratio, fadeInEaseType),
-                y = Ease.ByMethod(StartPosition.y, EndPosition.y, ratio, fadeInEaseType)
+                x = Interpolation.ByMethod(StartPosition.x, EndPosition.x, ratio, fadeInEaseType),
+                y = Interpolation.ByMethod(StartPosition.y, EndPosition.y, ratio, fadeInEaseType)
             };
             return ratio > 1;
         }
@@ -106,8 +106,8 @@ namespace Naukri.Toast
                 ratio = 1F;
             CurrentPosition = new Vector2
             {
-                x = Ease.ByMethod(StartPosition.x, EndPosition.x, ratio, movingEaseType),
-                y = Ease.ByMethod(StartPosition.y, EndPosition.y, ratio, movingEaseType)
+                x = Interpolation.ByMethod(StartPosition.x, EndPosition.x, ratio, movingEaseType),
+                y = Interpolation.ByMethod(StartPosition.y, EndPosition.y, ratio, movingEaseType)
             };
             return startActiveTime + manager.toastDuration < Time.time;
         }
@@ -129,8 +129,8 @@ namespace Naukri.Toast
             var ratio = (Time.time - startStateTime) / manager.toastTransitionTime;
             CurrentPosition = new Vector2
             {
-                x = Ease.ByMethod(StartPosition.x, EndPosition.x, ratio, fadeOutEaseType),
-                y = Ease.ByMethod(StartPosition.y, EndPosition.y, ratio, fadeOutEaseType)
+                x = Interpolation.ByMethod(StartPosition.x, EndPosition.x, ratio, fadeOutEaseType),
+                y = Interpolation.ByMethod(StartPosition.y, EndPosition.y, ratio, fadeOutEaseType)
             };
             return ratio > 1;
         }
@@ -148,7 +148,7 @@ namespace Naukri.Toast
                 while (ratio < 1)
                 {
                     ratio = (Time.time - startTime) / t;
-                    Alpha = Ease.ByMethod(s, e, ratio, alphaEaseType);
+                    Alpha = Interpolation.ByMethod(s, e, ratio, alphaEaseType);
                     yield return new WaitForEndOfFrame();
                 }
                 Alpha = e;
