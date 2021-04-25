@@ -1,0 +1,185 @@
+﻿using System.Collections;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace Naukri.Toast
+{
+    [System.Serializable]
+    [RequireComponent(typeof(RectTransform), typeof(CanvasGroup))]
+    public class Toast : MonoBehaviour
+    {
+        [System.NonSerialized]
+        public ToastState state;
+
+        public CanvasGroup canvasGroup;
+
+        public RectTransform RectTransform => transform as RectTransform;
+
+        public Text message;
+
+        private float startStateTime;
+
+        private float startActiveTime = float.MaxValue;
+
+        [Header("Alpha"), DisplayName("Ease Type")]
+        public EaseType alphaEaseType;
+
+        [Header("Moving"), DisplayName("Ease Type")]
+        public EaseType movingEaseType;
+
+        [DisplayName("Position Addition")]
+        public Vector2 movingPosAddition;
+
+        [Header("FadeIn"), DisplayName("Ease Type")]
+        public EaseType fadeInEaseType;
+
+        [DisplayName("Velocity")]
+        public Vector2 fadeInVelocity;
+
+        [Header("FadeOut"), DisplayName("Ease Type")]
+        public EaseType fadeOutEaseType;
+
+        [DisplayName("Velocity")]
+        public Vector2 fadeOutVelocity;
+
+        public float Alpha { get => canvasGroup.alpha; set => canvasGroup.alpha = value; }
+
+        public Vector2 CurrentPosition { get; set; }
+
+        public Vector2 StartPosition { get; set; }
+
+        public Vector2 EndPosition { get; set; }
+
+        internal Toast CreateToast(ToastManager manager, ToastMessage message)
+        {
+            var res = Instantiate(this);
+            res.RectTransform.SetParent(manager.transform);
+            var anchorV = manager.ToastAnchor.ToVector2();
+            res.RectTransform.anchorMin = anchorV;
+            res.RectTransform.anchorMax = anchorV;
+            res.RectTransform.pivot = anchorV;
+            res.message.text = message.text;
+            res.message.color = message.color;
+            return res;
+        }
+
+        internal void ReSetAnchor(ToastAnchor anchor)
+        {
+            var nextV = anchor.ToVector2();
+            RectTransform.anchorMin = nextV;
+            RectTransform.anchorMax = nextV;
+            RectTransform.pivot = nextV;
+        }
+
+        public virtual void OnFadeInEnter(ToastManager manager)
+        {
+            StartPosition = -fadeInVelocity * manager.toastTransitionTime;
+            EndPosition = Vector2.zero;
+            FadeAlpha(0, 1, manager.toastTransitionTime);
+            ResetStateTime();
+        }
+
+        public virtual bool OnFadeInStay(ToastManager manager)
+        {
+            var ratio = (Time.time - startStateTime) / manager.toastTransitionTime;
+            CurrentPosition = new Vector2
+            {
+                x = Ease.ByMethod(StartPosition.x, EndPosition.x, ratio, fadeInEaseType),
+                y = Ease.ByMethod(StartPosition.y, EndPosition.y, ratio, fadeInEaseType)
+            };
+            return ratio > 1;
+        }
+
+        public virtual void OnFadeInExit(ToastManager manager)
+        {
+        }
+
+        public virtual void OnDrawEnter(ToastManager manager)
+        {
+            startActiveTime = Time.time;
+        }
+
+        public virtual bool OnDrawStay(ToastManager manager)
+        {
+            var ratio = (Time.time - startStateTime) / manager.toastTransitionTime;
+            if (ratio > 1F)
+                ratio = 1F;
+            CurrentPosition = new Vector2
+            {
+                x = Ease.ByMethod(StartPosition.x, EndPosition.x, ratio, movingEaseType),
+                y = Ease.ByMethod(StartPosition.y, EndPosition.y, ratio, movingEaseType)
+            };
+            return startActiveTime + manager.toastDuration < Time.time;
+        }
+
+        public virtual void OnDrawExit(ToastManager manager)
+        {
+        }
+
+        public virtual void OnFadeOutEnter(ToastManager manager)
+        {
+            StartPosition = CurrentPosition;
+            EndPosition += fadeOutVelocity * manager.toastTransitionTime;
+            FadeAlpha(1, 0, manager.toastTransitionTime);
+            ResetStateTime();
+        }
+
+        public virtual bool OnFadeOutStay(ToastManager manager)
+        {
+            var ratio = (Time.time - startStateTime) / manager.toastTransitionTime;
+            CurrentPosition = new Vector2
+            {
+                x = Ease.ByMethod(StartPosition.x, EndPosition.x, ratio, fadeOutEaseType),
+                y = Ease.ByMethod(StartPosition.y, EndPosition.y, ratio, fadeOutEaseType)
+            };
+            return ratio > 1;
+        }
+
+        public virtual void OnFadeOutExit(ToastManager manager)
+        {
+        }
+
+        public void FadeAlpha(float start, float end, float time)
+        {
+            IEnumerator fadeAlpha(float s, float e, float t)
+            {
+                var startTime = Time.time;
+                var ratio = 0F;
+                while (ratio < 1)
+                {
+                    ratio = (Time.time - startTime) / t;
+                    Alpha = Ease.ByMethod(s, e, ratio, alphaEaseType);
+                    yield return new WaitForEndOfFrame();
+                }
+                Alpha = e;
+            }
+            StopCoroutine(nameof(fadeAlpha));
+            StartCoroutine(fadeAlpha(start, end, time));
+        }
+
+        public void UpdatePositionByAnchorAndPaddingEdge(ToastAnchor anchor, Vector2 paddingEdge)
+        {
+            var anchorVector = anchor.ToVector2();
+            var position = CurrentPosition;
+            position.x += anchorVector.x is 0F
+                ? paddingEdge.x
+                : anchorVector.x is 1F
+                ? -paddingEdge.x
+                : 0F;
+            position.y = anchorVector.y is 0
+                ? position.y + paddingEdge.y
+                : -position.y - paddingEdge.y;
+            RectTransform.anchoredPosition = position;
+        }
+
+        public void ResetStateTime()
+        {
+            startStateTime = Time.time;
+        }
+
+        public void MakeToastExpire()
+        {
+            startActiveTime = float.MinValue;
+        }
+    }
+}
