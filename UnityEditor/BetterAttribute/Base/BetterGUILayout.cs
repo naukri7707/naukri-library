@@ -22,7 +22,7 @@ namespace NaukriEditor
         public static bool PropertyField(SerializedProperty property, GUIContent label, bool includeChildren)
         {
             return CurrentDrawer.LayoutContainer(
-                pos => EditorGUI.PropertyField(pos, property, label, includeChildren),
+                () => EditorGUI.PropertyField(CurrentDrawer.position, property, label, includeChildren),
                 EditorGUI.GetPropertyHeight(property)
                 );
         }
