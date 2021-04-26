@@ -85,12 +85,9 @@ namespace NaukriEditor
                         if (focused)
                         {
                             GUI.Box(rect, "", focusedBackgroundStyle);
-                            Debug.Log($"F => {index}");
                         }
                         else if (selected)
                         {
-                            Debug.Log($"S => {index}");
-
                             GUI.Box(rect, "", selectedBackgroundStyle);
                         }
                     },
@@ -98,8 +95,5 @@ namespace NaukriEditor
             }
             reorderableList.DoLayoutList();
         }
-
-
-
     }
 }
