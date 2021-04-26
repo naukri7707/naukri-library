@@ -80,6 +80,13 @@ public class Demo
 
 一些擴充的插值，可以直接調用對應的函式。也可以透過 `InterpolationType` 使用 `ByMethod()` 動態選擇對應插值。
 
+## Serializable
+
+適用於 Unity 可序列化的資料結構，透過 `ISerializationCallbackReceiver` 介面自動進行與 `List` 的轉換
+
+- `SerializableDictionary` 可序列化字典
+- `SerializableHashSet` 可序列化唯一集合
+
 ## Singleton
 
 適用於 Unity 的單例模式
