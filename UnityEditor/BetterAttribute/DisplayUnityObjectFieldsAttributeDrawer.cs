@@ -21,16 +21,17 @@ namespace NaukriEditor
 
         public override void OnGUILayout(SerializedProperty property, GUIContent label)
         {
-            if (EditorGUI.indentLevel != 0)
-            {
-                throw new UnityException($"{nameof(DisplayUnityObjectFieldsAttribute)} 不適用於遞迴結構，這也許是因為目標物件的欄位包含了 {nameof(DisplayUnityObjectFieldsAttribute)} 屬性所導致的");
-            }
             label.text = displayName;
-            label = EditorGUI.BeginProperty(position, label, property);
+            label = BetterGUILayout.BeginProperty(label, property);
             BetterGUILayout.PropertyField(property, label);
+            if (property.propertyType != SerializedPropertyType.ObjectReference) // 若母標不是 UnityObject 則單純視為 PropertyField
+            {
+                BetterGUILayout.EndProperty();
+                return;
+            }
             if (IsGUI)
             {
-                property.isExpanded = EditorGUI.Foldout(position, property.isExpanded, "", true);
+                property.isExpanded = BetterGUILayout.Foldout(property.isExpanded, "", true);
             }
             if (property.isExpanded)
             {
@@ -50,7 +51,7 @@ namespace NaukriEditor
                         BetterGUILayout.PropertyField(dataSP);
                     });
                 }
-                EditorGUI.BeginChangeCheck();
+                BetterGUILayout.BeginChangeCheck();
                 while (dataSP.NextVisible(false))
                 {
                     if (!attr.skipFieldNames.Contains(dataSP.name))
@@ -58,13 +59,13 @@ namespace NaukriEditor
                         BetterGUILayout.PropertyField(dataSP);
                     }
                 }
-                if (EditorGUI.EndChangeCheck())
+                if (BetterGUILayout.EndChangeCheck())
                 {
                     dataSP.serializedObject.ApplyModifiedProperties();
                 }
                 EditorGUI.indentLevel--;
             }
-            EditorGUI.EndProperty();
+            BetterGUILayout.EndProperty();
         }
     }
 }

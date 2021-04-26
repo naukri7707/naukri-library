@@ -58,8 +58,6 @@ public class Demo
 
 - `DisplayName` 改變欄位名稱
 - `DisplayUnityObjectFields` 在子欄位顯示目標 `UnityObject` 欄位
-  
-  ⚠️ 若目標的欄位帶有 `DisplayUnityObjectFields` 將無法正確渲染
 - `DisplayWhenFieldEqual` 當條件成立時才顯示欄位
 - `DisplayWhenFieldNotEqual` 當條件不成立時才顯示欄位
 - `ElementName` 改變陣列元素前綴
