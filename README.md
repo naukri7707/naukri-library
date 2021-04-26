@@ -72,6 +72,8 @@ public class Demo
 
 一些工廠函式
 
+- `ScriptFactory` 腳本工場，透過定義 ScriptTemplate 可以自定義腳本模板，同時能解決因 Unity 預設編碼為 Big5 所導致的中文亂碼錯誤。
+
 - `TextureFactory` 紋理工廠
 
 ## Interpolation
