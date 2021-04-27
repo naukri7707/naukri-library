@@ -1,7 +1,7 @@
-﻿using System.Collections;
+﻿using Naukri.AwaitCoroutine;
 using UnityEngine;
 
-namespace Naukri.AwaitCoroutine
+namespace Naukri
 {
     public static class InstructionAwaiter
     {
