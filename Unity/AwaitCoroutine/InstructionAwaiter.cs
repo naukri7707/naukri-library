@@ -5,6 +5,11 @@ namespace Naukri
 {
     public static class InstructionAwaiter
     {
+        public static CustomYieldInstructionAwaiter GetAwaiter(this WaitForUpdate instruction)
+        {
+            return new CustomYieldInstructionAwaiter(instruction);
+        }
+
         public static YieldInstructionAwaiter GetAwaiter(this WaitForEndOfFrame instruction)
         {
             return new YieldInstructionAwaiter(instruction);

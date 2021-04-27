@@ -22,7 +22,7 @@ T dst = CastTo<T>.From(src);
 
 > 直接存取 1 : 快速反射 2 : 一般反射 391
 
-#### 使用範例
+使用範例
 
 ```cs
 public class Demo
@@ -47,6 +47,32 @@ public class Demo
 ⚠️ 保留快速反射的委派而不是每次反射時再建立一次，否則效能會比一般反射差上數倍。
 
 ---
+
+## AwaitCoroutine
+
+可異步等候協程，透過為 `YieldInstruction` 新增 `GetAwaiter()` 並建立 Awaiter 使其支援異步等候。
+
+使用範例
+
+```cs
+private async void Demo()
+{
+    // 透過新增 YieldInstruction 建立等候者
+    await new WaitForEndOfFrame();
+    // 透過 Awaiter 工廠建立等候者
+    await Awaiter.WaitForEndOfFrame();
+}
+```
+
+支援的等候選項
+
+- `WaitForUpdate` 等候直到下一幀 Update 結束
+- `WaitForEndOfFrame` 等候直到下一幀渲染結束
+- `WaitForFixedUpdate` 等候直到下一次 FixedUpdate 結束
+- `WaitForSeconds` 等候 Unity 時間 (秒)
+- `WaitForSecondsRealtime` 等候現實時間 (秒)
+- `WaitUntil` 等候直到條件成立
+- `WaitWhile` 等候直到條件不成立
 
 ## BetterAttribute
 
@@ -82,7 +108,7 @@ public class Demo
 
 ## Serializable
 
-適用於 Unity 可序列化的資料結構，透過 `ISerializationCallbackReceiver` 介面自動進行與 `List` 的轉換
+透過 `ISerializationCallbackReceiver` 介面自動與 `List` 轉換，以建立適用於 Unity 可序列化的資料結構。
 
 - `SerializableDictionary` 可序列化字典
 - `SerializableHashSet` 可序列化唯一集合
