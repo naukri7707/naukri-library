@@ -7,9 +7,16 @@ namespace Naukri
 {
     public static class Awaiter
     {
+        private static readonly WaitForUpdate waitForUpdate = new WaitForUpdate();
+
         private static readonly WaitForEndOfFrame waitForEndOfFrame = new WaitForEndOfFrame();
 
         private static readonly WaitForFixedUpdate waitForFixedUpdate = new WaitForFixedUpdate();
+
+        public static WaitForUpdate WaitForUpdate()
+        {
+            return waitForUpdate;
+        }
 
         public static WaitForEndOfFrame WaitForEndOfFrame()
         {
