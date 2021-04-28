@@ -66,17 +66,17 @@ namespace Naukri
                 text = message,
                 color = color
             };
-             Manager.Toast(msgInfo);
+            Manager.Toast(msgInfo);
         }
 
         public static void ClearToast()
         {
-           Manager.ClearToast();
+            Manager.ClearToast();
         }
 
-        public static void ClearMessageQuene()
+        public static void ClearMessageQueue()
         {
-            Manager.ClearMessageQuene();
+            Manager.ClearMessageQueue();
         }
 
         public static void ClearAll()

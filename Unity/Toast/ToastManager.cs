@@ -37,7 +37,7 @@ namespace Naukri.Toast
             name = "Template",
             defaultExpanded = true,
             skipScriptField = true,
-            skipFieldNames = new[] { 
+            skipFieldNames = new[] {
                 nameof(Naukri.Toast.Toast.state),
                 nameof(Naukri.Toast.Toast.canvasGroup),
                 nameof(Naukri.Toast.Toast.message)
@@ -61,7 +61,7 @@ namespace Naukri.Toast
             ReAnchor();
 #endif
             var isNewToast = false;
-            while (messageQueue.Count > 0 && (maxToastCount is 0 || toastQueue.Count < maxToastCount))
+            if (messageQueue.Count > 0 && (maxToastCount is 0 || toastQueue.Count < maxToastCount))
             {
                 var msg = messageQueue.Dequeue();
                 var newToast = toastTemplate.CreateToast(this, msg);
@@ -133,14 +133,14 @@ namespace Naukri.Toast
             }
         }
 
-        public void ClearMessageQuene()
+        public void ClearMessageQueue()
         {
             messageQueue.Clear();
         }
 
         public void ClearAll()
         {
-            ClearMessageQuene();
+            ClearMessageQueue();
             ClearToast();
         }
 
