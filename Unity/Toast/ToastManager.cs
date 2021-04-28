@@ -37,7 +37,7 @@ namespace Naukri.Toast
             name = "Template",
             defaultExpanded = true,
             skipScriptField = true,
-            skipFieldNames = new[] { 
+            skipFieldNames = new[] {
                 nameof(Naukri.Toast.Toast.state),
                 nameof(Naukri.Toast.Toast.canvasGroup),
                 nameof(Naukri.Toast.Toast.message)
@@ -133,14 +133,14 @@ namespace Naukri.Toast
             }
         }
 
-        public void ClearMessageQuene()
+        public void ClearMessageQueue()
         {
             messageQueue.Clear();
         }
 
         public void ClearAll()
         {
-            ClearMessageQuene();
+            ClearMessageQueue();
             ClearToast();
         }
 
