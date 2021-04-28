@@ -46,6 +46,18 @@ public class Demo
 
 ⚠️ 保留快速反射的委派而不是每次反射時再建立一次，否則效能會比一般反射差上數倍。
 
+## YamlUtility
+
+快速序列化 / 反序列化 yaml 物件。
+
+提醒 / 建議
+
+- 只會序列化 public 欄位 (包含自動實作屬性)
+- 可以使用 `YamlIgnore` 排除不想序列化的 public 欄位
+- 可以透過 `YamlMember` 改變一些基礎屬性
+- 建立一個序列化專用的物件並映射到目標物件上，而不是直接序列化目標物件
+- 引用 `YamlDotNet-11.1.1` 函式庫
+
 ---
 
 ## AwaitCoroutine
