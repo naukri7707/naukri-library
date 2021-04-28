@@ -61,7 +61,7 @@ namespace Naukri.Toast
             ReAnchor();
 #endif
             var isNewToast = false;
-            while (messageQueue.Count > 0 && (maxToastCount is 0 || toastQueue.Count < maxToastCount))
+            if (messageQueue.Count > 0 && (maxToastCount is 0 || toastQueue.Count < maxToastCount))
             {
                 var msg = messageQueue.Dequeue();
                 var newToast = toastTemplate.CreateToast(this, msg);
