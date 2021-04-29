@@ -2,53 +2,56 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
-public sealed class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
+namespace Naukri.Serializable
 {
     [Serializable]
-    public struct KeyValuePair
+    public sealed class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
     {
-        public TKey key;
-        public TValue value;
-    }
-
-    [SerializeField]
-    private List<KeyValuePair> values = new List<KeyValuePair>();
-
-    [SerializeField]
-    private KeyValuePair newData;
-
-    public SerializableDictionary() { newData = default; } // newData 的賦值為解決 unity 警告問題
-
-    public SerializableDictionary(IDictionary<TKey, TValue> dictionary) : base(dictionary) { }
-
-    public void OnBeforeSerialize()
-    {
-        values.Clear();
-        foreach (var pair in this)
+        [Serializable]
+        public struct KeyValuePair
         {
-            values.Add(new KeyValuePair() { key = pair.Key, value = pair.Value });
+            public TKey key;
+            public TValue value;
         }
-    }
 
-    public void OnAfterDeserialize()
-    {
-        var isAddValue = values.Count > Count;
-        Clear();
-        // 如果有兩筆以上的資料，且末兩項資料相等，視為 Add 按鈕被按下，此時將newData 取代最末項資料以維護 Dictionary 的唯一性
-        if (isAddValue)
+        [SerializeField]
+        private List<KeyValuePair> values = new List<KeyValuePair>();
+
+        [SerializeField]
+        private KeyValuePair newData;
+
+        public SerializableDictionary() { newData = default; } // newData 的賦值為解決 unity 警告問題
+
+        public SerializableDictionary(IDictionary<TKey, TValue> dictionary) : base(dictionary) { }
+
+        public void OnBeforeSerialize()
         {
-            values[values.Count - 1] = newData;
-        }
-        foreach (var item in values)
-        {
-            if (item.value == null)
+            values.Clear();
+            foreach (var pair in this)
             {
-                Add(item.key, default);
+                values.Add(new KeyValuePair() { key = pair.Key, value = pair.Value });
             }
-            else
+        }
+
+        public void OnAfterDeserialize()
+        {
+            var isAddValue = values.Count > Count;
+            Clear();
+            // 如果有兩筆以上的資料，且末兩項資料相等，視為 Add 按鈕被按下，此時將newData 取代最末項資料以維護 Dictionary 的唯一性
+            if (isAddValue)
             {
-                Add(item.key, item.value);
+                values[values.Count - 1] = newData;
+            }
+            foreach (var item in values)
+            {
+                if (item.value == null)
+                {
+                    Add(item.key, default);
+                }
+                else
+                {
+                    Add(item.key, item.value);
+                }
             }
         }
     }
