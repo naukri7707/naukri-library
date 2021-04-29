@@ -4,6 +4,7 @@ using UnityEditor;
 using NaukriEditor;
 using UnityEditorInternal;
 using NaukriEditor.Factory;
+using Naukri.Serializable;
 
 [CustomPropertyDrawer(typeof(SerializableHashSet<>), true)]
 public sealed class SerializableHashSetDrawer : BetterPropertyDrawer
