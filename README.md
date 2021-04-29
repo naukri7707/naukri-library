@@ -29,15 +29,15 @@ public class Demo
 {
     public int src { get; set; } = 1;
 
-    GetterDelegate<Demo, int> srcGetter;
+    FastGetter<Demo, int> srcGetter;
 
-    SetterDelegate<Demo, int> srcSetter;
+    FastSetter<Demo, int> srcSetter;
 
     private void Example()
     {
         var type = GetType();
-        srcGetter = type.GetProperty(nameof(src)).CreateGetterDelegate<Demo, int>();
-        srcSetter = type.GetProperty(nameof(src)).CreateSetterDelegate<Demo, int>();
+        srcGetter = type.GetProperty(nameof(src)).CreateFastGetter<Demo, int>();
+        srcSetter = type.GetProperty(nameof(src)).CreateFastSetter<Demo, int>();
         srcSetter.Invoke(this, 2);
         var dst = srcGetter.Invoke(this); // dst will be 2
     }
