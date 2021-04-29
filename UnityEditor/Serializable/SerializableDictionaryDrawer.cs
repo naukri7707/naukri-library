@@ -4,6 +4,7 @@ using UnityEditor;
 using NaukriEditor;
 using UnityEditorInternal;
 using NaukriEditor.Factory;
+using Naukri.Serializable;
 
 [CustomPropertyDrawer(typeof(SerializableDictionary<,>), true)]
 public sealed class SerializableDictionaryDrawer : BetterPropertyDrawer
