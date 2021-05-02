@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +14,7 @@ namespace Naukri.Reflection
     /// <typeparam name="TResult">取值型態</typeparam>
     /// <param name="target">目標實例</param>
     /// <returns></returns>
-    public delegate TResult FastGetter<TObject, TResult>(TObject target);
+    public delegate TResult FastGetter<in TObject, out TResult>(TObject target);
 
     /// <summary>
     /// Setter 委派
@@ -24,31 +24,49 @@ namespace Naukri.Reflection
     /// <param name="target">目標實例</param>
     /// <param name="value"></param>
     /// <returns></returns>
-    public delegate void FastSetter<TObject, TValue>(TObject target, TValue value);
+    public delegate void FastSetter<in TObject, in TValue>(TObject target, TValue value);
 
     public static class FastReflection
     {
         #region -- Property --
 
+        public static FastProperty<TObject, TValue> CreateFastProperty<TObject, TValue>(this PropertyInfo self)
+        {
+            return new FastProperty<TObject, TValue>();
+        }
+
         public static FastGetter<TObject, TValue> CreateFastGetter<TObject, TValue>(this PropertyInfo self)
         {
+            var getMethod = self.GetGetMethod();
+
+            if (getMethod is null)
+            {
+                return null;
+            }
+
             var objectType = typeof(TObject);
             var valueType = typeof(TValue);
-
             var instanceParam = Expression.Parameter(objectType);
 
             return
                 Expression.Lambda<FastGetter<TObject, TValue>>( // 建立方法
-                    Expression.Convert(                             // 先用 Call 取值 再用 Convert 轉成目標型態
-                        Expression.Call(instanceParam, self.GetGetMethod()),
+                    Expression.Convert( // 先用 Call 取值 再用 Convert 轉成目標型態
+                        Expression.Call(instanceParam, getMethod),
                         valueType
-                        ),
+                    ),
                     instanceParam
-                    ).Compile();
+                ).Compile();
         }
 
         public static FastSetter<TObject, TValue> CreateFastSetter<TObject, TValue>(this PropertyInfo self)
         {
+            var setMethod = self.GetSetMethod();
+
+            if (setMethod is null)
+            {
+                return null;
+            }
+
             var objectType = typeof(TObject);
             var valueType = typeof(TValue);
 
@@ -57,14 +75,14 @@ namespace Naukri.Reflection
 
             return
                 Expression.Lambda<FastSetter<TObject, TValue>>(
-                    Expression.Call(                                // 先用 Convert 轉型值 再用 Call 賦值
+                    Expression.Call( // 先用 Convert 轉型值 再用 Call 賦值
                         instanceParam,
-                        self.GetSetMethod(),
+                        setMethod,
                         Expression.Convert(argumentParam, valueType)
-                        ),
+                    ),
                     instanceParam,
                     argumentParam
-                    ).Compile();
+                ).Compile();
         }
 
         #endregion
@@ -84,9 +102,9 @@ namespace Naukri.Reflection
                     Expression.Call(
                         instance,
                         self
-                        ),
+                    ),
                     instance
-                    ).Compile();
+                ).Compile();
         }
 
         public static Action<TObject, TParam> CreatFastAction<TObject, TParam>(this MethodInfo self)
@@ -99,75 +117,83 @@ namespace Naukri.Reflection
 
             return
                 Expression.Lambda<Action<TObject, TParam>>(
-                    Expression.Call(                        // 先用 Convert 轉型值 再用 Call 賦值
+                    Expression.Call( // 先用 Convert 轉型值 再用 Call 賦值
                         instanceParam,
                         self,
                         Expression.Convert(argumentParam, paramType)
-                        ),
+                    ),
                     instanceParam,
                     argumentParam
-                    ).Compile();
+                ).Compile();
         }
 
         public static Action<TObject, TParam1, TParam2> CreatFastAction<TObject, TParam1, TParam2>(this MethodInfo self)
         {
-            var (argumentParams, convertArgumentParams) = CreateExpressionList(typeof(TObject), typeof(TParam1), typeof(TParam2));
+            var (argumentParams, convertArgumentParams) =
+                CreateExpressionList(typeof(TObject), typeof(TParam1), typeof(TParam2));
             return
                 Expression.Lambda<Action<TObject, TParam1, TParam2>>(
                     Expression.Call(
                         argumentParams[0],
                         self,
                         convertArgumentParams.Skip(1)
-                        ),
+                    ),
                     argumentParams
-                    ).Compile();
+                ).Compile();
         }
 
-        public static Action<TObject, TParam1, TParam2, TParam3> CreatFastAction<TObject, TParam1, TParam2, TParam3>(this MethodInfo self)
+        public static Action<TObject, TParam1, TParam2, TParam3> CreatFastAction<TObject, TParam1, TParam2, TParam3>(
+            this MethodInfo self)
         {
-            var (argumentParams, convertArgumentParams) = CreateExpressionList(typeof(TObject), typeof(TParam1), typeof(TParam2), typeof(TParam3));
+            var (argumentParams, convertArgumentParams) = CreateExpressionList(typeof(TObject), typeof(TParam1),
+                typeof(TParam2), typeof(TParam3));
             return
                 Expression.Lambda<Action<TObject, TParam1, TParam2, TParam3>>(
                     Expression.Call(
                         argumentParams[0],
                         self,
                         convertArgumentParams.Skip(1)
-                        ),
+                    ),
                     argumentParams
-                    ).Compile();
+                ).Compile();
         }
 
-        public static Action<TObject, TParam1, TParam2, TParam3, TParam4> CreatFastAction<TObject, TParam1, TParam2, TParam3, TParam4>(this MethodInfo self)
+        public static Action<TObject, TParam1, TParam2, TParam3, TParam4> CreatFastAction<TObject, TParam1, TParam2,
+            TParam3, TParam4>(this MethodInfo self)
         {
-            var (argumentParams, convertArgumentParams) = CreateExpressionList(typeof(TObject), typeof(TParam1), typeof(TParam2), typeof(TParam3), typeof(TParam4));
+            var (argumentParams, convertArgumentParams) = CreateExpressionList(typeof(TObject), typeof(TParam1),
+                typeof(TParam2), typeof(TParam3), typeof(TParam4));
             return
                 Expression.Lambda<Action<TObject, TParam1, TParam2, TParam3, TParam4>>(
                     Expression.Call(
                         argumentParams[0],
                         self,
                         convertArgumentParams.Skip(1)
-                        ),
+                    ),
                     argumentParams
-                    ).Compile();
+                ).Compile();
         }
 
-        public static Action<TObject, TParam1, TParam2, TParam3, TParam4, TParam5> CreatFastAction<TObject, TParam1, TParam2, TParam3, TParam4, TParam5>(this MethodInfo self)
+        public static Action<TObject, TParam1, TParam2, TParam3, TParam4, TParam5> CreatFastAction<TObject, TParam1,
+            TParam2, TParam3, TParam4, TParam5>(this MethodInfo self)
         {
-            var (argumentParams, convertArgumentParams) = CreateExpressionList(typeof(TObject), typeof(TParam1), typeof(TParam2), typeof(TParam3), typeof(TParam4), typeof(TParam5));
+            var (argumentParams, convertArgumentParams) = CreateExpressionList(typeof(TObject), typeof(TParam1),
+                typeof(TParam2), typeof(TParam3), typeof(TParam4), typeof(TParam5));
             return
                 Expression.Lambda<Action<TObject, TParam1, TParam2, TParam3, TParam4, TParam5>>(
                     Expression.Call(
                         argumentParams[0],
                         self,
                         convertArgumentParams.Skip(1)
-                        ),
+                    ),
                     argumentParams
-                    ).Compile();
+                ).Compile();
         }
 
         #endregion
 
         #region -- Func --
+
         public static Func<TObject, TResult> CreatFastFunc<TObject, TResult>(this MethodInfo self)
         {
             var objectType = typeof(TObject);
@@ -178,14 +204,14 @@ namespace Naukri.Reflection
             return
                 Expression.Lambda<Func<TObject, TResult>>(
                     Expression.Convert(
-                        Expression.Call(                        // 先用 Convert 轉型值 再用 Call 賦值
+                        Expression.Call( // 先用 Convert 轉型值 再用 Call 賦值
                             instanceParam,
                             self
-                            ),
-                        resultType
                         ),
+                        resultType
+                    ),
                     instanceParam
-                    ).Compile();
+                ).Compile();
         }
 
         public static Func<TObject, TParam1, TResult> CreatFastFunc<TObject, TParam1, TResult>(this MethodInfo self)
@@ -199,16 +225,18 @@ namespace Naukri.Reflection
                             argumentParams[0],
                             self,
                             convertArgumentParams.Skip(1)
-                            ),
-                        resultType
                         ),
+                        resultType
+                    ),
                     argumentParams
-                    ).Compile();
+                ).Compile();
         }
 
-        public static Func<TObject, TParam1, TParam2, TResult> CreatFastFunc<TObject, TParam1, TParam2, TResult>(this MethodInfo self)
+        public static Func<TObject, TParam1, TParam2, TResult> CreatFastFunc<TObject, TParam1, TParam2, TResult>(
+            this MethodInfo self)
         {
-            var (argumentParams, convertArgumentParams) = CreateExpressionList(typeof(TObject), typeof(TParam1), typeof(TParam2));
+            var (argumentParams, convertArgumentParams) =
+                CreateExpressionList(typeof(TObject), typeof(TParam1), typeof(TParam2));
             var resultType = typeof(TResult);
             return
                 Expression.Lambda<Func<TObject, TParam1, TParam2, TResult>>(
@@ -217,54 +245,59 @@ namespace Naukri.Reflection
                             argumentParams[0],
                             self,
                             convertArgumentParams.Skip(1)
-                            ),
-                        resultType
                         ),
+                        resultType
+                    ),
                     argumentParams
-                    ).Compile();
+                ).Compile();
         }
 
-        public static Func<TObject, TParam1, TParam2, TParam3, TResult> CreatFastFunc<TObject, TParam1, TParam2, TParam3, TResult>(this MethodInfo self)
+        public static Func<TObject, TParam1, TParam2, TParam3, TResult> CreatFastFunc<TObject, TParam1, TParam2,
+            TParam3, TResult>(this MethodInfo self)
         {
-            var (argumentParams, convertArgumentParams) = CreateExpressionList(typeof(TObject), typeof(TParam1), typeof(TParam2), typeof(TParam3));
+            var (argumentParams, convertArgumentParams) = CreateExpressionList(typeof(TObject), typeof(TParam1),
+                typeof(TParam2), typeof(TParam3));
             var resultType = typeof(TResult);
             return
-               Expression.Lambda<Func<TObject, TParam1, TParam2, TParam3, TResult>>(
-                   Expression.Convert(
-                       Expression.Call(
-                           argumentParams[0],
-                           self,
-                           convertArgumentParams.Skip(1)
-                           ),
-                       resultType
-                       ),
-                   argumentParams
-                   ).Compile();
+                Expression.Lambda<Func<TObject, TParam1, TParam2, TParam3, TResult>>(
+                    Expression.Convert(
+                        Expression.Call(
+                            argumentParams[0],
+                            self,
+                            convertArgumentParams.Skip(1)
+                        ),
+                        resultType
+                    ),
+                    argumentParams
+                ).Compile();
         }
 
-        public static Func<TObject, TParam1, TParam2, TParam3, TParam4, TResult> CreatFastFunc<TObject, TParam1, TParam2, TParam3, TParam4, TResult>(this MethodInfo self)
+        public static Func<TObject, TParam1, TParam2, TParam3, TParam4, TResult> CreatFastFunc<TObject, TParam1,
+            TParam2, TParam3, TParam4, TResult>(this MethodInfo self)
         {
-            var (argumentParams, convertArgumentParams) = CreateExpressionList(typeof(TObject), typeof(TParam1), typeof(TParam2), typeof(TParam3), typeof(TParam4));
+            var (argumentParams, convertArgumentParams) = CreateExpressionList(typeof(TObject), typeof(TParam1),
+                typeof(TParam2), typeof(TParam3), typeof(TParam4));
             var resultType = typeof(TResult);
             return
-               Expression.Lambda<Func<TObject, TParam1, TParam2, TParam3, TParam4, TResult>>(
-                   Expression.Convert(
-                       Expression.Call(
-                           argumentParams[0],
-                           self,
-                           convertArgumentParams.Skip(1)
-                           ),
-                       resultType
-                       ),
-                   argumentParams
-                   ).Compile();
+                Expression.Lambda<Func<TObject, TParam1, TParam2, TParam3, TParam4, TResult>>(
+                    Expression.Convert(
+                        Expression.Call(
+                            argumentParams[0],
+                            self,
+                            convertArgumentParams.Skip(1)
+                        ),
+                        resultType
+                    ),
+                    argumentParams
+                ).Compile();
         }
 
         #endregion
 
-        public static (ParameterExpression[] argumentParams, UnaryExpression[] convertArgumentParams) CreateExpressionList(params Type[] types)
+        private static (ParameterExpression[] argumentParams, UnaryExpression[] convertArgumentParams)
+            CreateExpressionList(params Type[] types)
         {
-            var argumentParams = types.Select(it => Expression.Parameter(it)).ToArray();
+            var argumentParams = types.Select(Expression.Parameter).ToArray();
             var convertArgumentParams = argumentParams.Select(it => Expression.Convert(it, it.Type)).ToArray();
             return (argumentParams, convertArgumentParams);
         }
