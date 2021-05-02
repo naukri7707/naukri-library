@@ -16,26 +16,26 @@ namespace Naukri.Unity.Toast
 
     public static class ToastAnchorMethods
     {
-        private const float TOLERANCE = 0.01F;
+        private const float EPS = 0.0001F;
 
         public static bool IsLeft(this ToastAnchor self)
         {
-            return Math.Abs(self.ToVector2().x - (-1F)) < TOLERANCE;
+            return Math.Abs(self.ToVector2().x - (-1F)) < EPS;
         }
 
         public static bool IsRight(this ToastAnchor self)
         {
-            return Math.Abs(self.ToVector2().x - 1F) < TOLERANCE;
+            return Math.Abs(self.ToVector2().x - 1F) < EPS;
         }
 
         public static bool IsTop(this ToastAnchor self)
         {
-            return Math.Abs(self.ToVector2().y - 1F) < TOLERANCE;
+            return Math.Abs(self.ToVector2().y - 1F) < EPS;
         }
 
         public static bool IsBottom(this ToastAnchor self)
         {
-            return Math.Abs(self.ToVector2().y - (-1F)) < TOLERANCE;
+            return Math.Abs(self.ToVector2().y - (-1F)) < EPS;
         }
 
         public static Vector2 ToVector2(this ToastAnchor self)
