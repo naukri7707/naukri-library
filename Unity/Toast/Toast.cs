@@ -1,15 +1,16 @@
-﻿using System.Collections;
-using Naukri.Unity.BetterAttribute;
+﻿using Naukri.Unity.BetterAttribute;
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Naukri.Toast
+namespace Naukri.Unity.Toast
 {
-    [System.Serializable]
+    [Serializable]
     [RequireComponent(typeof(RectTransform), typeof(CanvasGroup))]
     public class Toast : MonoBehaviour
     {
-        [System.NonSerialized]
+        [NonSerialized]
         public ToastState state;
 
         public CanvasGroup canvasGroup;
@@ -53,8 +54,7 @@ namespace Naukri.Toast
 
         internal Toast CreateToast(ToastManager manager, ToastMessage message)
         {
-            var res = Instantiate(this);
-            res.RectTransform.SetParent(manager.transform);
+            var res = Instantiate(this, manager.transform, true);
             var anchorV = manager.ToastAnchor.ToVector2();
             res.RectTransform.anchorMin = anchorV;
             res.RectTransform.anchorMax = anchorV;
@@ -162,11 +162,12 @@ namespace Naukri.Toast
         {
             var anchorVector = anchor.ToVector2();
             var position = CurrentPosition;
-            position.x += anchorVector.x is 0F
-                ? paddingEdge.x
-                : anchorVector.x is 1F
-                ? -paddingEdge.x
-                : 0F;
+            position.x += anchorVector.x switch
+            {
+                0F => paddingEdge.x,
+                1F => -paddingEdge.x,
+                _ => 0F
+            };
             position.y = anchorVector.y is 0
                 ? position.y + paddingEdge.y
                 : -position.y - paddingEdge.y;

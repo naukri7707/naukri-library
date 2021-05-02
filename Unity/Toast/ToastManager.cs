@@ -1,15 +1,14 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Naukri.Unity.BetterAttribute;
 using UnityEngine;
 
-namespace Naukri.Toast
+namespace Naukri.Unity.Toast
 {
     [RequireComponent(typeof(Canvas))]
     public class ToastManager : MonoBehaviour
     {
-        [DisplayName("Maximum Toast"), Tooltip("Number of toasts which can be displayed at a once, 0 is unlimit")]
+        [DisplayName("Maximum Toast"), Tooltip("Number of toasts which can be displayed at a once, 0 is unlimited")]
         public int maxToastCount = 10;
 
         [SerializeField, Header("Style"), DisplayName("Anchor")]
@@ -39,9 +38,9 @@ namespace Naukri.Toast
             defaultExpanded = true,
             skipScriptField = true,
             skipFieldNames = new[] {
-                nameof(Naukri.Toast.Toast.state),
-                nameof(Naukri.Toast.Toast.canvasGroup),
-                nameof(Naukri.Toast.Toast.message)
+                nameof(Unity.Toast.Toast.state),
+                nameof(Unity.Toast.Toast.canvasGroup),
+                nameof(Unity.Toast.Toast.message)
             }
             )]
         public Toast toastTemplate;
@@ -110,7 +109,7 @@ namespace Naukri.Toast
                     case ToastState.AfterOut:
                         break;
                     default:
-                        break;
+                        throw new ArgumentOutOfRangeException();
                 }
                 toast.UpdatePositionByAnchorAndPaddingEdge(ToastAnchor, toastPaddingEdge);
             }
