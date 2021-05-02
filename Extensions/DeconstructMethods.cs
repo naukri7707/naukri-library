@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
-namespace Naukri
+namespace Naukri.Extensions
 {
-    public static class Deconstructs
+    public static class DeconstructMethods
     {
         public static void Deconstruct<TKey, TValue>(this KeyValuePair<TKey, TValue> self, out TKey key, out TValue value)
         {
