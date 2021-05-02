@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Naukri.Unity.BetterAttribute;
 using UnityEngine;
 using UnityEngine.UI;
 
