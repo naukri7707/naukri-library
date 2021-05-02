@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Threading;
+using Naukri.Unity.Singleton;
 using UnityEngine;
 
 namespace Naukri.Unity.AwaitCoroutine

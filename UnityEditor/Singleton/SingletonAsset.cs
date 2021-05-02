@@ -4,6 +4,7 @@ using System.Reflection;
 using UnityEngine;
 using UnityEditor;
 using Naukri;
+using Naukri.Unity.Singleton;
 
 namespace NaukriEditor
 {
