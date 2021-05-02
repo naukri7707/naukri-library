@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SysAssembly = System.Reflection.Assembly;
 
 namespace Naukri.Reflection
@@ -16,6 +14,7 @@ namespace Naukri.Reflection
                 if (assembly.GetName().Name == name)
                     return assembly;
             }
+
             return null;
         }
 
@@ -26,18 +25,19 @@ namespace Naukri.Reflection
 
         public static Type[] GetDerivedTypesOf(this Type baseType)
         {
-            return GetAllTypes().Where(it => baseType.IsAssignableFrom(it)).ToArray();
+            return GetAllTypes().Where(baseType.IsAssignableFrom).ToArray();
         }
 
-        public static Type[] GetAllTypes()
+        public static IEnumerable<Type> GetAllTypes()
         {
-            List<Type> types = new List<Type>();
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             foreach (var assembly in assemblies)
             {
-                types.AddRange(assembly.GetTypes());
+                foreach (var type in assembly.GetTypes())
+                {
+                    yield return type;
+                }
             }
-            return types.ToArray();
         }
     }
 }

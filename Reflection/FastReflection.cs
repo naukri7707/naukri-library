@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -32,7 +30,7 @@ namespace Naukri.Reflection
 
         public static FastProperty<TObject, TValue> CreateFastProperty<TObject, TValue>(this PropertyInfo self)
         {
-            return new FastProperty<TObject, TValue>();
+            return new FastProperty<TObject, TValue>(self);
         }
 
         public static FastGetter<TObject, TValue> CreateFastGetter<TObject, TValue>(this PropertyInfo self)
