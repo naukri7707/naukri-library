@@ -1,10 +1,6 @@
-﻿using Naukri;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Text;
-using UnityEngine;
 using YamlDotNet.Serialization;
 
 namespace Naukri
@@ -31,27 +27,13 @@ namespace Naukri
         public static void SaveToYamlFile<T>(string filePath, T obj)
         {
             var yaml = ToYaml(obj);
-            try
-            {
-                File.WriteAllText(filePath, yaml, new UTF8Encoding(true));
-            }
-            catch (UnityException e)
-            {
-                throw e;
-            }
+            File.WriteAllText(filePath, yaml, new UTF8Encoding(true));
         }
 
         public static T LoadFromYamlFile<T>(string filePath)
         {
-            try
-            {
-                var yaml = File.ReadAllText(filePath);
-                return FromYaml<T>(yaml);
-            }
-            catch (UnityException e)
-            {
-                throw e;
-            }
+            var yaml = File.ReadAllText(filePath);
+            return FromYaml<T>(yaml);
         }
     }
 }
