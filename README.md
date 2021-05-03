@@ -1,5 +1,14 @@
 # Naukri-Library
 
+## Extensions
+
+擴充函式
+
+- `DeconstructMethods`
+- `EnumMethods`
+- `IListMethods`
+- `StringExtension`
+
 ## Reflection
 
 ### `Assembly`
@@ -14,7 +23,7 @@
 T dst = CastTo<T>.From(src);
 ```
 
-來將 src 轉型成 T，在編譯器無法準確判定型態的泛型方法中很好用。
+將 src 轉型成 T，在編譯器無法準確判定型態的泛型方法中很好用。
 
 ### `FastReflection`
 
@@ -46,7 +55,7 @@ public class Demo
 
 ⚠️ 保留快速反射的委派而不是每次反射時再建立一次，否則效能會比一般反射差上數倍。
 
-## YamlUtility
+## `YamlUtility`
 
 快速序列化 / 反序列化 yaml 物件。
 
@@ -102,10 +111,6 @@ private async void Demo()
 - `ForkName` 依照不同條件顯示不同欄位名稱
 - `ReadOnly` 使欄位唯讀
 
-## EventInvoker
-
-可以在 `EventInvoker` 面板中透過 Invoke 按鈕觸發對應的 `UnityEvent`，也可以設定熱鍵後在 runtime 透過熱鍵觸發事件。
-
 ## Factory
 
 一些工廠函式
@@ -113,10 +118,6 @@ private async void Demo()
 - `ScriptFactory` 腳本工場，透過定義 ScriptTemplate 可以自定義腳本模板，同時能解決因 Unity 預設編碼為 Big5 所導致的中文亂碼錯誤。
 
 - `TextureFactory` 紋理工廠
-
-## Interpolation
-
-一些擴充的插值，可以直接調用對應的函式。也可以透過 `InterpolationType` 使用 `ByMethod()` 動態選擇對應插值。
 
 ## Serializable
 
@@ -148,3 +149,11 @@ private async void Demo()
 使用 `Toaster.Create()` 可以使用快速生成預設風格的訊息
 
 也可以透過建立 `Toast` 作為模板，並使用 `ToastManager` 來動態生成自定義風格的訊息，具體流程請參考預製物 `DefaultToast` 和 `DefaultToastManager`
+
+## `EventInvoker`
+
+可以在 `EventInvoker` 面板中透過 Invoke 按鈕觸發對應的 `UnityEvent`，也可以設定熱鍵後在 runtime 透過熱鍵觸發事件。
+
+## `Interpolation`
+
+一些擴充的插值，可以直接調用對應的函式。也可以透過 `InterpolationType` 使用 `ByMethod()` 動態選擇對應插值。
