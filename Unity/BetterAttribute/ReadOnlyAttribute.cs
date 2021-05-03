@@ -1,8 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class ReadOnlyAttribute : PropertyAttribute
+namespace Naukri.Unity.BetterAttribute
 {
+    public class ReadOnlyAttribute : PropertyAttribute
+    {
 
+    }
 }

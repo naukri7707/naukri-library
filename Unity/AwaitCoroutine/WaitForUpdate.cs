@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Naukri
+namespace Naukri.Unity.AwaitCoroutine
 {
     public class WaitForUpdate : CustomYieldInstruction
     {

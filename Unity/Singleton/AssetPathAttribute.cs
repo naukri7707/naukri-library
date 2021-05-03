@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace Naukri
+namespace Naukri.Unity.Singleton
 {
     public class AssetPathAttribute : Attribute
     {
@@ -42,12 +40,12 @@ namespace Naukri
         public AssetPathAttribute(string assetPath)
         {
             var builder = new StringBuilder();
-            if (Naukri.UnityPath.GetDirectoryRoot(assetPath) != "Assets")
+            if (UnityPath.GetDirectoryRoot(assetPath) != "Assets")
             {
                 builder.Append("Assets/");
             }
             builder.Append(assetPath);
-            if (!Naukri.UnityPath.HasExtension(assetPath))
+            if (!UnityPath.HasExtension(assetPath))
             {
                 builder.Append(".asset");
             }

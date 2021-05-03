@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace NaukriEditor
+namespace Naukri.UnityEditor.BetterAttribute.Core
 {
     [InitializeOnLoad]
     public abstract class BetterPropertyDrawer : PropertyDrawer
@@ -14,19 +13,17 @@ namespace NaukriEditor
 
         private const int MAX_STACK_COUNT = 7;
 
-        private static Stack<BetterPropertyDrawer> drawerStack;
+        private static readonly Stack<BetterPropertyDrawer> drawerStack;
 
+        public static BetterPropertyDrawer CurrentDrawer
+            => drawerStack is null || drawerStack.Count is 0 ? null : drawerStack.Peek();
+        
         static BetterPropertyDrawer()
         {
             drawerStack = new Stack<BetterPropertyDrawer>();
         }
 
-        public static BetterPropertyDrawer CurrentDrawer
-            => drawerStack is null || drawerStack.Count is 0 ? null : drawerStack.Peek();
-
-        private bool isInit;
-
-        public bool IsInit => isInit;
+        public bool IsInit { get; private set; }
 
         private bool isFirst;
 
@@ -36,14 +33,12 @@ namespace NaukriEditor
 
 #pragma warning disable IDE1006 // 命名樣式
         public Rect position => _position;
+        
 #pragma warning restore IDE1006 // 命名樣式
 
+        public bool IsGUI { get; private set; }
 
-        private bool isGUI = false;
-
-        public bool IsGUI => isGUI;
-
-        public bool IsGetHeight => !isGUI;
+        public bool IsGetHeight => !IsGUI;
 
         public virtual void OnInit(SerializedProperty property, GUIContent label) { }
 
@@ -51,15 +46,15 @@ namespace NaukriEditor
 
         public sealed override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            if (!isInit)
+            if (!IsInit)
             {
                 OnInit(property, label);
-                isInit = true;
+                IsInit = true;
             }
             //
             height = 0F;
             isFirst = true;
-            isGUI = false;
+            IsGUI = false;
             drawerStack.Push(this);
             CheckStackDepth();
             //
@@ -74,7 +69,7 @@ namespace NaukriEditor
             position.height = 0F;
             _position = position;
             isFirst = true;
-            isGUI = true;
+            IsGUI = true;
             drawerStack.Push(this);
             CheckStackDepth();
             //
@@ -101,7 +96,7 @@ namespace NaukriEditor
                 isFirst = false;
             }
 
-            if (isGUI)
+            if (IsGUI)
             {
                 _position.yMin = _position.yMax + spacing; // StartLayout 後因 height 為 0， 故首行 pos.yMax 為 yMin
                 _position.height = height;                // 在渲染/計算前才將 yMin 移動到下一個欄位應該出現的 yMin 上，避免 position 出現錯位
@@ -121,20 +116,18 @@ namespace NaukriEditor
                 isFirst = false;
             }
 
-            if (isGUI)
+            if (IsGUI)
             {
                 _position.yMin = _position.yMax + spacing; // StartLayout 後因 height 為 0， 故首行 pos.yMax 為 yMin
                 _position.height = height;                // 在渲染/計算前才將 yMin 移動到下一個欄位應該出現的 yMin 上，避免 position 出現錯位
                 return drawer.Invoke();
             }
-            else
-            {
-                this.height += height + spacing;
-                return default;
-            }
+
+            this.height += height + spacing;
+            return default;
         }
 
-        private void CheckStackDepth()
+        private static void CheckStackDepth()
         {
             if(drawerStack.Count > MAX_STACK_COUNT)
             {

@@ -1,6 +1,6 @@
 {
     "name": "NaukriEditor",
-    "rootNamespace": "NaukriEditor",
+    "rootNamespace": "",
     "references": [
         "Naukri"
     ],

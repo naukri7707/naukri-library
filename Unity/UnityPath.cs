@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
+using Naukri.Extensions;
 using UnityEngine;
 
-namespace Naukri
+namespace Naukri.Unity
 {
     public static class UnityPath
     {
@@ -23,7 +22,7 @@ namespace Naukri
         public static string GetFileName(string path)
         {
             var dirs = path.Split('\\', '/');
-            return dirs?[dirs.Length - 1];
+            return dirs.HasElement() ? dirs[dirs.Length - 1] : null;
         }
 
         public static string GetFileNameWithoutExtension(string path)
@@ -37,14 +36,14 @@ namespace Naukri
                     return fileName.Substring(0, idx);
                 }
             }
+
             throw new UnityException("GetFileNameWithoutExtension Failed");
         }
 
         public static string GetExtension(string path)
         {
             var fileName = GetFileName(path);
-            var idx = fileName.Length;
-            for (int i = fileName.Length - 2; i >= 0; i--)
+            for (var i = fileName.Length - 2; i >= 0; i--)
             {
                 if (fileName[i] is '.')
                 {
@@ -52,19 +51,21 @@ namespace Naukri
                     return fileName.Substring(i, fileName.Length - i);
                 }
             }
+
             throw new UnityException("GetExtension Failed");
         }
 
         public static bool HasExtension(string path)
         {
             var fileName = GetFileName(path);
-            for (int i = fileName.Length - 2; i >= 0; i--)
+            for (var i = fileName.Length - 2; i >= 0; i--)
             {
                 if (fileName[i] is '.')
                 {
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -75,7 +76,7 @@ namespace Naukri
             var dirs = GetDirectories(path);
             var builder = new StringBuilder(Assets);
             var currentDir = Assets;
-            for (int i = dirs[0] is Assets ? 1 : 0; i < dirs.Length; i++)
+            for (var i = dirs[0] is Assets ? 1 : 0; i < dirs.Length; i++)
             {
                 var parentFolder = currentDir;
                 currentDir = builder.Append('/').Append(dirs[i]).ToString();

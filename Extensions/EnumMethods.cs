@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using UnityEngine;
+using Naukri.Reflection;
 
-namespace Naukri
+namespace Naukri.Extensions
 {
-    public static partial class ExtensionMethods
+    public static class EnumMethods
     {
         public static bool IndexExist(this Array self, int index)
         {
@@ -28,8 +24,7 @@ namespace Naukri
         {
             if (state)
                 return self.AddFlag(targetFlag);
-            else
-                return self.RemoveFlag(targetFlag);
+            return self.RemoveFlag(targetFlag);
         }
 
         public static T HasFlag<T>(this T self, T checkFlag) where T : Enum

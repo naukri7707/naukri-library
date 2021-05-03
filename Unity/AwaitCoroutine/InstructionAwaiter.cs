@@ -1,43 +1,42 @@
-﻿using Naukri.AwaitCoroutine;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Naukri
+namespace Naukri.Unity.AwaitCoroutine
 {
     public static class InstructionAwaiter
     {
-        public static CustomYieldInstructionAwaiter GetAwaiter(this WaitForUpdate instruction)
+        public static YieldAwaiter<CustomYieldInstruction> GetAwaiter(this WaitForUpdate instruction)
         {
-            return new CustomYieldInstructionAwaiter(instruction);
+            return new YieldAwaiter<CustomYieldInstruction>(instruction);
         }
 
-        public static YieldInstructionAwaiter GetAwaiter(this WaitForEndOfFrame instruction)
+        public static YieldAwaiter<YieldInstruction> GetAwaiter(this WaitForEndOfFrame instruction)
         {
-            return new YieldInstructionAwaiter(instruction);
+            return new YieldAwaiter<YieldInstruction>(instruction);
         }
 
-        public static YieldInstructionAwaiter GetAwaiter(this WaitForFixedUpdate instruction)
+        public static YieldAwaiter<YieldInstruction> GetAwaiter(this WaitForFixedUpdate instruction)
         {
-            return new YieldInstructionAwaiter(instruction);
+            return new YieldAwaiter<YieldInstruction>(instruction);
         }
 
-        public static YieldInstructionAwaiter GetAwaiter(this WaitForSeconds instruction)
+        public static YieldAwaiter<YieldInstruction> GetAwaiter(this WaitForSeconds instruction)
         {
-            return new YieldInstructionAwaiter(instruction);
+            return new YieldAwaiter<YieldInstruction>(instruction);
         }
 
-        public static CustomYieldInstructionAwaiter GetAwaiter(this WaitForSecondsRealtime instruction)
+        public static YieldAwaiter<CustomYieldInstruction> GetAwaiter(this WaitForSecondsRealtime instruction)
         {
-            return new CustomYieldInstructionAwaiter(instruction);
+            return new YieldAwaiter<CustomYieldInstruction>(instruction);
         }
 
-        public static CustomYieldInstructionAwaiter GetAwaiter(this WaitUntil instruction)
+        public static YieldAwaiter<CustomYieldInstruction> GetAwaiter(this WaitUntil instruction)
         {
-            return new CustomYieldInstructionAwaiter(instruction);
+            return new YieldAwaiter<CustomYieldInstruction>(instruction);
         }
 
-        public static CustomYieldInstructionAwaiter GetAwaiter(this WaitWhile instruction)
+        public static YieldAwaiter<CustomYieldInstruction> GetAwaiter(this WaitWhile instruction)
         {
-            return new CustomYieldInstructionAwaiter(instruction);
+            return new YieldAwaiter<CustomYieldInstruction>(instruction);
         }
     }
 }

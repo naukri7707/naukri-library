@@ -1,10 +1,10 @@
-﻿using UnityEngine;
+﻿using Naukri.Unity;
+using Naukri.UnityEditor.Factory;
 using UnityEditor;
 using UnityEditorInternal;
-using Naukri;
-using NaukriEditor.Factory;
+using UnityEngine;
 
-namespace NaukriEditor
+namespace Naukri.UnityEditor
 {
     [CustomEditor(typeof(EventInvoker), true)]
     public class EventInvokerDrawer : Editor
@@ -20,10 +20,14 @@ namespace NaukriEditor
         private void OnEnable()
         {
             self = target as EventInvoker;
-            focusedBackgroundStyle = new GUIStyle();
-            focusedBackgroundStyle.normal.background = TextureFactory.SolidColor(new Color32(44, 93, 135, 255));
-            selectedBackgroundStyle = new GUIStyle();
-            selectedBackgroundStyle.normal.background = TextureFactory.SolidColor(new Color32(77, 77, 77, 255));
+            focusedBackgroundStyle = new GUIStyle
+            {
+                normal = {background = TextureFactory.SolidColor(new Color32(44, 93, 135, 255))}
+            };
+            selectedBackgroundStyle = new GUIStyle
+            {
+                normal = {background = TextureFactory.SolidColor(new Color32(77, 77, 77, 255))}
+            };
         }
 
         public override bool RequiresConstantRepaint()
@@ -38,11 +42,8 @@ namespace NaukriEditor
                 var callersSP = serializedObject.FindProperty(nameof(EventInvoker.Callers));
                 reorderableList = new ReorderableList(serializedObject, callersSP)
                 {
-                    drawHeaderCallback = (Rect rect) =>
-                    {
-                        EditorGUI.LabelField(rect, "Invoke List");
-                    },
-                    drawElementCallback = (Rect rect, int index, bool selected, bool focused) =>
+                    drawHeaderCallback = rect => { EditorGUI.LabelField(rect, "Invoke List"); },
+                    drawElementCallback = (rect, index, selected, focused) =>
                     {
                         var callerSP = callersSP.GetArrayElementAtIndex(index);
                         EditorGUI.indentLevel++;
@@ -58,12 +59,13 @@ namespace NaukriEditor
                             self.Callers[index].TargetMethod.Invoke();
                             reorderableList.index = index;
                         }
+
                         var hotKey = self.Callers[index].hotKey;
                         var hotKeyString = hotKey == KeyCode.None ? "" : $" ({hotKey})";
-                        EditorGUI.PropertyField(rect, callerSP, new GUIContent($"{callerSP.displayName}{hotKeyString}"), true);
+                        EditorGUI.PropertyField(rect, callerSP, new GUIContent($"{callerSP.displayName}{hotKeyString}"),
+                            true);
                         EditorGUI.indentLevel--;
                         reorderableList.serializedProperty.serializedObject.ApplyModifiedProperties();
-
                     },
                     elementHeightCallback = index =>
                     {
@@ -80,7 +82,7 @@ namespace NaukriEditor
                         callersSP.DeleteArrayElementAtIndex(reorderableList.index);
                         callersSP.serializedObject.ApplyModifiedProperties();
                     },
-                    drawElementBackgroundCallback = (Rect rect, int index, bool selected, bool focused) =>
+                    drawElementBackgroundCallback = (rect, index, selected, focused) =>
                     {
                         if (focused)
                         {
@@ -93,6 +95,7 @@ namespace NaukriEditor
                     },
                 };
             }
+
             reorderableList.DoLayoutList();
         }
     }

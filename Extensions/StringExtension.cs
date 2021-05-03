@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
-namespace Naukri
+namespace Naukri.Extensions
 {
-    public static partial class ExtensionMethods
+    public static class StringMethods
     {
         public static bool Substring(this string self, string left, string right, out string substring)
         {
@@ -17,10 +12,10 @@ namespace Naukri
 
         public static string Substring(this string self, string left, string right)
         {
-            var start = self.IndexOf(left) + left.Length;
+            var start = self.IndexOf(left, StringComparison.Ordinal) + left.Length;
             if (self.Length < start)
                 return null;
-            var end = self.IndexOf(right, start);
+            var end = self.IndexOf(right, start, StringComparison.Ordinal);
             var length = end - start;
             return length < 0 ? null : self.Substring(start, length);
         }

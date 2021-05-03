@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace NaukriEditor.Factory
+namespace Naukri.UnityEditor.Factory
 {
     public static class TextureFactory
     {
@@ -19,7 +14,7 @@ namespace NaukriEditor.Factory
             var res = new Texture2D(width, height);
             var pixels = new Color32[width * height];
 
-            for (int i = 0; i < pixels.Length; i++)
+            for (var i = 0; i < pixels.Length; i++)
                 pixels[i] = color;
 
             res.SetPixels32(pixels);

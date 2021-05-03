@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
-using UnityEngine;
+﻿using System.Reflection;
+using Naukri.Unity;
+using Naukri.Unity.Singleton;
 using UnityEditor;
-using Naukri;
+using UnityEngine;
 
-namespace NaukriEditor
+namespace Naukri.UnityEditor.Singleton
 {
     public abstract class SingletonAsset<T> : ScriptableObject where T : SingletonAsset<T>
     {
@@ -61,7 +60,7 @@ namespace NaukriEditor
 
         private static bool TryLoadAsset(out T asset)
         {
-            asset = UnityEditor.AssetDatabase.LoadAssetAtPath<T>(Path.assetPath);
+            asset = AssetDatabase.LoadAssetAtPath<T>(Path.assetPath);
             return asset != null;
         }
 

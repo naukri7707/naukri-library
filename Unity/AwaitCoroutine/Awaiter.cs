@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Naukri
+namespace Naukri.Unity.AwaitCoroutine
 {
     public static class Awaiter
     {

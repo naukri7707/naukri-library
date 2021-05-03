@@ -1,7 +1,7 @@
-﻿using Naukri.Toast;
+﻿using Naukri.Extensions;
 using UnityEngine;
 
-namespace Naukri
+namespace Naukri.Unity.Toast
 {
     public static class Toaster
     {
@@ -15,13 +15,15 @@ namespace Naukri
                 hideInHierarchy = value;
                 if (value)
                 {
-                    var flag = Manager.gameObject.hideFlags.AddFlag(HideFlags.HideInHierarchy);
-                    Manager.gameObject.hideFlags = flag;
+                    var gameObject = Manager.gameObject;
+                    var flag = gameObject.hideFlags.AddFlag(HideFlags.HideInHierarchy);
+                    gameObject.hideFlags = flag;
                 }
                 else
                 {
-                    var flag = Manager.gameObject.hideFlags.RemoveFlag(HideFlags.HideInHierarchy);
-                    Manager.gameObject.hideFlags = flag;
+                    var gameObject = Manager.gameObject;
+                    var flag = gameObject.hideFlags.RemoveFlag(HideFlags.HideInHierarchy);
+                    gameObject.hideFlags = flag;
                 }
             }
         }

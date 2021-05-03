@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Naukri
+namespace Naukri.Unity.Toast
 {
     public struct ToastMessage
     {

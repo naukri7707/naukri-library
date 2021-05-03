@@ -1,19 +1,18 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
-using UnityEngine;
 using System.Collections;
+using System.Runtime.CompilerServices;
 
-namespace Naukri.AwaitCoroutine
+namespace Naukri.Unity.AwaitCoroutine
 {
-    public struct YieldInstructionAwaiter : INotifyCompletion
+    public struct YieldAwaiter<TInstruction> : INotifyCompletion
     {
         public bool IsCompleted { get; private set; }
 
-        private readonly YieldInstruction instruction;
+        private readonly TInstruction instruction;
 
         private Action continuation;
 
-        public YieldInstructionAwaiter(YieldInstruction instruction)
+        public YieldAwaiter(TInstruction instruction)
         {
             IsCompleted = false;
             this.instruction = instruction;
@@ -25,6 +24,7 @@ namespace Naukri.AwaitCoroutine
             get
             {
                 yield return instruction;
+                IsCompleted = true;
                 continuation?.Invoke();
             }
         }

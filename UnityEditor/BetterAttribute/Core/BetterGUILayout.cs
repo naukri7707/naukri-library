@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using static NaukriEditor.BetterPropertyDrawer;
 
-namespace NaukriEditor
+namespace Naukri.UnityEditor.BetterAttribute.Core
 {
     public static class BetterGUILayout
     {
@@ -21,8 +19,8 @@ namespace NaukriEditor
 
         public static bool PropertyField(SerializedProperty property, GUIContent label, bool includeChildren)
         {
-            return CurrentDrawer.LayoutContainer(
-                () => EditorGUI.PropertyField(CurrentDrawer.position, property, label, includeChildren),
+            return BetterPropertyDrawer.CurrentDrawer.LayoutContainer(
+                () => EditorGUI.PropertyField(BetterPropertyDrawer.CurrentDrawer.position, property, label, includeChildren),
                 EditorGUI.GetPropertyHeight(property)
                 );
         }
@@ -68,7 +66,7 @@ namespace NaukriEditor
 
         public static bool Foldout(bool foldout, GUIContent content, bool toggleOnLabelClick, GUIStyle style)
         {
-            return EditorGUI.Foldout(CurrentDrawer.position, foldout, content, toggleOnLabelClick, style);
+            return EditorGUI.Foldout(BetterPropertyDrawer.CurrentDrawer.position, foldout, content, toggleOnLabelClick, style);
         }
 
         #endregion
@@ -76,7 +74,7 @@ namespace NaukriEditor
         #region -- Other --
 
         public static GUIContent BeginProperty(GUIContent label, SerializedProperty property)
-            => EditorGUI.BeginProperty(CurrentDrawer.position, label, property);
+            => EditorGUI.BeginProperty(BetterPropertyDrawer.CurrentDrawer.position, label, property);
 
         public static void EndProperty() => EditorGUI.EndProperty();
 
