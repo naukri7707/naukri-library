@@ -1,19 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class ForkNameAttribute : PropertyAttribute
+namespace Naukri.Unity.BetterAttribute
 {
-    public readonly string fieldName;
-    public readonly object value;
-    public readonly string trueForkName;
-    public readonly string falseForkName;
-
-    public ForkNameAttribute(string fieldName, object value, string trueForkName, string falseForkName)
+    public class ForkNameAttribute : PropertyAttribute
     {
-        this.fieldName = fieldName;
-        this.value = value;
-        this.trueForkName = trueForkName;
-        this.falseForkName = falseForkName;
+        public readonly string fieldName;
+        
+        public readonly object value;
+        
+        public readonly string trueForkName;
+        
+        public readonly string falseForkName;
+
+        public ForkNameAttribute(string fieldName, object value, string trueForkName, string falseForkName)
+        {
+            this.fieldName = fieldName;
+            this.value = value;
+            this.trueForkName = trueForkName;
+            this.falseForkName = falseForkName;
+        }
     }
 }

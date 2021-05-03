@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using Naukri.Unity.BetterAttribute;
+using Naukri.UnityEditor.BetterAttribute.Core;
 using UnityEditor;
-using System.Linq;
-using System.Collections.Generic;
+using UnityEngine;
 
-namespace NaukriEditor
+namespace Naukri.UnityEditor.BetterAttribute
 {
     [CustomPropertyDrawer(typeof(DisplayUnityObjectFieldsAttribute))]
     public class DisplayUnityObjectFieldsAttributeDrawer : BetterPropertyDrawer
@@ -14,9 +15,12 @@ namespace NaukriEditor
 
         public override void OnInit(SerializedProperty property, GUIContent label)
         {
-            attr = attribute as DisplayUnityObjectFieldsAttribute;
-            property.isExpanded = attr.defaultExpanded;
-            displayName = attr.name is null ? label.text : attr.name;
+            if (attribute is DisplayUnityObjectFieldsAttribute tAttr)
+            {
+                attr = tAttr;
+                property.isExpanded = tAttr.defaultExpanded;
+                displayName = tAttr.name ?? label.text;
+            }
         }
 
         public override void OnGUILayout(SerializedProperty property, GUIContent label)

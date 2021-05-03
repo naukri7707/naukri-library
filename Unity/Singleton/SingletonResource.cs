@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
+﻿using System.Reflection;
 using UnityEngine;
 
-namespace Naukri
+namespace Naukri.Unity.Singleton
 {
-    public abstract partial class SingletonResource<T> : ScriptableObject where T : SingletonResource<T>
+    public abstract class SingletonResource<T> : ScriptableObject where T : SingletonResource<T>
     {
         private static readonly object loadLock = new object();
 

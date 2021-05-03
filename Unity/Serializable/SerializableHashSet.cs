@@ -1,19 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
-using System.Security;
-using System.Runtime.Serialization;
 using System.Collections;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.Security;
+using UnityEngine;
 
-namespace Naukri.Serializable
+namespace Naukri.Unity.Serializable
 {
     [Serializable]
-    public class SerializableHashSet<T> : ISerializationCallbackReceiver, ICollection<T>, IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ISet<T>, IDeserializationCallback, ISerializable
+    public class SerializableHashSet<T> : ISerializationCallbackReceiver, IReadOnlyCollection<T>, ISet<T>, IDeserializationCallback, ISerializable
     {
+        private readonly HashSet<T> self;
+        
         [SerializeField]
         private List<T> values = new List<T>();
-
-        private readonly HashSet<T> self;
 
         [SerializeField]
         private T newData;

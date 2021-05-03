@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Naukri
+namespace Naukri.Unity.Singleton
 {
     public abstract class SingletonBehaviour<T> : MonoBehaviour where T : SingletonBehaviour<T>
     {
@@ -27,23 +25,26 @@ namespace Naukri
                             instance.OnSingletonLoaded();
                         }
                     }
+
+                    return instance;
                 }
+
                 return instance;
             }
         }
 
         private static bool TryCreateInstance(out T component)
         {
-            var instance = new GameObject
+            var inst = new GameObject
             {
                 name = $"{typeof(T).Name} (Singleton)",
                 hideFlags = HideFlags.HideAndDontSave, // 隱藏該物件
             };
             // 不在場景轉換時刪除該物件
-            component = instance.AddComponent<T>();
+            component = inst.AddComponent<T>();
             if (!component.DestroyOnLoad)
             {
-                DontDestroyOnLoad(instance);
+                DontDestroyOnLoad(inst);
             }
             return component != null;
         }

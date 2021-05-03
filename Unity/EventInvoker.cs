@@ -1,13 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Naukri
+namespace Naukri.Unity
 {
     public class EventInvoker : MonoBehaviour
     {
-        [System.Serializable]
+        [Serializable]
         public struct Caller
         {
             public string tag;

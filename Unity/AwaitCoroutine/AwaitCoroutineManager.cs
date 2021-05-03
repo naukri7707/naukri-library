@@ -1,11 +1,10 @@
-﻿using Naukri;
-using System;
+﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Threading;
+using Naukri.Unity.Singleton;
 using UnityEngine;
 
-namespace Naukri.AwaitCoroutine
+namespace Naukri.Unity.AwaitCoroutine
 {
     public class AwaitCoroutineManager : SingletonBehaviour<AwaitCoroutineManager>
     {
@@ -22,23 +21,17 @@ namespace Naukri.AwaitCoroutine
 
         public static void StartCoroutineAwaiter(IEnumerator routine)
         {
-            DoOnUnityThread(() =>
-            {
-                Instance.StartCoroutine(routine);
-            });
+            DoOnUnityThread(() => { Instance.StartCoroutine(routine); });
         }
 
         public static void StopCoroutineAwaiter(IEnumerator routine)
         {
-            DoOnUnityThread(() =>
-            {
-                Instance.StopCoroutine(routine);
-            });
+            DoOnUnityThread(() => { Instance.StopCoroutine(routine); });
         }
 
         public static void DoOnUnityThread(Action action)
         {
-            if (SynchronizationContext.Current == UnitySynchronizationContext)
+            if (Thread.CurrentThread.ManagedThreadId == UnityThreadId)
             {
                 action();
             }

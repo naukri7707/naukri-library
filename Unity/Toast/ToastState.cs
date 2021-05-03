@@ -1,4 +1,4 @@
-﻿namespace Naukri.Toast
+﻿namespace Naukri.Unity.Toast
 {
     public enum ToastState
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Naukri.Serializable
+namespace Naukri.Unity.Serializable
 {
     [Serializable]
     public sealed class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
@@ -44,14 +44,7 @@ namespace Naukri.Serializable
             }
             foreach (var item in values)
             {
-                if (item.value == null)
-                {
-                    Add(item.key, default);
-                }
-                else
-                {
-                    Add(item.key, item.value);
-                }
+                Add(item.key, item.value ?? default);
             }
         }
     }

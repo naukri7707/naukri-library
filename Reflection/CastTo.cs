@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace Naukri
+namespace Naukri.Reflection
 {
     /// <summary>
     /// 轉型成<see cref="TResult"/>
@@ -14,7 +12,7 @@ namespace Naukri
         private static class Caster<TSource>
         {
             // 轉型用委派
-            public static readonly Func<TSource, TResult> cast = GetDelegate();
+            public static readonly Func<TSource, TResult> Cast = GetDelegate();
 
             private static Func<TSource, TResult> GetDelegate()
             {
@@ -38,7 +36,7 @@ namespace Naukri
         /// <typeparam name="TSource">原始型態</typeparam>
         public static TResult From<TSource>(TSource src)
         {
-            return Caster<TSource>.cast(src);
+            return Caster<TSource>.Cast(src);
         }
 
     }

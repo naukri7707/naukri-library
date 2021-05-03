@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEditor;
+using UnityEditor.ProjectWindowCallback;
 using UnityEngine;
 
-namespace NaukriEditor
+namespace Naukri.UnityEditor.Factory
 {
     /// <summary>
     /// 使用 ScriptTemplate 建立腳本 <para/>
@@ -32,7 +32,6 @@ namespace NaukriEditor
         private static readonly List<(string src, string dst)> replaceList = new List<(string src, string dst)>();
 
         private static readonly Texture2D scriptIcon = (EditorGUIUtility.IconContent("cs Script Icon").image as Texture2D);
-
 
         /// <summary>
         /// Use this method if your template named style is like "MyScript.cs.txt" 
@@ -72,26 +71,25 @@ namespace NaukriEditor
                 );
         }
 
-        private class DoCreateCodeFile : UnityEditor.ProjectWindowCallback.EndNameEditAction
+        private class DoCreateCodeFile : EndNameEditAction
         {
             public override void Action(int instanceId, string pathName, string resourceFile)
             {
-                UnityEngine.Object o = CreateScript(pathName, resourceFile);
+                var o = CreateScript(pathName, resourceFile);
                 ProjectWindowUtil.ShowCreatedAsset(o);
             }
         }
 
-        private static UnityEngine.Object CreateScript(string pathName, string templatePath)
+        private static Object CreateScript(string pathName, string templatePath)
         {
-            string className = Path.GetFileNameWithoutExtension(pathName).Replace(" ", string.Empty);
-            string templateText = string.Empty;
+            var className = Path.GetFileNameWithoutExtension(pathName).Replace(" ", string.Empty);
 
-            UTF8Encoding encoding = new UTF8Encoding(true, false);
+            var encoding = new UTF8Encoding(true, false);
 
             if (File.Exists(templatePath))
             {
                 StreamReader reader = new StreamReader(templatePath);
-                templateText = reader.ReadToEnd();
+                var templateText = reader.ReadToEnd();
                 reader.Close();
 
                 templateText = templateText.Replace("#SCRIPTNAME#", className);
@@ -107,7 +105,7 @@ namespace NaukriEditor
                 writer.Close();
 
                 AssetDatabase.ImportAsset(pathName);
-                return AssetDatabase.LoadAssetAtPath(pathName, typeof(UnityEngine.Object));
+                return AssetDatabase.LoadAssetAtPath(pathName, typeof(Object));
             }
             else
             {

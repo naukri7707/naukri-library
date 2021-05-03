@@ -1,105 +1,104 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Naukri
+namespace Naukri.Unity
 {
     public enum InterpolationType
     {
         Linear,
+
         //
-        InSine, OutSine, InOutSine,
+        InSine,
+        OutSine,
+        InOutSine,
+
         //
-        InQuad, OutQuad, InOutQuad,
+        InQuad,
+        OutQuad,
+        InOutQuad,
+
         //
-        InCubic, OutCubic, InOutCubic,
+        InCubic,
+        OutCubic,
+        InOutCubic,
+
         //
-        InQuart, OutQuart, InOutQuart,
+        InQuart,
+        OutQuart,
+        InOutQuart,
+
         //
-        InQuint, OutQuint, InOutQuint,
+        InQuint,
+        OutQuint,
+        InOutQuint,
+
         //
-        InExpo, OutExpo, InOutExpo,
+        InExpo,
+        OutExpo,
+        InOutExpo,
+
         //
-        InCirc, OutCirc, InOutCirc,
+        InCirc,
+        OutCirc,
+        InOutCirc,
+
         //
-        InBack, OutBack, InOutBack,
+        InBack,
+        OutBack,
+        InOutBack,
+
         //
-        InElastic, OutElastic, InOutElastic,
+        InElastic,
+        OutElastic,
+        InOutElastic,
+
         //
-        InBounce, OutBounce, InOutBounce
+        InBounce,
+        OutBounce,
+        InOutBounce
     }
 
     public static class Interpolation
     {
+        public static float EPS = float.Epsilon;
+
         public static float ByMethod(float start, float end, float ratio, InterpolationType interpolationType)
         {
-            switch (interpolationType)
+            return interpolationType switch
             {
-                case InterpolationType.Linear:
-                    return Linear(start, end, ratio);
-                case InterpolationType.InSine:
-                    return InSine(start, end, ratio);
-                case InterpolationType.OutSine:
-                    return OutSine(start, end, ratio);
-                case InterpolationType.InOutSine:
-                    return InOutSine(start, end, ratio);
-                case InterpolationType.InQuad:
-                    return InQuad(start, end, ratio);
-                case InterpolationType.OutQuad:
-                    return OutQuad(start, end, ratio);
-                case InterpolationType.InOutQuad:
-                    return InOutQuad(start, end, ratio);
-                case InterpolationType.InCubic:
-                    return InCubic(start, end, ratio);
-                case InterpolationType.OutCubic:
-                    return OutCubic(start, end, ratio);
-                case InterpolationType.InOutCubic:
-                    return InOutCubic(start, end, ratio);
-                case InterpolationType.InQuart:
-                    return InQuart(start, end, ratio);
-                case InterpolationType.OutQuart:
-                    return OutQuart(start, end, ratio);
-                case InterpolationType.InOutQuart:
-                    return InOutQuart(start, end, ratio);
-                case InterpolationType.InQuint:
-                    return InQuint(start, end, ratio);
-                case InterpolationType.OutQuint:
-                    return OutQuint(start, end, ratio);
-                case InterpolationType.InOutQuint:
-                    return InOutQuint(start, end, ratio);
-                case InterpolationType.InExpo:
-                    return InExpo(start, end, ratio);
-                case InterpolationType.OutExpo:
-                    return OutExpo(start, end, ratio);
-                case InterpolationType.InOutExpo:
-                    return InOutExpo(start, end, ratio);
-                case InterpolationType.InCirc:
-                    return InCirc(start, end, ratio);
-                case InterpolationType.OutCirc:
-                    return OutCirc(start, end, ratio);
-                case InterpolationType.InOutCirc:
-                    return InOutCirc(start, end, ratio);
-                case InterpolationType.InBack:
-                    return InBack(start, end, ratio);
-                case InterpolationType.OutBack:
-                    return OutBack(start, end, ratio);
-                case InterpolationType.InOutBack:
-                    return InOutBack(start, end, ratio);
-                case InterpolationType.InElastic:
-                    return InElastic(start, end, ratio);
-                case InterpolationType.OutElastic:
-                    return OutElastic(start, end, ratio);
-                case InterpolationType.InOutElastic:
-                    return InOutElastic(start, end, ratio);
-                case InterpolationType.InBounce:
-                    return InBounce(start, end, ratio);
-                case InterpolationType.OutBounce:
-                    return OutBounce(start, end, ratio);
-                case InterpolationType.InOutBounce:
-                    return InOutBounce(start, end, ratio);
-                default:
-                    return 0F;
-            }
+                InterpolationType.Linear => Linear(start, end, ratio),
+                InterpolationType.InSine => InSine(start, end, ratio),
+                InterpolationType.OutSine => OutSine(start, end, ratio),
+                InterpolationType.InOutSine => InOutSine(start, end, ratio),
+                InterpolationType.InQuad => InQuad(start, end, ratio),
+                InterpolationType.OutQuad => OutQuad(start, end, ratio),
+                InterpolationType.InOutQuad => InOutQuad(start, end, ratio),
+                InterpolationType.InCubic => InCubic(start, end, ratio),
+                InterpolationType.OutCubic => OutCubic(start, end, ratio),
+                InterpolationType.InOutCubic => InOutCubic(start, end, ratio),
+                InterpolationType.InQuart => InQuart(start, end, ratio),
+                InterpolationType.OutQuart => OutQuart(start, end, ratio),
+                InterpolationType.InOutQuart => InOutQuart(start, end, ratio),
+                InterpolationType.InQuint => InQuint(start, end, ratio),
+                InterpolationType.OutQuint => OutQuint(start, end, ratio),
+                InterpolationType.InOutQuint => InOutQuint(start, end, ratio),
+                InterpolationType.InExpo => InExpo(start, end, ratio),
+                InterpolationType.OutExpo => OutExpo(start, end, ratio),
+                InterpolationType.InOutExpo => InOutExpo(start, end, ratio),
+                InterpolationType.InCirc => InCirc(start, end, ratio),
+                InterpolationType.OutCirc => OutCirc(start, end, ratio),
+                InterpolationType.InOutCirc => InOutCirc(start, end, ratio),
+                InterpolationType.InBack => InBack(start, end, ratio),
+                InterpolationType.OutBack => OutBack(start, end, ratio),
+                InterpolationType.InOutBack => InOutBack(start, end, ratio),
+                InterpolationType.InElastic => InElastic(start, end, ratio),
+                InterpolationType.OutElastic => OutElastic(start, end, ratio),
+                InterpolationType.InOutElastic => InOutElastic(start, end, ratio),
+                InterpolationType.InBounce => InBounce(start, end, ratio),
+                InterpolationType.OutBounce => OutBounce(start, end, ratio),
+                InterpolationType.InOutBounce => InOutBounce(start, end, ratio),
+                _ => 0F
+            };
         }
 
         public static float Linear(float start, float end, float ratio)
@@ -287,6 +286,7 @@ namespace Naukri
                 s *= (1.525F);
                 return end * 0.5F * (ratio * ratio * (((s) + 1) * ratio - s)) + start;
             }
+
             ratio -= 2;
             s *= (1.525F);
             return end * 0.5F * ((ratio) * ratio * (((s) + 1) * ratio + s) + 2) + start;
@@ -294,17 +294,17 @@ namespace Naukri
 
         public static float InElastic(float start, float end, float ratio)
         {
-            end -= start;
+            const float d = 1F;
+            const float p = d * .3F;
+            float s;
+            var a = 0F;
 
-            float d = 1F;
-            float p = d * .3F;
-            float s = 0;
-            float a = 0;
-
-            if (ratio == 0)
+            if (ratio == 0F)
                 return start;
 
-            if ((ratio /= d) == 1)
+            end -= start;
+
+            if (Math.Abs((ratio /= d) - 1) < EPS)
                 return start + end;
 
             if (a == 0F || a < Mathf.Abs(end))
@@ -322,17 +322,17 @@ namespace Naukri
 
         public static float OutElastic(float start, float end, float ratio)
         {
-            end -= start;
+            const float d = 1F;
+            const float p = d * .3F;
+            float s;
+            var a = 0F;
 
-            float d = 1F;
-            float p = d * .3F;
-            float s = 0;
-            float a = 0;
-
-            if (ratio == 0)
+            if (ratio == 0F)
                 return start;
 
-            if ((ratio /= d) == 1)
+            end -= start;
+
+            if (Math.Abs((ratio /= d) - 1) < EPS)
                 return start + end;
 
             if (a == 0F || a < Mathf.Abs(end))
@@ -350,17 +350,17 @@ namespace Naukri
 
         public static float InOutElastic(float start, float end, float ratio)
         {
-            end -= start;
+            const float d = 1F;
+            const float p = d * .3F;
+            float s;
+            var a = 0F;
 
-            float d = 1F;
-            float p = d * .3F;
-            float s = 0;
-            float a = 0;
-
-            if (ratio == 0)
+            if (ratio == 0F)
                 return start;
 
-            if ((ratio /= d * 0.5F) == 2)
+            end -= start;
+            
+            if (Math.Abs((ratio /= d * 0.5F) - 2) < EPS)
                 return start + end;
 
             if (a == 0F || a < Mathf.Abs(end))
@@ -374,14 +374,18 @@ namespace Naukri
             }
 
             if (ratio < 1)
-                return -0.5F * (a * Mathf.Pow(2, 10 * (ratio -= 1)) * Mathf.Sin((ratio * d - s) * (2 * Mathf.PI) / p)) + start;
-            return a * Mathf.Pow(2, -10 * (ratio -= 1)) * Mathf.Sin((ratio * d - s) * (2 * Mathf.PI) / p) * 0.5F + end + start;
+                return -0.5F * (a * Mathf.Pow(2, 10 * (ratio -= 1)) * Mathf.Sin((ratio * d - s) * (2 * Mathf.PI) / p)) +
+                       start;
+            return a * Mathf.Pow(2, -10 * (ratio -= 1)) * Mathf.Sin((ratio * d - s) * (2 * Mathf.PI) / p) * 0.5F + end +
+                   start;
         }
 
         public static float InBounce(float start, float end, float ratio)
         {
+            const float d = 1F;
+
             end -= start;
-            float d = 1F;
+
             return end - OutBounce(0, end, d - ratio) + start;
         }
 
