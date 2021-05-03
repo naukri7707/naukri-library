@@ -1,11 +1,10 @@
-﻿using UnityEngine;
+﻿using Naukri.Unity;
+using NaukriEditor.Factory;
 using UnityEditor;
 using UnityEditorInternal;
-using Naukri;
-using Naukri.Unity;
-using NaukriEditor.Factory;
+using UnityEngine;
 
-namespace NaukriEditor
+namespace Naukri.UnityEditor
 {
     [CustomEditor(typeof(EventInvoker), true)]
     public class EventInvokerDrawer : Editor

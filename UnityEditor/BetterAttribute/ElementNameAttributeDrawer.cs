@@ -1,11 +1,13 @@
 ﻿using Naukri.Unity.BetterAttribute;
-using UnityEngine;
+using Naukri.UnityEditor.BetterAttribute.Core;
 using UnityEditor;
+using UnityEngine;
+using UnityEngine.Assertions;
 
-namespace NaukriEditor
+namespace Naukri.UnityEditor.BetterAttribute
 {
     [CustomPropertyDrawer(typeof(ElementNameAttribute))]
-    public class ElementNameAttributeDarwer : BetterPropertyDrawer
+    public class ElementNameAttributeDrawer : BetterPropertyDrawer
     {
         public override void OnGUILayout(SerializedProperty property, GUIContent label)
         {
@@ -14,7 +16,8 @@ namespace NaukriEditor
             if (name[0] is "Element")
             {
                 var attr = attribute as ElementNameAttribute;
-                BetterGUILayout.PropertyField(property, new GUIContent($"{attr.name} {name[1]}"), true);
+                Assert.IsNotNull(attr);
+                BetterGUILayout.PropertyField(property, new GUIContent($"{attr.name ?? "Element"} {name[1]}"), true);
             }
             else
             {

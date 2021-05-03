@@ -1,16 +1,18 @@
-﻿using UnityEngine;
-using System.Reflection;
+﻿using System.Reflection;
 using Naukri.Unity.BetterAttribute;
+using Naukri.UnityEditor.BetterAttribute.Core;
 using UnityEditor;
+using UnityEngine;
+using UnityEngine.Assertions;
 
-namespace NaukriEditor
+namespace Naukri.UnityEditor.BetterAttribute
 {
     [CustomPropertyDrawer(typeof(DisplayWhenFieldEqualAttribute), true)]
-    public class DisplayWhenFieldEqualAttributeDarwer : BetterPropertyDrawer
+    public class DisplayWhenFieldEqualAttributeDrawer : BetterPropertyDrawer
     {
         public override void OnGUILayout(SerializedProperty property, GUIContent label)
         {
-            if(CheckValue(property))
+            if (CheckValue(property))
             {
                 BetterGUILayout.PropertyField(property);
             }
@@ -25,12 +27,12 @@ namespace NaukriEditor
                 isNot = false;
                 attr = attribute as DisplayWhenFieldEqualAttribute;
             }
+            Assert.IsNotNull(attr);
             var target = property.serializedObject.targetObject;
             var type = target.GetType();
-            var value = type.GetField(attr.fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(target);
-            return value is null
-                ? false
-                : value.Equals(attr.value) ^ isNot;
+            var value = type.GetField(attr.fieldName ?? "",
+                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(target);
+            return value?.Equals(attr.value) ^ isNot ?? false;
         }
     }
 }

@@ -1,8 +1,9 @@
 ﻿using Naukri.Unity.BetterAttribute;
-using UnityEngine;
+using Naukri.UnityEditor.BetterAttribute.Core;
 using UnityEditor;
+using UnityEngine;
 
-namespace NaukriEditor
+namespace Naukri.UnityEditor.BetterAttribute
 {
     [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
     public class ReadOnlyAttributeDrawer : BetterPropertyDrawer
