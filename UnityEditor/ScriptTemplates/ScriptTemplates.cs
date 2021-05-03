@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Naukri.UnityEditor.Factory;
+﻿using Naukri.UnityEditor.Factory;
 using UnityEditor;
 
-namespace NaukriEditor
+namespace Naukri.UnityEditor.ScriptTemplates
 {
-    public partial class ScriptTemplates
+    public static class ScriptTemplates
     {
         [MenuItem("Assets/Create/N# Script", false, 79)]
         public static void CreateNaukriBehaviourTemplate()
