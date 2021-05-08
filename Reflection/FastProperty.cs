@@ -2,7 +2,7 @@ using System.Reflection;
 
 namespace Naukri.Reflection
 {
-    public class FastProperty<TObject, TValue>
+    public readonly struct FastProperty<TObject, TValue>
     {
         private readonly FastGetter<TObject, TValue> getter;
 
