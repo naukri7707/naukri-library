@@ -1,15 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using Naukri.Reflection;
 
 namespace Naukri.Extensions
 {
     public static class EnumMethods
     {
-        public static bool IndexExist(this Array self, int index)
-        {
-            return (index >= 0) & (index < self.Length);
-        }
-
         public static T AddFlag<T>(this T self, T addFlag) where T : Enum
         {
             return CastTo<T>.From(CastTo<int>.From(self) | CastTo<int>.From(addFlag));
@@ -20,11 +16,9 @@ namespace Naukri.Extensions
             return CastTo<T>.From(CastTo<int>.From(self) & ~CastTo<int>.From(removeFlag));
         }
 
-        public static T SetFlag<T>(this T self, bool state, T targetFlag) where T : Enum
+        public static T SetFlag<T>(this T self, T targetFlag, bool targetState) where T : Enum
         {
-            if (state)
-                return self.AddFlag(targetFlag);
-            return self.RemoveFlag(targetFlag);
+            return targetState ? self.AddFlag(targetFlag) : self.RemoveFlag(targetFlag);
         }
 
         public static T HasFlag<T>(this T self, T checkFlag) where T : Enum
@@ -48,6 +42,7 @@ namespace Naukri.Extensions
             {
                 self = self.AddFlag(flag);
             }
+
             return self;
         }
 
@@ -57,6 +52,7 @@ namespace Naukri.Extensions
             {
                 self = self.RemoveFlag(flag);
             }
+
             return self;
         }
 
@@ -64,8 +60,9 @@ namespace Naukri.Extensions
         {
             foreach (var flag in targetFlags)
             {
-                self = self.SetFlag(state, flag);
+                self = self.SetFlag(flag, state);
             }
+
             return self;
         }
 
@@ -76,6 +73,7 @@ namespace Naukri.Extensions
                 if (self.HasFlag(flag))
                     return true;
             }
+
             return false;
         }
 
@@ -86,6 +84,7 @@ namespace Naukri.Extensions
                 if (!self.HasFlag(flag))
                     return false;
             }
+
             return true;
         }
 
@@ -95,7 +94,24 @@ namespace Naukri.Extensions
             {
                 self = self.SwitchFlag(flag);
             }
+
             return self;
+        }
+
+        public static T[] GetAllFlags<T>(this T self) where T : Enum
+        {
+            var res = new List<T>();
+            var flag = CastTo<int>.From(self);
+            for (var i = 0; i < 32; i++)
+            {
+                var currentFlag = 1 << i;
+                if ((flag & currentFlag) != 0)
+                {
+                    res.Add(CastTo<T>.From(currentFlag));
+                }
+            }
+
+            return res.ToArray();
         }
     }
 }

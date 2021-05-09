@@ -38,5 +38,10 @@ namespace Naukri.Unity.AwaitCoroutine
         {
             return new YieldAwaiter<CustomYieldInstruction>(instruction);
         }
+        
+        public static YieldAwaiter<YieldInstruction> GetAwaiter(this AsyncOperation instruction)
+        {
+            return new YieldAwaiter<YieldInstruction>(instruction);
+        }
     }
 }
