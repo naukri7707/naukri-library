@@ -17,7 +17,7 @@ namespace Naukri.UnityEditor.BetterAttribute.Core
 
         public static BetterPropertyDrawer CurrentDrawer
             => drawerStack is null || drawerStack.Count is 0 ? null : drawerStack.Peek();
-        
+
         static BetterPropertyDrawer()
         {
             drawerStack = new Stack<BetterPropertyDrawer>();
@@ -33,7 +33,7 @@ namespace Naukri.UnityEditor.BetterAttribute.Core
 
 #pragma warning disable IDE1006 // 命名樣式
         public Rect position => _position;
-        
+
 #pragma warning restore IDE1006 // 命名樣式
 
         public bool IsGUI { get; private set; }
@@ -108,7 +108,7 @@ namespace Naukri.UnityEditor.BetterAttribute.Core
             }
         }
 
-        public T LayoutContainer<T>(Func<T> drawer, float height, float spacing = SPACING)
+        public void LayoutContainer<T>(ref T target, Func<T> drawer, float height, float spacing = SPACING)
         {
             if (isFirst)
             {
@@ -120,16 +120,17 @@ namespace Naukri.UnityEditor.BetterAttribute.Core
             {
                 _position.yMin = _position.yMax + spacing; // StartLayout 後因 height 為 0， 故首行 pos.yMax 為 yMin
                 _position.height = height;                // 在渲染/計算前才將 yMin 移動到下一個欄位應該出現的 yMin 上，避免 position 出現錯位
-                return drawer.Invoke();
+                target = drawer.Invoke();
             }
-
-            this.height += height + spacing;
-            return default;
+            else
+            {
+                this.height += height + spacing;
+            }
         }
 
         private static void CheckStackDepth()
         {
-            if(drawerStack.Count > MAX_STACK_COUNT)
+            if (drawerStack.Count > MAX_STACK_COUNT)
             {
                 throw new UnityException($"堆疊深度過深，深度最大不可超過 {MAX_STACK_COUNT}");
             }
