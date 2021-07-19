@@ -19,10 +19,13 @@ namespace Naukri.UnityEditor.BetterAttribute.Core
 
         public static bool PropertyField(SerializedProperty property, GUIContent label, bool includeChildren)
         {
-            return BetterPropertyDrawer.CurrentDrawer.LayoutContainer(
+            var res = false;
+            BetterPropertyDrawer.CurrentDrawer.LayoutContainer(
+                ref res,
                 () => EditorGUI.PropertyField(BetterPropertyDrawer.CurrentDrawer.position, property, label, includeChildren),
                 EditorGUI.GetPropertyHeight(property)
                 );
+            return res;
         }
 
         #endregion
