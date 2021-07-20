@@ -12,17 +12,17 @@ namespace Naukri.Unity.SceneManagement
 
 #if UNITY_EDITOR
         [SerializeField]
-        private UnityEngine.Object sceneAsset;
+        private UnityEngine.Object _sceneAsset;
 #endif
 
         [SerializeField]
-        private string sceneName = "";
+        private string _sceneName = "";
 
-        public string Name => sceneName;
+        public string Name => _sceneName;
 
-        public static implicit operator string(SceneObject sceneField)
+        public static implicit operator string(SceneObject sceneObject)
         {
-            return sceneField.sceneName;
+            return sceneObject._sceneName;
         }
     }
 }
