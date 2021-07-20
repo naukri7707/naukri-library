@@ -9,7 +9,7 @@ using USceneManager = UnityEngine.SceneManagement.SceneManager;
 namespace Naukri.Unity.SceneManagement
 {
     [Serializable]
-    public class SceneObject
+    public struct SceneObject
     {
 
 #if UNITY_EDITOR
@@ -18,7 +18,7 @@ namespace Naukri.Unity.SceneManagement
 #endif
 
         [SerializeField]
-        private string _sceneName = "";
+        private string _sceneName;
 
         public string Name => _sceneName;
 
