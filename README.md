@@ -125,7 +125,7 @@ private async void Demo()
 
 - `SceneManager` 自動依調用順序排程載入/卸載場景
 
-- `SceneObject` 透過儲存 `SceneAsset`的 name 輔助存取場景資產
+- `SceneObject` 透過儲存 `SceneAsset` 的 name 輔助存取場景資產
 
     ⚠️ `SceneObject` 與 `SceneAsset` 並沒有綁定關係，所以當 `SceneAsset` 更改名稱時對應的 `SceneObject` 欄位需要重新指定目標否則會找不到目標場景。
 
