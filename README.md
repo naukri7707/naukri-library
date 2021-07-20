@@ -119,6 +119,16 @@ private async void Demo()
 
 - `TextureFactory` 紋理工廠
 
+## SceneManagement
+
+輔助控制、排程載入 Unity 場景
+
+- `SceneManager` 自動依調用順序排程載入/卸載場景
+
+- `SceneObject` 透過儲存 `SceneAsset`的 name 輔助存取場景資產
+
+    ⚠️ `SceneObject` 與 `SceneAsset` 並沒有綁定關係，所以當 `SceneAsset` 更改名稱時對應的 `SceneObject` 欄位需要重新指定目標否則會找不到目標場景。
+
 ## Serializable
 
 透過 `ISerializationCallbackReceiver` 介面自動與 `List` 轉換，以建立適用於 Unity 可序列化的資料結構。
