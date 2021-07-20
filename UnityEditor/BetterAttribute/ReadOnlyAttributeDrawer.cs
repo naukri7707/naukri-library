@@ -6,13 +6,13 @@ using UnityEngine;
 namespace Naukri.UnityEditor.BetterAttribute
 {
     [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
-    public class ReadOnlyAttributeDrawer : BetterPropertyDrawer
+    public class ReadOnlyAttributeDrawer : PropertyDrawer
     {
-        public override void OnGUILayout(SerializedProperty property, GUIContent label)
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             var prevGUIState = GUI.enabled;
             GUI.enabled = false;
-            BetterGUILayout.PropertyField(property, label);
+            EditorGUI.PropertyField(position, property, label);
             GUI.enabled = prevGUIState;
         }
     }
