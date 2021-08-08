@@ -1,40 +1,47 @@
 ﻿using Naukri;
+using Naukri.Unity.BetterAttribute;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using USceneManager = UnityEngine.SceneManagement.SceneManager;
 
 namespace Naukri.Unity.SceneManagement
 {
-    [Serializable]
-    public struct SceneObject
-    {
 
+    [Serializable]
+    public struct SceneObject : ISerializationCallbackReceiver
+    {
 #if UNITY_EDITOR
-        [SerializeField]
+        [SerializeField, PropertyUsage(typeof(UnityEditor.SceneAsset))]
         private UnityEngine.Object _sceneAsset;
 #endif
 
-        [SerializeField]
+        [SerializeField, HideInInspector]
         private string _sceneName;
 
         public string Name => _sceneName;
 
-        public Scene GetScene()
-        {
-            return USceneManager.GetSceneByName(_sceneName);
-        }
+        [SerializeField]
+        private LoadingMode _loadingMode;
+
+        public LoadingMode LoadingMode { get => _loadingMode; set => _loadingMode = value; }
 
         public static implicit operator string(SceneObject sceneObject)
         {
             return sceneObject._sceneName;
         }
 
-        public static implicit operator Scene(SceneObject sceneObject)
+        void ISerializationCallbackReceiver.OnBeforeSerialize()
         {
-            return sceneObject.GetScene();
+#if UNITY_EDITOR
+            _sceneName = _sceneAsset == null ? "" : _sceneAsset.name;
+#endif
+        }
+
+        void ISerializationCallbackReceiver.OnAfterDeserialize()
+        {
+
         }
     }
 }
