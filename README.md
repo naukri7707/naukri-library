@@ -8,7 +8,7 @@
 - `EnumMethods`
 - `EnumerableMethods`
 - `IListMethods`
-- `StringExtension`
+- `StringMethods`
 
 ## Reflection
 
