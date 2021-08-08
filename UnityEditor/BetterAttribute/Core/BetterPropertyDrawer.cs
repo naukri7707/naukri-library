@@ -13,15 +13,7 @@ namespace Naukri.UnityEditor.BetterAttribute.Core
 
         private const int MAX_STACK_COUNT = 7;
 
-        private static readonly Stack<BetterPropertyDrawer> drawerStack;
-
-        public static BetterPropertyDrawer CurrentDrawer
-            => drawerStack is null || drawerStack.Count is 0 ? null : drawerStack.Peek();
-
-        static BetterPropertyDrawer()
-        {
-            drawerStack = new Stack<BetterPropertyDrawer>();
-        }
+        public static BetterPropertyDrawer currentDrawer;
 
         public bool IsInit { get; private set; }
 
@@ -55,12 +47,12 @@ namespace Naukri.UnityEditor.BetterAttribute.Core
             height = 0F;
             isFirst = true;
             IsGUI = false;
-            drawerStack.Push(this);
-            CheckStackDepth();
             //
+            var parentDrawer = currentDrawer;
+            currentDrawer = this;
             OnGUILayout(property, label);
+            currentDrawer = parentDrawer;
             //
-            drawerStack.Pop();
             return height;
         }
 
@@ -70,12 +62,12 @@ namespace Naukri.UnityEditor.BetterAttribute.Core
             _position = position;
             isFirst = true;
             IsGUI = true;
-            drawerStack.Push(this);
-            CheckStackDepth();
             //
+            var parentDrawer = currentDrawer;
+            currentDrawer = this;
             OnGUILayout(property, label);
+            currentDrawer = parentDrawer;
             //
-            drawerStack.Pop();
         }
 
         public sealed override bool CanCacheInspectorGUI(SerializedProperty property)
@@ -125,14 +117,6 @@ namespace Naukri.UnityEditor.BetterAttribute.Core
             else
             {
                 this.height += height + spacing;
-            }
-        }
-
-        private static void CheckStackDepth()
-        {
-            if (drawerStack.Count > MAX_STACK_COUNT)
-            {
-                throw new UnityException($"堆疊深度過深，深度最大不可超過 {MAX_STACK_COUNT}");
             }
         }
     }

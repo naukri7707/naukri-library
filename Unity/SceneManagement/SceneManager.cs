@@ -1,8 +1,6 @@
 ﻿using Naukri;
+using Naukri.Extensions;
 using Naukri.Unity.AwaitCoroutine;
-using Naukri.Unity.BetterAttribute;
-using Naukri.Unity.Singleton;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -11,17 +9,22 @@ using USceneManager = UnityEngine.SceneManagement.SceneManager;
 
 namespace Naukri.Unity.SceneManagement
 {
-    public delegate void LoadingSceneEvent(Scene scene);
+    public delegate void LoadingSceneEvent(string sceneName);
 
-    public class SceneManager : SingletonBehaviour<SceneManager>
+    public class SceneManager
     {
-        private enum TargetState
+        private enum ProcessType
         {
-            Load,
-            UnLoad
+            LoadScene,
+            LoadAndDisable,
+            UnloadScene
         }
 
-        private static readonly Queue<(Scene, TargetState)> _processQueue = new Queue<(Scene, TargetState)>();
+        private static readonly Queue<(string, ProcessType)> processQueue = new Queue<(string, ProcessType)>();
+
+        private static readonly Dictionary<string, List<bool>> activeSnapshots = new Dictionary<string, List<bool>>();
+
+        public static bool IsBusy { get; set; }
 
         public static event LoadingSceneEvent OnLoadingSceneStart;
 
@@ -31,23 +34,9 @@ namespace Naukri.Unity.SceneManagement
 
         public static event LoadingSceneEvent OnUnLoadingSceneEnd;
 
-        [ReadOnly, SerializeField]
-        public bool isBusy = false;
-
-        public static bool IsBusy { get => Instance.isBusy; set => Instance.isBusy = value; }
-
-
-        [SerializeField]
-        private SceneObject[] firstLoadScenes;
-
-        public void Awake()
+        private static void AddProcess(string sceneName, ProcessType targetState)
         {
-            LoadScene(firstLoadScenes);
-        }
-
-        private static void AddProcess(Scene scene, TargetState targetState)
-        {
-            _processQueue.Enqueue((scene, targetState));
+            processQueue.Enqueue((sceneName, targetState));
             TryHandleProcess();
         }
 
@@ -56,17 +45,22 @@ namespace Naukri.Unity.SceneManagement
             static async void HandleProcess()
             {
                 IsBusy = true;
-                while (_processQueue.Count > 0) // 執行直到佇列中沒有處理對象
+                while (processQueue.Count > 0) // 執行直到佇列中沒有處理對象
                 {
-                    (var scene, var targetState) = _processQueue.Dequeue();
+                    (var sceneName, var targetState) = processQueue.Dequeue();
 
                     switch (targetState)
                     {
-                        case TargetState.Load:
-                            await LoadSceneAsyncImp(scene);
+                        case ProcessType.LoadScene:
+                        case ProcessType.LoadAndDisable:
+                            await LoadSceneAsyncImp(sceneName);
+                            if (targetState == ProcessType.LoadAndDisable)
+                            {
+                                DisableScene(sceneName);
+                            }
                             break;
-                        case TargetState.UnLoad:
-                            await UnLoadSceneAsyncImp(scene);
+                        case ProcessType.UnloadScene:
+                            await UnloadSceneAsyncImp(sceneName);
                             break;
                         default:
                             break;
@@ -81,39 +75,107 @@ namespace Naukri.Unity.SceneManagement
             }
         }
 
-        private static async Task LoadSceneAsyncImp(Scene scene)
+        private static async Task LoadSceneAsyncImp(string sceneName)
         {
-            if (!scene.isLoaded)
+            if (!USceneManager.GetSceneByName(sceneName).isLoaded) // Unloaded (index 為 -1) 的場景 isLoaded 為 False 剛好可以通過
             {
-                OnLoadingSceneStart(scene);
-                await USceneManager.LoadSceneAsync(scene.buildIndex, LoadSceneMode.Additive);
-                OnLoadingSceneEnd(scene);
+                OnLoadingSceneStart?.Invoke(sceneName);
+                await USceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+                OnLoadingSceneEnd?.Invoke(sceneName);
             }
         }
 
-        private static async Task UnLoadSceneAsyncImp(Scene scene)
+        private static async Task UnloadSceneAsyncImp(string sceneName)
         {
+            if (USceneManager.GetSceneByName(sceneName).isLoaded)
+            {
+                OnUnLoadingSceneStart?.Invoke(sceneName);
+                await USceneManager.UnloadSceneAsync(sceneName);
+                OnUnLoadingSceneEnd?.Invoke(sceneName);
+            }
+        }
+
+        public static void LoadScene(string sceneName)
+        {
+            AddProcess(sceneName, ProcessType.LoadScene);
+        }
+
+        public static void UnloadScene(string sceneName)
+        {
+            AddProcess(sceneName, ProcessType.UnloadScene);
+        }
+
+        public static void EnableScene(string sceneName)
+        {
+            var scene = USceneManager.GetSceneByName(sceneName);
+            if (scene.IsValid())
+            {
+                if (activeSnapshots.TryGetValue(sceneName, out var snapshots))
+                {
+                    scene.GetRootGameObjects()
+                        .ForEach((it, i) => it.SetActive(snapshots[i]));
+                    activeSnapshots.Remove(sceneName);
+                }
+            }
+        }
+
+        public static void DisableScene(string sceneName)
+        {
+            var scene = USceneManager.GetSceneByName(sceneName);
+            if (scene.IsValid())
+            {
+                var snapshots = new List<bool>();
+                scene.GetRootGameObjects()
+                    .CreateSnapshots(it => it.activeSelf, snapshots)
+                    .ForEach(it => it.SetActive(false));
+                activeSnapshots.Add(sceneName, snapshots);
+            }
+        }
+
+        public static void EnableOrLoadScene(string sceneName)
+        {
+            var scene = USceneManager.GetSceneByName(sceneName);
             if (scene.isLoaded)
             {
-                OnUnLoadingSceneStart(scene);
-                await USceneManager.UnloadSceneAsync(scene.buildIndex);
-                OnUnLoadingSceneEnd(scene);
+                EnableScene(sceneName);
+            }
+            else
+            {
+                LoadScene(sceneName);
             }
         }
 
-        public static void LoadScene(params SceneObject[] sceneObjects)
+        public static void LoadAndDisableScene(string sceneName)
         {
-            foreach (var sceneObject in sceneObjects)
-            {
-                AddProcess(sceneObject, TargetState.Load);
-            }
+            AddProcess(sceneName, ProcessType.LoadAndDisable);
         }
 
-        public static void UnLoadScene(params SceneObject[] sceneObjects)
+        public static void HandleByLoadingMode(string sceneName, LoadingMode loadingMode)
         {
-            foreach (var sceneObject in sceneObjects)
+            switch (loadingMode)
             {
-                AddProcess(sceneObject, TargetState.UnLoad);
+                case LoadingMode.None:
+                    break;
+                case LoadingMode.Load:
+                    LoadScene(sceneName);
+                    break;
+                case LoadingMode.Unload:
+                    UnloadScene(sceneName);
+                    break;
+                case LoadingMode.Enable:
+                    EnableScene(sceneName);
+                    break;
+                case LoadingMode.Disable:
+                    DisableScene(sceneName);
+                    break;
+                case LoadingMode.EnableOrLoad:
+                    EnableOrLoadScene(sceneName);
+                    break;
+                case LoadingMode.LoadAndDisable:
+                    LoadAndDisableScene(sceneName);
+                    break;
+                default:
+                    break;
             }
         }
     }

@@ -6,6 +6,7 @@
 
 - `DeconstructMethods`
 - `EnumMethods`
+- `EnumerableMethods`
 - `IListMethods`
 - `StringExtension`
 
@@ -108,7 +109,9 @@ private async void Demo()
 - `DisplayWhenFieldEqual` 當條件成立時才顯示欄位
 - `DisplayWhenFieldNotEqual` 當條件不成立時才顯示欄位
 - `ElementName` 改變陣列元素前綴
+- `ExpandElement` 直接在陣列中的元素
 - `ForkName` 依照不同條件顯示不同欄位名稱
+- `PropertyUsage` 自訂 ObjectField 之 Object Selector 可選擇的目標型態
 - `ReadOnly` 使欄位唯讀
 
 ## Factory
@@ -119,15 +122,30 @@ private async void Demo()
 
 - `TextureFactory` 紋理工廠
 
+## Helper
+
+基於 UnityEditor 的輔助工具，在 MenuItem/Naukri 下可以找到並使用。
+
+- `MissingScriptCleaner` 清除所有選擇的 `GameObject` 中遺失腳本的 `MonoBehaviour`
+
 ## SceneManagement
 
 輔助控制、排程載入 Unity 場景
 
-- `SceneManager` 自動依調用順序排程載入/卸載場景
+- `SceneManager` 自動依調用順序排程載入/卸載或啟用/禁用場景
+  - LoadScene() 載入目標場景
+  - UnloadScene() 卸載目標場景
+  - EnableScene() 啟用載入的目標場景
+  - DisableScene() 禁用已載入的目標場景
+  - EnableOrLoadScene() 啟用載入的目標場景，若無則載入之
+  - LoadAndDisableScene() 載入目標場景後立即禁用之
+  - HandleByLoadingMode() 使用 `LoadingMode` 動態選擇場景的處理方式
 
 - `SceneObject` 透過儲存 `SceneAsset`的 name 輔助存取場景資產
 
     ⚠️ `SceneObject` 與 `SceneAsset` 並沒有綁定關係，所以當 `SceneAsset` 更改名稱時對應的 `SceneObject` 欄位需要重新指定目標否則會找不到目標場景。
+
+- `HandleScenes` 在開始時自動處理已儲存的 SceneObject 來管理場景
 
 ## Serializable
 
