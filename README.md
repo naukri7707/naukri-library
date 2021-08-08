@@ -108,8 +108,8 @@ private async void Demo()
 - `DisplayUnityObjectFields` 在子欄位顯示目標 `UnityObject` 欄位
 - `DisplayWhenFieldEqual` 當條件成立時才顯示欄位
 - `DisplayWhenFieldNotEqual` 當條件不成立時才顯示欄位
-- `ElementName` 改變陣列元素前綴
-- `ExpandElement` 直接在陣列中的元素
+- `ElementName` 改變陣列中元素的前綴
+- `ExpandElement` 直接展開在陣列中的元素
 - `ForkName` 依照不同條件顯示不同欄位名稱
 - `PropertyUsage` 自訂 ObjectField 之 Object Selector 可選擇的目標型態
 - `ReadOnly` 使欄位唯讀
