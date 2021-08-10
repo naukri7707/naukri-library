@@ -4,8 +4,12 @@ namespace Naukri.Unity.BetterAttribute
 {
     public class ElementNameAttribute : PropertyAttribute
     {
-        public readonly string name;
+        public readonly string elementName;
 
-        public ElementNameAttribute(string name) => this.name = name;
+        public ElementNameAttribute(string elementName)
+        {
+            order = 10000;
+            this.elementName = elementName;
+        }
     }
 }

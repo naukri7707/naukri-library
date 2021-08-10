@@ -8,20 +8,14 @@ using UnityEngine.Assertions;
 namespace Naukri.UnityEditor.BetterAttribute
 {
     [CustomPropertyDrawer(typeof(ForkNameAttribute), true)]
-    public class ForkNameAttributeDrawer : BetterPropertyDrawer
+    public class ForkNameDrawer : BetterPropertyDrawer
     {
-        public override void OnGUILayout(SerializedProperty property, GUIContent label)
+        public override void OnBeforeGUILayout(SerializedProperty property, GUIContent label)
         {
             var attr = attribute as ForkNameAttribute;
-            Assert.IsNotNull(attr);
-            BetterGUILayout.PropertyField(
-                property,
-                new GUIContent(
-                    CheckValue(property)
-                        ? attr.trueForkName
-                        : attr.falseForkName
-                )
-            );
+            label.text = CheckValue(property)
+                ? attr.trueForkName
+                : attr.falseForkName;
         }
 
         private bool CheckValue(SerializedProperty property)
