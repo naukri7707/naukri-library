@@ -12,10 +12,6 @@
 
 ## Reflection
 
-### `Assembly`
-
-一些需要透過存取 Assembly 才能實現的操作，比如 `GetDerivedTypesOf<T>()` 取得某類別的所有子類別。
-
 ### `CastTo`
 
 透過使用
@@ -98,20 +94,24 @@ private async void Demo()
 
 ## BetterAttribute
 
-`PropertyDrawer` 輔助開發框架，透過在 `BetterPropertyDrawer` 使用 `BetterGUILayout` 下的函式，將 `EditorGUI` 模擬為 `EditorGUILayout`。
+`PropertyDrawer` 輔助開發框架，透過在 `BetterPropertyDrawer` 使用 `BetterGUILayout` 下的函式，將 `EditorGUI` 模擬為 `EditorGUILayout`。這可以讓 `BetterPropertyDrawer` 下的 `GetPropertyHeight()` 和 `OnGUI()` 描述合二唯一，使之維護更為便利。並且解放了單一欄位只能對應一個 `PropertyDrawer` 的限制，基於 `BetterPropertyDrawer` 所實現的自定義屬性可以在不衝突的前提下同時作用於對應欄位。
 
-這可以讓 `BetterPropertyDrawer` 下的 `GetPropertyHeight()` 和 `OnGUI()` 描述合二唯一，使之維護更為便利。
+- `OnInit()` 初始化 `BetterPropertyDrawer`
+- `OnGUILayout()` 繪製欄位，如果完成繪製及回傳 true ， 若為 false 則會依 `PropertyAttribute` 的 order 順延至下一個 `BetterPropertyDrawer` 直到回傳 true 中止，若都沒有完成繪製則會使用預設欄位進行繪製
+- `OnBeforeGUILayout()` 用以修改對這個欄位的 GUI 參數及開啟 GUI Scope
+- `OnAfterGUILayout()` 用以回復 `OnBeforeGUILayout()` 所修改的 GUI 參數及關閉 GUI Scope
+- `LayoutWrapper()` 用以包裝沒有被寫進 `BetterGUILayout` 的 EditorGUIField
 
 ### 擴充屬性
 
+- `CustomObjectField` 自訂 ObjectField 之 Object Selector 可選擇的目標型態
 - `DisplayName` 改變欄位名稱
-- `DisplayUnityObjectFields` 在子欄位顯示目標 `UnityObject` 欄位
+- `DisplayObjectFields` 在子欄位顯示目標 `UnityObject` 欄位
 - `DisplayWhenFieldEqual` 當條件成立時才顯示欄位
 - `DisplayWhenFieldNotEqual` 當條件不成立時才顯示欄位
 - `ElementName` 改變陣列中元素的前綴
 - `ExpandElement` 直接展開在陣列中的元素
 - `ForkName` 依照不同條件顯示不同欄位名稱
-- `PropertyUsage` 自訂 ObjectField 之 Object Selector 可選擇的目標型態
 - `ReadOnly` 使欄位唯讀
 
 ## Factory

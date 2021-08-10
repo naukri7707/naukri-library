@@ -139,7 +139,7 @@ namespace Naukri.UnityEditor.BetterAttribute.Core
             }
         }
 
-        public void DoGUILayout(SerializedProperty property, GUIContent label)
+        private void DoGUILayout(SerializedProperty property, GUIContent label)
         {
             // 因為在複數個 Attribute 的情況下 unity editor 無法利用 order 抓取最優先項
             // 故在讀取到首項後生成全部 attribute 的對應 drawer (包含和首項相同的 drawer) 並排序之
