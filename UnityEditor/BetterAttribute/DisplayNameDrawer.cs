@@ -6,12 +6,12 @@ using UnityEngine;
 namespace Naukri.UnityEditor.BetterAttribute
 {
     [CustomPropertyDrawer(typeof(DisplayNameAttribute))]
-    public class DisplayNameAttributeDrawer : BetterPropertyDrawer
+    public class DisplayNameDrawer : BetterPropertyDrawer
     {
-        public override void OnGUILayout(SerializedProperty property, GUIContent label)
+        public override void OnBeforeGUILayout(SerializedProperty property, GUIContent label)
         {
             var attr = attribute as DisplayNameAttribute;
-            BetterGUILayout.PropertyField(property, new GUIContent($"{attr?.name}"), true);
+            label.text = attr.name;
         }
     }
 }

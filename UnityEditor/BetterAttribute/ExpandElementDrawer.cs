@@ -6,9 +6,9 @@ using UnityEngine;
 namespace Naukri.UnityEditor.BetterAttribute
 {
     [CustomPropertyDrawer(typeof(ExpandElementAttribute))]
-    public class ExpandElementAttributeDrawer : BetterPropertyDrawer
+    public class ExpandElementDrawer : BetterPropertyDrawer
     {
-        public override void OnGUILayout(SerializedProperty property, GUIContent label)
+        public override bool OnGUILayout(SerializedProperty property, GUIContent label)
         {
             var nextProperty = property.Copy();
             var hasNextProperty = nextProperty.Next(false);
@@ -20,6 +20,8 @@ namespace Naukri.UnityEditor.BetterAttribute
                 }
                 BetterGUILayout.PropertyField(property, label, true);
             }
+
+            return true;
         }
     }
 }

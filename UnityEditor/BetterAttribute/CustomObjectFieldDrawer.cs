@@ -5,13 +5,13 @@ using UnityEngine;
 
 namespace Naukri.UnityEditor.BetterAttribute
 {
-    [CustomPropertyDrawer(typeof(PropertyUsageAttribute))]
-    public class PropertyUsageAttributeDrawer : BetterPropertyDrawer
+    [CustomPropertyDrawer(typeof(CustomObjectFieldAttribute))]
+    public class CustomObjectFieldDrawer : BetterPropertyDrawer
     {
-        public override void OnGUILayout(SerializedProperty property, GUIContent label)
+        public override bool OnGUILayout(SerializedProperty property, GUIContent label)
         {
-            var attr = attribute as PropertyUsageAttribute;
-            LayoutContainer(
+            var attr = attribute as CustomObjectFieldAttribute;
+            LayoutWrapper(
               () => property.objectReferenceValue = EditorGUI.ObjectField(
                   position,
                   property.displayName,
@@ -20,6 +20,7 @@ namespace Naukri.UnityEditor.BetterAttribute
                   attr.allowSceneObject),
               EditorGUI.GetPropertyHeight(property)
               );
+            return true;
         }
     }
 }

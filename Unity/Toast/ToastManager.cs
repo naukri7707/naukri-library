@@ -33,8 +33,7 @@ namespace Naukri.Unity.Toast
         [DisplayName("Transition Time"), Tooltip("Time of toast fadeIn, fadeOut and moving")]
         public float toastTransitionTime = 2;
 
-        [DisplayUnityObjectFields(
-            name = "Template",
+        [DisplayName("Template"), DisplayObjectFields(
             defaultExpanded = true,
             skipScriptField = true,
             skipFieldNames = new[] {

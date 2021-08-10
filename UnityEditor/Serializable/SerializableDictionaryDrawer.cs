@@ -19,13 +19,11 @@ namespace Naukri.UnityEditor.Serializable
 
         public GUIStyle transparentStyle;
 
-        private GUIContent displayLabel;
-
         public override void OnInit(SerializedProperty property, GUIContent label)
         {
             transparentStyle = new GUIStyle
             {
-                normal = {background = TextureFactory.SolidColor(new Color32(0, 0, 0, 0))}
+                normal = { background = TextureFactory.SolidColor(new Color32(0, 0, 0, 0)) }
             };
             // set display label
             var newDataSP = property.FindPropertyRelative("newData");
@@ -33,18 +31,19 @@ namespace Naukri.UnityEditor.Serializable
             keyType = keyType.Substring("PPtr<$", ">", out var k) ? k : keyType;
             var valueType = newDataSP.FindPropertyRelative("value").type;
             valueType = valueType.Substring("PPtr<$", ">", out var v) ? v : keyType;
-            displayLabel = new GUIContent($"{label.text}  ({keyType}, {valueType})");
+            label = new GUIContent($"{label.text}  ({keyType}, {valueType})");
             //
             var valuesSP = property.FindPropertyRelative("values");
             reorderableList = new ReorderableList(valuesSP.serializedObject, valuesSP)
             {
+                elementHeight = 20,
                 drawHeaderCallback = rect =>
                 {
                     if (GUI.Button(rect, "", headerStyle))
                     {
                         property.isExpanded = false;
                     }
-                    EditorGUI.LabelField(rect, displayLabel, headerStyle);
+                    EditorGUI.LabelField(rect, label, headerStyle);
                 },
                 drawElementCallback = (rect, index, selected, focused) =>
                 {
@@ -54,14 +53,16 @@ namespace Naukri.UnityEditor.Serializable
                     const float arrowWidth = 20;
                     var keyWidth = (rect.width - arrowWidth) * 0.3F;
                     var valueWidth = rect.width - keyWidth - arrowWidth;
-                    BetterGUILayout.ReadOnlyScope(() =>
+                    rect.height -= 2; // 移除 elementHeight 為了讓欄位中間有空間額外加的 2 (18 -> 20)
+                    rect.yMin++;      // 讓欄位在 rect 中間渲染
+                    using (new EditorGUI.DisabledScope(true))
                     {
                         EditorGUI.PropertyField(
                             new Rect(rect.xMin, rect.yMin, keyWidth, rect.height),
                             keySP,
                             GUIContent.none
                         );
-                    });
+                    }
                     EditorGUI.PrefixLabel(
                         new Rect(rect.xMin + keyWidth, rect.yMin, arrowWidth, rect.height),
                         new GUIContent(ArrowText)
@@ -83,11 +84,11 @@ namespace Naukri.UnityEditor.Serializable
             };
         }
 
-        public override void OnGUILayout(SerializedProperty property, GUIContent label)
+        public override bool OnGUILayout(SerializedProperty property, GUIContent label)
         {
             if (property.isExpanded)
             {
-                LayoutContainer(() => reorderableList.DoList(position), reorderableList.GetHeight());
+                LayoutWrapper(() => reorderableList.DoList(position), reorderableList.GetHeight());
                 if (IsGUI)
                 {
                     var newDataSP = property.FindPropertyRelative("newData");
@@ -124,8 +125,9 @@ namespace Naukri.UnityEditor.Serializable
             }
             else
             {
-                BetterGUILayout.PropertyField(property, displayLabel);
+                BetterGUILayout.PropertyField(property, label);
             }
+            return true;
         }
     }
 }
