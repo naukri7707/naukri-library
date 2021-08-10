@@ -9,10 +9,10 @@ namespace Naukri.UnityEditor.BetterAttribute.Core
         #region -- PropertyFields --
 
         public static bool PropertyField(SerializedProperty property)
-            => PropertyField(property, null, false);
+            => PropertyField(property, new GUIContent(property.displayName), false);
 
         public static bool PropertyField(SerializedProperty property, bool includeChildren)
-            => PropertyField(property, null, includeChildren);
+            => PropertyField(property, new GUIContent(property.displayName), includeChildren);
 
         public static bool PropertyField(SerializedProperty property, GUIContent label)
             => PropertyField(property, label, false);
@@ -20,9 +20,9 @@ namespace Naukri.UnityEditor.BetterAttribute.Core
         public static bool PropertyField(SerializedProperty property, GUIContent label, bool includeChildren)
         {
             var res = false;
-            BetterPropertyDrawer.currentDrawer.LayoutContainer(
+            BetterPropertyDrawer.currentFramework.LayoutWrapper(
                 ref res,
-                () => EditorGUI.PropertyField(BetterPropertyDrawer.currentDrawer.position, property, label, includeChildren),
+                () => EditorGUI.PropertyField(BetterPropertyDrawer.currentFramework.position, property, label, includeChildren),
                 EditorGUI.GetPropertyHeight(property)
                 );
             return res;
@@ -69,32 +69,7 @@ namespace Naukri.UnityEditor.BetterAttribute.Core
 
         public static bool Foldout(bool foldout, GUIContent content, bool toggleOnLabelClick, GUIStyle style)
         {
-            return EditorGUI.Foldout(BetterPropertyDrawer.currentDrawer.position, foldout, content, toggleOnLabelClick, style);
-        }
-
-        #endregion
-
-        #region -- Other --
-
-        public static GUIContent BeginProperty(GUIContent label, SerializedProperty property)
-            => EditorGUI.BeginProperty(BetterPropertyDrawer.currentDrawer.position, label, property);
-
-        public static void EndProperty() => EditorGUI.EndProperty();
-
-        public static void BeginChangeCheck() => EditorGUI.BeginChangeCheck();
-
-        public static bool EndChangeCheck() => EditorGUI.EndChangeCheck();
-
-        #endregion
-
-        #region -- Scopes --
-
-        public static void ReadOnlyScope(Action gui)
-        {
-            var active = GUI.enabled;
-            GUI.enabled = false;
-            gui();
-            GUI.enabled = active;
+            return EditorGUI.Foldout(BetterPropertyDrawer.currentFramework.position, foldout, content, toggleOnLabelClick, style);
         }
 
         #endregion

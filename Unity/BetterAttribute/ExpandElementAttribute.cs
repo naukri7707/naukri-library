@@ -4,6 +4,9 @@ namespace Naukri.Unity.BetterAttribute
 {
     public class ExpandElementAttribute : PropertyAttribute
     {
-        public ExpandElementAttribute() { }
+        public ExpandElementAttribute() 
+        {
+            order = -9999;
+        }
     }
 }

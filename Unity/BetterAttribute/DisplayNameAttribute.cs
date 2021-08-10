@@ -8,6 +8,7 @@ namespace Naukri.Unity.BetterAttribute
 
         public DisplayNameAttribute(string name)
         {
+            order = 10000;
             this.name = name;
         }
     }

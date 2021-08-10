@@ -8,14 +8,11 @@ using UnityEngine.Assertions;
 namespace Naukri.UnityEditor.BetterAttribute
 {
     [CustomPropertyDrawer(typeof(DisplayWhenFieldEqualAttribute), true)]
-    public class DisplayWhenFieldEqualAttributeDrawer : BetterPropertyDrawer
+    public class DisplayWhenFieldEqualDrawer : BetterPropertyDrawer
     {
-        public override void OnGUILayout(SerializedProperty property, GUIContent label)
+        public override bool OnGUILayout(SerializedProperty property, GUIContent label)
         {
-            if (CheckValue(property))
-            {
-                BetterGUILayout.PropertyField(property);
-            }
+            return !CheckValue(property);
         }
 
         private bool CheckValue(SerializedProperty property)

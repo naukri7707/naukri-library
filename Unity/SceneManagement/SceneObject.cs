@@ -13,7 +13,7 @@ namespace Naukri.Unity.SceneManagement
     public struct SceneObject : ISerializationCallbackReceiver
     {
 #if UNITY_EDITOR
-        [SerializeField, PropertyUsage(typeof(UnityEditor.SceneAsset))]
+        [SerializeField, CustomObjectField(typeof(UnityEditor.SceneAsset))]
         private UnityEngine.Object _sceneAsset;
 #endif
 
@@ -22,7 +22,7 @@ namespace Naukri.Unity.SceneManagement
 
         public string Name => _sceneName;
 
-        [SerializeField]
+        [SerializeField, DisplayName("LoadingMode")]
         private LoadingMode _loadingMode;
 
         public LoadingMode LoadingMode { get => _loadingMode; set => _loadingMode = value; }

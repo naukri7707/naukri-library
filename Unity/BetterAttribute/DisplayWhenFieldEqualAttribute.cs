@@ -10,6 +10,7 @@ namespace Naukri.Unity.BetterAttribute
 
         public DisplayWhenFieldEqualAttribute(string fieldName, object value)
         {
+            order = -10000;
             this.fieldName = fieldName;
             this.value = value;
         }

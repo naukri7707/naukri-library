@@ -33,6 +33,7 @@ namespace Naukri.UnityEditor.Serializable
             var valuesSP = property.FindPropertyRelative("values");
             reorderableList = new ReorderableList(valuesSP.serializedObject, valuesSP)
             {
+                elementHeight = 20,
                 drawHeaderCallback = rect =>
                 {
                     if (GUI.Button(rect, "", headerStyle))
@@ -43,6 +44,8 @@ namespace Naukri.UnityEditor.Serializable
                 },
                 drawElementCallback = (rect, index, selected, focused) =>
                 {
+                    rect.height -= 2; // 移除 elementHeight 為了讓欄位中間有空間額外加的 2 (18 -> 20)
+                    rect.yMin++;      // 讓欄位在 rect 中間渲染
                     var valueSP = valuesSP.GetArrayElementAtIndex(index);
                     EditorGUI.PropertyField(rect, valueSP);
                 },
@@ -57,11 +60,11 @@ namespace Naukri.UnityEditor.Serializable
             };
         }
 
-        public override void OnGUILayout(SerializedProperty property, GUIContent label)
+        public override bool OnGUILayout(SerializedProperty property, GUIContent label)
         {
             if (property.isExpanded)
             {
-                LayoutContainer(() => reorderableList.DoList(position), reorderableList.GetHeight());
+                LayoutWrapper(() => reorderableList.DoList(position), reorderableList.GetHeight());
                 if (IsGUI)
                 {
                     var newDataSP = property.FindPropertyRelative("newData");
@@ -75,6 +78,7 @@ namespace Naukri.UnityEditor.Serializable
             {
                 BetterGUILayout.PropertyField(property, displayLabel);
             }
+            return true;
         }
     }
 }
