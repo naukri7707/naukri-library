@@ -1,4 +1,5 @@
 using System.Reflection;
+using UnityEngine;
 
 namespace Naukri.Reflection
 {
@@ -35,14 +36,14 @@ namespace Naukri.Reflection
         public TValue GetValue(TObject obj)
         {
             if (getter is null)
-                throw new NaukriException("Getter Not Found");
+                throw new UnityException("Getter Not Found");
             return getter(obj);
         }
 
         public void SetValue(TObject obj, TValue value)
         {
             if (getter is null)
-                throw new NaukriException("Setter Not Found");
+                throw new UnityException("Setter Not Found");
             setter(obj, value);
         }
     }
