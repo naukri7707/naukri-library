@@ -58,6 +58,7 @@ private async void Demo()
 
 - `DefaultInspector` 使用原生方式繪製 (在類別上標記)
 - `DisplayField` 顯示屬性欄位
+
     ⚠️ 自動實作屬性會因為序列化問題無法正確的儲存修改。可以使用以下方法取得類似的效果，但要注意此時他會被視為欄位需使用 `PropertyDrawer` 來自定義
 
     ```cs
