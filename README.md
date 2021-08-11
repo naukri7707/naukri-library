@@ -16,7 +16,7 @@ private async void Demo()
 }
 ```
 
-支援的等候選項
+### 支援的等候選項
 
 - `WaitForUpdate` 等候直到下一幀 Update 結束
 - `WaitForEndOfFrame` 等候直到下一幀渲染結束
