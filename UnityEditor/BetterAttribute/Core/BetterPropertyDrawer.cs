@@ -76,6 +76,7 @@ namespace Naukri.UnityEditor.BetterAttribute.Core
         }
 
         public virtual void OnBeforeGUILayout(SerializedProperty property, GUIContent label) { }
+
         public virtual void OnAfterGUILayout(SerializedProperty property, GUIContent label) { }
 
         public sealed override float GetPropertyHeight(SerializedProperty property, GUIContent label)

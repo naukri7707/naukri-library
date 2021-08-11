@@ -5,15 +5,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class #SCRIPTNAME# : NaukriBehaviour
+[CreateAssetMenu(fileName = "#SCRIPTNAME#", menuName = "ScriptableObject/#SCRIPTNAME#")]
+public class #SCRIPTNAME# : NaukriScriptableObject
 {
-    private void Start()
-    {
-        #NOTRIM#
-    }
-
-    private void Update()
-    {
-        #NOTRIM#
-    }
+	#NOTRIM#
 }

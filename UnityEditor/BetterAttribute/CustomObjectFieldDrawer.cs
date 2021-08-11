@@ -10,17 +10,21 @@ namespace Naukri.UnityEditor.BetterAttribute
     {
         public override bool OnGUILayout(SerializedProperty property, GUIContent label)
         {
-            var attr = attribute as CustomObjectFieldAttribute;
-            LayoutWrapper(
-              () => property.objectReferenceValue = EditorGUI.ObjectField(
-                  position,
-                  property.displayName,
-                  property.objectReferenceValue,
-                  attr.type,
-                  attr.allowSceneObject),
-              EditorGUI.GetPropertyHeight(property)
-              );
-            return true;
+            if (property.propertyType == SerializedPropertyType.ObjectReference)
+            {
+                var attr = attribute as CustomObjectFieldAttribute;
+                LayoutWrapper(
+                  () => property.objectReferenceValue = EditorGUI.ObjectField(
+                      position,
+                      property.displayName,
+                      property.objectReferenceValue,
+                      attr.type,
+                      attr.allowSceneObject),
+                  EditorGUI.GetPropertyHeight(property)
+                  );
+                return true;
+            }
+            return false;
         }
     }
 }

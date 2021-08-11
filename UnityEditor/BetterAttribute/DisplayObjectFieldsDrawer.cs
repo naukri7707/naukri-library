@@ -22,13 +22,13 @@ namespace Naukri.UnityEditor.BetterAttribute
 
         public override bool OnGUILayout(SerializedProperty property, GUIContent label)
         {
+            if (property.propertyType != SerializedPropertyType.ObjectReference) // 若目標不是 UnityObject 則不繪製
+            {
+                return false;
+            }
             using (var propScope = new EditorGUI.PropertyScope(position, label, property))
             {
                 BetterGUILayout.PropertyField(property, label);
-                if (property.propertyType != SerializedPropertyType.ObjectReference) // 若目標不是 UnityObject 則單純視為 PropertyField
-                {
-                    return true;
-                }
                 if (IsGUI)
                 {
                     property.isExpanded = BetterGUILayout.Foldout(property.isExpanded, "", true);

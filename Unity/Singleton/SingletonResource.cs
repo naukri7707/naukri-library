@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Naukri.Unity.Singleton
 {
-    public abstract class SingletonResource<T> : ScriptableObject where T : SingletonResource<T>
+    public abstract class SingletonResource<T> : NaukriScriptableObject where T : SingletonResource<T>
     {
         private static readonly object loadLock = new object();
 
