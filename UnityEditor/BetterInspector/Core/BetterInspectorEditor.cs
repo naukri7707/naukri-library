@@ -158,7 +158,7 @@ namespace Naukri.UnityEditor.BetterInspector.Core
             foreach (var info in infos)
             {
                 var attrs = info
-                    .GetCustomAttributes<BehaviourAttribute>(true)
+                    .GetCustomAttributes<InspectorAttribute>(true)
                     .OrderBy(it => it.order);
                 // 加入至快取
                 var drawers = attrs

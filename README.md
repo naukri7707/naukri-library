@@ -114,6 +114,16 @@ private async void Demo()
 - `ForkName` 依照不同條件顯示不同欄位名稱
 - `ReadOnly` 使欄位唯讀
 
+## BetterInspector
+
+基於 `Editor` 的開發框架，新增一個繼承自 `BetterInspectorEditor` 的類別並使用 `CustomEditor` 標註目標屬性，即可使用本框架。
+
+透過 `InspectorAttribute` 標記繪製器並使用 `InspectorMemberDrawer` 和 `CustomInspectorDrawer` 實作，便能夠讓屬性及方法獲得類似序列化的欄位繪製在 Inspecotr 上的功能。
+
+### 擴充屬性 (只作用使用 BetterInspector 繪製的類別)
+
+- `DisplayField` 顯示屬性欄位
+
 ## Factory
 
 一些工廠函式
