@@ -1,0 +1,13 @@
+using Naukri;
+using Naukri.BetterAttribute;
+using Naukri.BetterInspector;
+using Naukri.Singleton;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[AssetPath("Resources/Singleton/#SCRIPTNAME#")]
+public class #SCRIPTNAME# : SingletonResource<#SCRIPTNAME#>
+{
+	#NOTRIM#
+}

@@ -1,0 +1,12 @@
+using Naukri;
+using Naukri.BetterAttribute;
+using Naukri.BetterInspector;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "#SCRIPTNAME#", menuName = "ScriptableObject/#SCRIPTNAME#")]
+public class #SCRIPTNAME# : NaukriScriptableObject
+{
+	#NOTRIM#
+}
