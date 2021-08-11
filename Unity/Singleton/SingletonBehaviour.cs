@@ -2,7 +2,7 @@
 
 namespace Naukri.Unity.Singleton
 {
-    public abstract class SingletonBehaviour<T> : MonoBehaviour where T : SingletonBehaviour<T>
+    public abstract class SingletonBehaviour<T> : NaukriBehaviour where T : SingletonBehaviour<T>
     {
         protected virtual bool DestroyOnLoad => false;
 

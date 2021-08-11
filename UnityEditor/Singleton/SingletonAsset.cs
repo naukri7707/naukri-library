@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Naukri.UnityEditor.Singleton
 {
-    public abstract class SingletonAsset<T> : ScriptableObject where T : SingletonAsset<T>
+    public abstract class SingletonAsset<T> : NaukriScriptableObject where T : SingletonAsset<T>
     {
         private static readonly object loadLock = new object();
 
