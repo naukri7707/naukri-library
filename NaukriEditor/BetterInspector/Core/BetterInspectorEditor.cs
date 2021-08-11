@@ -1,15 +1,11 @@
-﻿using Naukri;
-using Naukri.Reflection;
+﻿using Naukri.BetterInspector;
 using Naukri.BetterInspector.Core;
-using NaukriEditor.BetterAttribute.Core;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using UnityEditor;
-using UnityEditor.EditorTools;
 using UnityEngine;
 
 namespace NaukriEditor.BetterInspector.Core
@@ -36,11 +32,25 @@ namespace NaukriEditor.BetterInspector.Core
 
         private List<(MemberInfo, InspectorMemberDrawer[])> methodDrawerCache;
 
-        private bool displayFields = true;
+        private bool defaultInspector;
 
-        private bool displayProperties;
+        public bool DisplayFields
+        {
+            get => BetterInspectorSettings.Instance.displayFields;
+            set => BetterInspectorSettings.Instance.displayFields = value;
+        }
 
-        private bool displayMethods;
+        public bool DisplayProperties
+        {
+            get => BetterInspectorSettings.Instance.displayProperties;
+            set => BetterInspectorSettings.Instance.displayProperties = value;
+        }
+
+        public bool DisplayMethods
+        {
+            get => BetterInspectorSettings.Instance.displayMethods;
+            set => BetterInspectorSettings.Instance.displayMethods = value;
+        }
 
         private static Dictionary<Type, Type> CreateDrawerTypeForTypeDictionary()
         {
@@ -80,23 +90,34 @@ namespace NaukriEditor.BetterInspector.Core
 
         private void OnEnable()
         {
-            InitDrawers();
+            var targetType = target.GetType();
+            defaultInspector = targetType.GetCustomAttribute<DefaultInspectorAttribute>() != null;
+            if (!defaultInspector)
+            {
+                InitDrawers();
+            }
         }
 
         public override void OnInspectorGUI()
         {
+            if (defaultInspector)
+            {
+                DrawDefaultInspector();
+                return;
+            }
+
             ControlPanel();
-            if (displayFields)
+            if (DisplayFields)
             {
                 LableSeparator("Fields");
                 DrawDefaultInspector();
             }
-            if (displayProperties)
+            if (DisplayProperties)
             {
                 LableSeparator("Properties");
                 DrawDrawers(propertyDrawerCache);
             }
-            if (displayMethods)
+            if (DisplayMethods)
             {
                 LableSeparator("Methods");
                 DrawDrawers(methodDrawerCache);
@@ -112,17 +133,17 @@ namespace NaukriEditor.BetterInspector.Core
                 var spacing = 2;
                 EditorGUILayout.LabelField("Display", GUILayout.Width(EditorStyles.label.CalcSize(new GUIContent("Display")).x + spacing));
                 GUILayout.FlexibleSpace();
-                displayFields = EditorGUILayout.Toggle(displayFields, toggleBoxWidthOption);
+                DisplayFields = EditorGUILayout.Toggle(DisplayFields, toggleBoxWidthOption);
                 EditorGUILayout.LabelField(
                     "Field",
                     GUILayout.Width(EditorStyles.label.CalcSize(new GUIContent("Field")).x + spacing)
                     );
-                displayProperties = EditorGUILayout.Toggle(displayProperties, toggleBoxWidthOption);
+                DisplayProperties = EditorGUILayout.Toggle(DisplayProperties, toggleBoxWidthOption);
                 EditorGUILayout.LabelField(
                     "Property",
                     GUILayout.Width(EditorStyles.label.CalcSize(new GUIContent("Property")).x + spacing)
                     );
-                displayMethods = EditorGUILayout.Toggle(displayMethods, toggleBoxWidthOption);
+                DisplayMethods = EditorGUILayout.Toggle(DisplayMethods, toggleBoxWidthOption);
                 EditorGUILayout.LabelField(
                    "Method",
                    GUILayout.Width(EditorStyles.label.CalcSize(new GUIContent("Method")).x)
