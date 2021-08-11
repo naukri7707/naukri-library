@@ -1,71 +1,5 @@
 # Naukri-Library
 
-## Extensions
-
-擴充函式
-
-- `DeconstructMethods`
-- `EnumMethods`
-- `EnumerableMethods`
-- `IListMethods`
-- `StringMethods`
-
-## Reflection
-
-### `CastTo`
-
-透過使用
-
-```cs
-T dst = CastTo<T>.From(src);
-```
-
-將 src 轉型成 T，在編譯器無法準確判定型態的泛型方法中很好用。
-
-### `FastReflection`
-
-透過委派來加速反射對特定物件欄位的存取速度，具體效能約為
-
-> 直接存取 1 : 快速反射 2 : 一般反射 391
-
-使用範例
-
-```cs
-public class Demo
-{
-    public int src { get; set; } = 1;
-
-    FastGetter<Demo, int> srcGetter;
-
-    FastSetter<Demo, int> srcSetter;
-
-    private void Example()
-    {
-        var type = GetType();
-        srcGetter = type.GetProperty(nameof(src)).CreateFastGetter<Demo, int>();
-        srcSetter = type.GetProperty(nameof(src)).CreateFastSetter<Demo, int>();
-        srcSetter.Invoke(this, 2);
-        var dst = srcGetter.Invoke(this); // dst will be 2
-    }
-}
-```
-
-⚠️ 保留快速反射的委派而不是每次反射時再建立一次，否則效能會比一般反射差上數倍。
-
-## `YamlUtility`
-
-快速序列化 / 反序列化 yaml 物件。
-
-提醒 / 建議
-
-- 只會序列化 public 欄位 (包含自動實作屬性)
-- 可以使用 `YamlIgnore` 排除不想序列化的 public 欄位
-- 可以透過 `YamlMember` 改變一些基礎屬性
-- 建立一個序列化專用的物件並映射到目標物件上，而不是直接序列化目標物件
-- 引用 `YamlDotNet-11.1.1` 函式庫
-
----
-
 ## AwaitCoroutine
 
 可異步等候協程，透過為 `YieldInstruction` 新增 `GetAwaiter()` 並建立 Awaiter 使其支援異步等候。
@@ -124,6 +58,16 @@ private async void Demo()
 
 - `DisplayField` 顯示屬性欄位
 
+## Extensions
+
+擴充函式
+
+- `DeconstructMethods`
+- `EnumMethods`
+- `EnumerableMethods`
+- `IListMethods`
+- `StringMethods`
+
 ## Factory
 
 一些工廠函式
@@ -137,6 +81,48 @@ private async void Demo()
 基於 UnityEditor 的輔助工具，在 MenuItem/Naukri 下可以找到並使用。
 
 - `MissingScriptCleaner` 清除所有選擇的 `GameObject` 中遺失腳本的 `MonoBehaviour`
+
+## Reflection
+
+### `CastTo`
+
+透過使用
+
+```cs
+T dst = CastTo<T>.From(src);
+```
+
+將 src 轉型成 T，在編譯器無法準確判定型態的泛型方法中很好用。
+
+### `FastReflection`
+
+透過委派來加速反射對特定物件欄位的存取速度，具體效能約為
+
+> 直接存取 1 : 快速反射 2 : 一般反射 391
+
+使用範例
+
+```cs
+public class Demo
+{
+    public int src { get; set; } = 1;
+
+    FastGetter<Demo, int> srcGetter;
+
+    FastSetter<Demo, int> srcSetter;
+
+    private void Example()
+    {
+        var type = GetType();
+        srcGetter = type.GetProperty(nameof(src)).CreateFastGetter<Demo, int>();
+        srcSetter = type.GetProperty(nameof(src)).CreateFastSetter<Demo, int>();
+        srcSetter.Invoke(this, 2);
+        var dst = srcGetter.Invoke(this); // dst will be 2
+    }
+}
+```
+
+⚠️ 保留快速反射的委派而不是每次反射時再建立一次，否則效能會比一般反射差上數倍。
 
 ## SceneManagement
 
@@ -188,10 +174,53 @@ private async void Demo()
 
 也可以透過建立 `Toast` 作為模板，並使用 `ToastManager` 來動態生成自定義風格的訊息，具體流程請參考預製物 `DefaultToast` 和 `DefaultToastManager`
 
+---
+
 ## `EventInvoker`
 
-可以在 `EventInvoker` 面板中透過 Invoke 按鈕觸發對應的 `UnityEvent`，也可以設定熱鍵後在 runtime 透過熱鍵觸發事件。
+可以在 Inspector 加入 `EventInvoker` 後於面板中透過 Invoke 按鈕觸發對應的 `UnityEvent`，也可以透過定義的快捷鍵觸發觸發事件。
+
+## `Flag`
+
+用以增加 EnumFlag 的可讀性
+
+```cs
+using Naukri;
+using System;
+
+[Flags]
+public enum DemoFlag
+{
+    None = Flag.NONE,
+    Flag1 = Flag.BIT00,
+    Flag2 = Flag.BIT01,
+}
+```
 
 ## `Interpolation`
 
-一些擴充的插值，可以直接調用對應的函式。也可以透過 `InterpolationType` 使用 `ByMethod()` 動態選擇對應插值。
+一些擴充的插值，可以直接調用對應的函式。也可以透過在 `HandleByType()` 傳入目標 `InterpolationType` 動態選擇對應插值。
+
+## `NaukriBehaviour`
+
+綁定好 `BetterInspector` 的 `MonoBehaviour`
+
+## `NaukriScriptableObject`
+
+綁定好 `BetterInspector` 的 `ScriptableObject`
+
+## `UnityPath`
+
+取得基於 Unity 專案的相對路徑
+
+## `YamlUtility`
+
+快速序列化 / 反序列化 yaml 物件。
+
+提醒 / 建議
+
+- 只會序列化 public 欄位 (包含自動實作屬性)
+- 可以使用 `YamlIgnore` 排除不想序列化的 public 欄位
+- 可以透過 `YamlMember` 改變一些基礎屬性
+- 建立一個序列化專用的物件並映射到目標物件上，而不是直接序列化目標物件
+- 引用 `YamlDotNet-11.1.1` 函式庫

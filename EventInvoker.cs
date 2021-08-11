@@ -1,3 +1,4 @@
+using Naukri.BetterAttribute;
 using System;
 using UnityEngine;
 using UnityEngine.Events;
@@ -6,6 +7,8 @@ namespace Naukri
 {
     public class EventInvoker : MonoBehaviour
     {
+        public bool runtimeHotKey;
+
         [Serializable]
         public struct Caller
         {
@@ -20,11 +23,14 @@ namespace Naukri
 
         public void Update()
         {
-            foreach (var caller in Callers)
+            if (runtimeHotKey || !Application.isPlaying)
             {
-                if (Input.GetKeyDown(caller.hotKey))
+                foreach (var caller in Callers)
                 {
-                    caller.TargetMethod.Invoke();
+                    if (Input.GetKeyDown(caller.hotKey))
+                    {
+                        caller.TargetMethod.Invoke();
+                    }
                 }
             }
         }

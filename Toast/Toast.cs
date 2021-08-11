@@ -85,8 +85,8 @@ namespace Naukri.Toast
             var ratio = (Time.time - startStateTime) / manager.toastTransitionTime;
             CurrentPosition = new Vector2
             {
-                x = Interpolation.ByMethod(StartPosition.x, EndPosition.x, ratio, fadeInEaseType),
-                y = Interpolation.ByMethod(StartPosition.y, EndPosition.y, ratio, fadeInEaseType)
+                x = Interpolation.HandleByType(StartPosition.x, EndPosition.x, ratio, fadeInEaseType),
+                y = Interpolation.HandleByType(StartPosition.y, EndPosition.y, ratio, fadeInEaseType)
             };
             return ratio > 1;
         }
@@ -107,8 +107,8 @@ namespace Naukri.Toast
                 ratio = 1F;
             CurrentPosition = new Vector2
             {
-                x = Interpolation.ByMethod(StartPosition.x, EndPosition.x, ratio, movingEaseType),
-                y = Interpolation.ByMethod(StartPosition.y, EndPosition.y, ratio, movingEaseType)
+                x = Interpolation.HandleByType(StartPosition.x, EndPosition.x, ratio, movingEaseType),
+                y = Interpolation.HandleByType(StartPosition.y, EndPosition.y, ratio, movingEaseType)
             };
             return startActiveTime + manager.toastDuration < Time.time;
         }
@@ -130,8 +130,8 @@ namespace Naukri.Toast
             var ratio = (Time.time - startStateTime) / manager.toastTransitionTime;
             CurrentPosition = new Vector2
             {
-                x = Interpolation.ByMethod(StartPosition.x, EndPosition.x, ratio, fadeOutEaseType),
-                y = Interpolation.ByMethod(StartPosition.y, EndPosition.y, ratio, fadeOutEaseType)
+                x = Interpolation.HandleByType(StartPosition.x, EndPosition.x, ratio, fadeOutEaseType),
+                y = Interpolation.HandleByType(StartPosition.y, EndPosition.y, ratio, fadeOutEaseType)
             };
             return ratio > 1;
         }
@@ -149,7 +149,7 @@ namespace Naukri.Toast
                 while (ratio < 1)
                 {
                     ratio = (Time.time - startTime) / t;
-                    Alpha = Interpolation.ByMethod(s, e, ratio, alphaEaseType);
+                    Alpha = Interpolation.HandleByType(s, e, ratio, alphaEaseType);
                     yield return new WaitForEndOfFrame();
                 }
                 Alpha = e;

@@ -22,11 +22,11 @@ namespace NaukriEditor
             self = target as EventInvoker;
             focusedBackgroundStyle = new GUIStyle
             {
-                normal = {background = TextureFactory.SolidColor(new Color32(44, 93, 135, 255))}
+                normal = { background = TextureFactory.SolidColor(new Color32(44, 93, 135, 255)) }
             };
             selectedBackgroundStyle = new GUIStyle
             {
-                normal = {background = TextureFactory.SolidColor(new Color32(77, 77, 77, 255))}
+                normal = { background = TextureFactory.SolidColor(new Color32(77, 77, 77, 255)) }
             };
         }
 
@@ -62,8 +62,7 @@ namespace NaukriEditor
 
                         var hotKey = self.Callers[index].hotKey;
                         var hotKeyString = hotKey == KeyCode.None ? "" : $" ({hotKey})";
-                        EditorGUI.PropertyField(rect, callerSP, new GUIContent($"{callerSP.displayName}{hotKeyString}"),
-                            true);
+                        EditorGUI.PropertyField(rect, callerSP, new GUIContent($"{callerSP.displayName}{hotKeyString}"), true);
                         EditorGUI.indentLevel--;
                         reorderableList.serializedProperty.serializedObject.ApplyModifiedProperties();
                     },
@@ -95,7 +94,10 @@ namespace NaukriEditor
                     },
                 };
             }
-
+            //
+            var worksOnRuntimeSP = serializedObject.FindProperty(nameof(EventInvoker.runtimeHotKey));
+            EditorGUILayout.PropertyField(worksOnRuntimeSP);
+            EditorGUILayout.Space(2);
             reorderableList.DoLayoutList();
         }
     }
