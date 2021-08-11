@@ -1,9 +1,11 @@
-using Naukri;
+using Naukri.Unity;
+using Naukri.Unity.BetterAttribute;
+using Naukri.Unity.BetterInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class #SCRIPTNAME# : MonoBehaviour
+public class #SCRIPTNAME# : NaukriBehaviour
 {
     private void Start()
     {
