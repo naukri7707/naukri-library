@@ -1,0 +1,19 @@
+using Naukri;
+using Naukri.BetterAttribute;
+using Naukri.BetterInspector;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class #SCRIPTNAME# : NaukriBehaviour
+{
+    private void Start()
+    {
+        #NOTRIM#
+    }
+
+    private void Update()
+    {
+        #NOTRIM#
+    }
+}
