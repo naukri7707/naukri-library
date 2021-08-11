@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Naukri.Singleton
 {
-    public abstract class SingletonResource<T> : NaukriScriptableObject where T : SingletonResource<T>
+    public abstract class SingletonResource<T> : SingletonScriptableObject where T : SingletonResource<T>
     {
         private static readonly object loadLock = new object();
 
@@ -17,7 +17,7 @@ namespace Naukri.Singleton
                 {
                     lock (loadLock)
                     {
-                        if (TryLoadAsset(out instance) || TryCreateAsset(out instance))
+                        if (TryLoadAsset(out instance))
                         {
                             instance.OnSingletonLoaded();
                         }
@@ -43,21 +43,6 @@ namespace Naukri.Singleton
                 }
                 return res;
             }
-        }
-
-        private static bool TryCreateAsset(out T asset)
-        {
-#if UNITY_EDITOR
-            asset = CreateInstance<T>();
-            var path = Path.assetPath;
-            UnityPath.CreateDirectoryInEditor(path);
-            UnityEditor.AssetDatabase.CreateAsset(asset, path);
-            UnityEditor.AssetDatabase.SaveAssets();
-            return asset != null;
-#else
-            asset = null;
-            return false;
-#endif
         }
 
         private static bool TryLoadAsset(out T asset)
