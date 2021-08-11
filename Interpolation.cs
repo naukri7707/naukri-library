@@ -62,7 +62,7 @@ namespace Naukri
     {
         public static float EPS = float.Epsilon;
 
-        public static float ByMethod(float start, float end, float ratio, InterpolationType interpolationType)
+        public static float HandleByType(float start, float end, float ratio, InterpolationType interpolationType)
         {
             return interpolationType switch
             {
