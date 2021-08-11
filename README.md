@@ -56,7 +56,14 @@ private async void Demo()
 
 ### 擴充屬性 (只作用使用 BetterInspector 繪製的類別)
 
+- `DefaultInspector` 使用原生方式繪製 (在類別上標記)
 - `DisplayField` 顯示屬性欄位
+    ⚠️ 自動實作屬性會因為序列化問題無法正確的儲存修改。可以使用以下方法取得類似的效果，但要注意此時他會被視為欄位需使用 `PropertyDrawer` 來自定義
+
+    ```cs
+        [field: SerializeField]
+        public int AutoImplementedProperty { get; set; }
+    ```
 
 ## Extensions
 
@@ -67,6 +74,7 @@ private async void Demo()
 - `EnumerableMethods`
 - `IListMethods`
 - `StringMethods`
+- `TypeMethods`
 
 ## Factory
 
@@ -152,7 +160,7 @@ public class Demo
 
 ## Singleton
 
-適用於 Unity 的單例模式
+適用於 Unity 的單例模式，會在腳本建置時在目標位置自動生成所需的 `.asset` 檔，也可以點擊 `MenuItem/Naukri/Create Singleton Asset` 手動生成。
 
 ### `SingletonBehaviour`
 
@@ -209,7 +217,7 @@ public enum DemoFlag
 
 綁定好 `BetterInspector` 的 `ScriptableObject`
 
-## `UnityPath`
+## `UnityPath` & `EditorUnityPath`
 
 取得基於 Unity 專案的相對路徑
 
