@@ -6,11 +6,11 @@ namespace Naukri.Extensions
 {
     public static class IListMethods
     {
-        public static bool IndexExist(this Array self, int index)
+        public static bool IndexExist(this IList self, int index)
         {
-            return (index >= 0) & (index < self.Length);
+            return (index >= 0) & (index < self.Count);
         }
-        
+
         public static bool HasElement(this IList self)
         {
             return self.Count > 0;

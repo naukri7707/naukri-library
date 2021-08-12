@@ -4,7 +4,7 @@ using System;
 namespace Naukri.BetterInspector
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class DisplayFieldAttribute : InspectorAttribute
+    public class DisplayPropertyAttribute : InspectorAttribute
     {
 
     }
