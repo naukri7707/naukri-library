@@ -8,7 +8,7 @@ namespace NaukriEditor.BetterAttribute
     [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
     public class ReadOnlyDrawer : BetterPropertyDrawer
     {
-        EditorGUI.DisabledScope disableScope;
+        private EditorGUI.DisabledScope disableScope;
 
         public override void OnBeforeGUILayout(SerializedProperty property, GUIContent label)
         {
