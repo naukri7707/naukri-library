@@ -1,7 +1,3 @@
 # Ignore LFS folder
-**/LFS/
-**/LFS.meta
-
-# Ignore Editor folder
-/Editor
-/Editor.meta
+**/\[L\] */
+**/\[L\] *.meta
