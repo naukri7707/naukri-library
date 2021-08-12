@@ -57,14 +57,20 @@ private async void Demo()
 ### 擴充屬性 (只作用使用 BetterInspector 繪製的類別)
 
 - `DefaultInspector` 使用原生方式繪製 (在類別上標記)
-- `DisplayField` 顯示屬性欄位
+- `DisplayProperty` 顯示屬性欄位
 
-    ⚠️ 自動實作屬性會因為序列化問題無法正確的儲存修改。可以使用以下方法取得類似的效果，但要注意此時他會被視為欄位需使用 `PropertyDrawer` 來自定義
+    ⚠️ 自動實作屬性會因為沒有被序列化而無法儲存資料。可以使用以下方法取得類似的效果，但要注意此時他會被視為欄位需使用 `PropertyDrawer` 來自定義
 
     ```cs
         [field: SerializeField]
         public int AutoImplementedProperty { get; set; }
     ```
+
+- `DisplayMethod` 顯示方法欄位，並能且透過 Invoke 按鈕觸發方法
+
+### 兼容屬性
+
+- `ReadOnly` 使欄位唯讀
 
 ## Extensions
 
@@ -213,6 +219,8 @@ public enum DemoFlag
 ## `NaukriBehaviour`
 
 綁定好 `BetterInspector` 的 `MonoBehaviour`
+
+- `GetComponentsRecursive` 取得特定深度下所有子物件的 Component
 
 ## `NaukriScriptableObject`
 
