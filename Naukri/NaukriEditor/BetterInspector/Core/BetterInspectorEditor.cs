@@ -1,4 +1,4 @@
-﻿using Naukri.BetterInspector;
+using Naukri.BetterInspector;
 using Naukri.BetterInspector.Core;
 using System;
 using System.Collections;
@@ -109,17 +109,17 @@ namespace NaukriEditor.BetterInspector.Core
             ControlPanel();
             if (DisplayFields)
             {
-                LableSeparator("Fields");
+                BetterGUILayout.LableSeparator("Fields");
                 DrawDefaultInspector();
             }
             if (DisplayProperties)
             {
-                LableSeparator("Properties");
+                BetterGUILayout.LableSeparator("Properties");
                 DrawDrawers(propertyDrawerCache);
             }
             if (DisplayMethods)
             {
-                LableSeparator("Methods");
+                BetterGUILayout.LableSeparator("Methods");
                 DrawDrawers(methodDrawerCache);
             }
         }
@@ -179,8 +179,8 @@ namespace NaukriEditor.BetterInspector.Core
             foreach (var info in infos)
             {
                 var attrs = info
-                    .GetCustomAttributes<InspectorAttribute>(true)
-                    .OrderBy(it => it.order);
+                    .GetCustomAttributes<PropertyAttribute>(true) // 使用 PropertyAttribute 作為 InspectorAttribute 的基底類別
+                    .OrderBy(it => it.order);                     // 讓 BetterInspector 可以自訂 BetterAttribute 的擴充屬性
                 // 加入至快取
                 var drawers = attrs
                     .Select(attr => GetDrawerTypeForType(attr.GetType()))
@@ -214,20 +214,22 @@ namespace NaukriEditor.BetterInspector.Core
         {
             foreach ((var info, var drawers) in drawerCache)
             {
+                var displayName = BetterGUILayout.GetDispalyName(info.Name);
+                var label = new GUIContent(displayName);
                 foreach (var drawer in drawers)
                 {
-                    drawer.OnBeforeGUILayout();
+                    drawer.OnBeforeGUILayout(label);
                 }
                 foreach (var drawer in drawers) // 如果沒有完成繪製，則由下一優先序 Drawer 繪製直到繪製完成
                 {
-                    if (drawer.OnGUILayout())
+                    if (drawer.OnGUILayout(label))
                     {
                         break;
                     }
                 }
                 foreach (var drawer in drawers.Reverse())
                 {
-                    drawer.OnAfterGUILayout();
+                    drawer.OnAfterGUILayout(label);
                 }
             }
         }
@@ -238,34 +240,6 @@ namespace NaukriEditor.BetterInspector.Core
         public static Type GetDrawerTypeForType(Type type)
         {
             return DrawerTypeForType[type];
-        }
-
-        public static void LableSeparator(string label, float thickness = 1.6F, int padleft = 30)
-        {
-            using (new EditorGUI.DisabledScope(true))
-            {
-                var rect = EditorGUILayout.GetControlRect();
-                var leftRect = new Rect(rect)
-                {
-                    width = padleft,
-                    y = (rect.yMin + rect.yMax) / 2,
-                    height = thickness
-                };
-                EditorGUI.DrawRect(leftRect, new Color(0.5F, 0.5F, 0.5F, 1));
-                var labelRect = new Rect(rect)
-                {
-                    xMin = leftRect.xMax + 2,
-                    width = EditorStyles.label.CalcSize(new GUIContent(label)).x + 4
-                };
-                EditorGUI.LabelField(labelRect, label, EditorStyles.boldLabel);
-                var rightRect = new Rect(rect)
-                {
-                    xMin = labelRect.xMax + 2,
-                    y = leftRect.y,
-                    height = leftRect.height
-                };
-                EditorGUI.DrawRect(rightRect, new Color(0.5F, 0.5F, 0.5F, 1));
-            }
         }
     }
 }

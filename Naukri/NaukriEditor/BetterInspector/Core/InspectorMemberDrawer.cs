@@ -13,10 +13,10 @@ namespace NaukriEditor.BetterInspector.Core
 
         public virtual void OnInit() { }
 
-        public virtual void OnBeforeGUILayout() { }
+        public virtual void OnBeforeGUILayout(GUIContent label) { }
 
-        public virtual bool OnGUILayout() => false;
+        public virtual bool OnGUILayout(GUIContent label) => false;
 
-        public virtual void OnAfterGUILayout() { }
+        public virtual void OnAfterGUILayout(GUIContent label) { }
     }
 }
