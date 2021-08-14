@@ -175,7 +175,7 @@ namespace NaukriEditor.BetterAttribute.Core
             return base.CreatePropertyGUI(property);
         }
 
-        public void LayoutWrapper(Action drawer, float height, float spacing = SPACING)
+        public void LayoutWrapper(Action<Rect> drawer, float height, float spacing = SPACING)
         {
             if (IsFirst)
             {
@@ -189,7 +189,7 @@ namespace NaukriEditor.BetterAttribute.Core
                 pos.yMin = pos.yMax + spacing; // StartLayout 後因 height 為 0， 故首行 pos.yMax 為 yMin
                 pos.height = height;                 // 在渲染/計算前才將 yMin 移動到下一個欄位應該出現的 yMin 上，避免 position 出現錯位
                 position = pos;
-                drawer.Invoke();
+                drawer.Invoke(pos);
             }
             else
             {
@@ -197,7 +197,7 @@ namespace NaukriEditor.BetterAttribute.Core
             }
         }
 
-        public void LayoutWrapper<T>(ref T target, Func<T> drawer, float height, float spacing = SPACING)
+        public void LayoutWrapper<T>(ref T target, Func<Rect, T> drawer, float height, float spacing = SPACING)
         {
             if (IsFirst)
             {
@@ -211,7 +211,7 @@ namespace NaukriEditor.BetterAttribute.Core
                 pos.yMin = pos.yMax + spacing; // StartLayout 後因 height 為 0， 故首行 pos.yMax 為 yMin
                 pos.height = height;                 // 在渲染/計算前才將 yMin 移動到下一個欄位應該出現的 yMin 上，避免 position 出現錯位
                 position = pos;
-                target = drawer.Invoke();
+                target = drawer.Invoke(pos);
             }
             else
             {
