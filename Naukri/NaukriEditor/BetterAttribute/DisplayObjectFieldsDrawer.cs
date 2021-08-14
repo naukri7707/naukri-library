@@ -36,38 +36,43 @@ namespace NaukriEditor.BetterAttribute
                 if (property.isExpanded)
                 {
                     BetterGUILayout.SeparatorLine(2, 4);
-                    var data = property.objectReferenceValue;
-                    if (data is null)
+                    using (new EditorGUI.DisabledScope(attr.readOnlyFields))
                     {
-                        return true;
-                    }
-                    var dataSO = new SerializedObject(data);
-                    var dataSP = dataSO.GetIterator();
-                    EditorGUI.indentLevel++;
-                    dataSP.NextVisible(true);
-                    if (!attr.skipScriptField)
-                    {
-                        using (new EditorGUI.DisabledScope(true))
+                        var data = property.objectReferenceValue;
+                        if (data is null)
                         {
-                            BetterGUILayout.PropertyField(dataSP);
+                            return true;
                         }
-                    }
-                    using (var check = new EditorGUI.ChangeCheckScope())
-                    {
-
-                        while (dataSP.NextVisible(false))
+                        var dataSO = new SerializedObject(data);
+                        var dataSP = dataSO.GetIterator();
+                        using (new EditorGUI.IndentLevelScope(1))
                         {
-                            if (!attr.skipFieldNames.Contains(dataSP.name))
+                            EditorGUI.indentLevel++;
+                            dataSP.NextVisible(true);
+                            if (!attr.skipScriptField)
                             {
-                                BetterGUILayout.PropertyField(dataSP);
+                                using (new EditorGUI.DisabledScope(true))
+                                {
+                                    BetterGUILayout.PropertyField(dataSP);
+                                }
+                            }
+                            using (var check = new EditorGUI.ChangeCheckScope())
+                            {
+
+                                while (dataSP.NextVisible(false))
+                                {
+                                    if (!attr.skipFieldNames.Contains(dataSP.name))
+                                    {
+                                        BetterGUILayout.PropertyField(dataSP);
+                                    }
+                                }
+                                if (check.changed)
+                                {
+                                    dataSP.serializedObject.ApplyModifiedProperties();
+                                }
                             }
                         }
-                        if (check.changed)
-                        {
-                            dataSP.serializedObject.ApplyModifiedProperties();
-                        }
                     }
-                    EditorGUI.indentLevel--;
                 }
                 return true;
             }
