@@ -14,8 +14,8 @@ namespace NaukriEditor.BetterAttribute
             {
                 var attr = attribute as CustomObjectFieldAttribute;
                 LayoutWrapper(
-                  () => property.objectReferenceValue = EditorGUI.ObjectField(
-                      position,
+                  rect => property.objectReferenceValue = EditorGUI.ObjectField(
+                      rect,
                       property.displayName,
                       property.objectReferenceValue,
                       attr.type,

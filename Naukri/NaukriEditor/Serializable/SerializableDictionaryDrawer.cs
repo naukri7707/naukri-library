@@ -88,7 +88,7 @@ namespace NaukriEditor.Serializable
         {
             if (property.isExpanded)
             {
-                LayoutWrapper(() => reorderableList.DoList(position), reorderableList.GetHeight());
+                LayoutWrapper(rect => reorderableList.DoList(rect), reorderableList.GetHeight());
                 if (IsGUI)
                 {
                     var newDataSP = property.FindPropertyRelative("newData");

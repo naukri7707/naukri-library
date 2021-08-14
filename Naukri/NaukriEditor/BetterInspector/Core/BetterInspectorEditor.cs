@@ -156,6 +156,10 @@ namespace NaukriEditor.BetterInspector.Core
             propertyInfos = new List<MemberInfo>();
             methodInfos = new List<MemberInfo>();
             var targetType = target.GetType();
+            if (targetType == typeof(UnityEngine.Object))
+            {
+                return; // 過濾掉 Unity 在按下 Play 鍵後要求繪製用 BetterInspector 繪製 UnityObject 物件的情況
+            }
             var inspectedTypes = new List<Type>();
             var customEditorAttr = GetType().GetCustomAttribute<CustomEditor>();
             var inspectedBaseType = typeof(CustomEditor).GetField("m_InspectedType", bindingAllDeclaredMember).GetValue(customEditorAttr) as Type;  // 抓取開始檢查的類別
