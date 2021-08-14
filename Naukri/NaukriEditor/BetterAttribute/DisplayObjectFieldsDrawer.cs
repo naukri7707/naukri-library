@@ -35,6 +35,7 @@ namespace NaukriEditor.BetterAttribute
                 }
                 if (property.isExpanded)
                 {
+                    BetterGUILayout.SeparatorLine(2, 4);
                     var data = property.objectReferenceValue;
                     if (data is null)
                     {

@@ -22,13 +22,32 @@ namespace NaukriEditor.BetterAttribute.Core
             var res = false;
             BetterPropertyDrawer.currentFramework.LayoutWrapper(
                 ref res,
-                () => EditorGUI.PropertyField(BetterPropertyDrawer.currentFramework.position, property, label, includeChildren),
+                rect => EditorGUI.PropertyField(rect, property, label, includeChildren),
                 EditorGUI.GetPropertyHeight(property)
                 );
             return res;
         }
 
         #endregion
+
+        public static bool SeparatorLine(float thickness, float space)
+        {
+            if (thickness > space)
+            {
+                thickness = space;
+            }
+            var res = false;
+            BetterPropertyDrawer.currentFramework.LayoutWrapper(
+                rect =>
+                {
+                    rect.y = (rect.yMin + rect.yMax) / 2 - thickness / 2;
+                    rect.height = thickness;
+                    EditorGUI.DrawRect(rect, new Color(0.5F, 0.5F, 0.5F, 1));
+                },
+                space
+                );
+            return res;
+        }
 
         #region -- Foldout --
 
