@@ -4,6 +4,8 @@ namespace Naukri.BetterAttribute
 {
     public class DisplayObjectFieldsAttribute : PropertyAttribute
     {
+        public bool readOnlyFields;
+
         public bool defaultExpanded = false;
 
         public bool skipScriptField = false;
