@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
@@ -15,7 +16,7 @@ namespace NaukriEditor.BetterInspector.Core
             public IndentScope(int indentLevel)
             {
                 this.indentLevel = indentLevel;
-                EditorGUI.indentLevel++;
+                EditorGUI.indentLevel += indentLevel;
             }
 
             protected override void CloseScope()
@@ -60,6 +61,17 @@ namespace NaukriEditor.BetterInspector.Core
         public static bool AutoField(Type valueType, GUIContent label, dynamic value, out object result)
         {
             TypeCode typeCode = Type.GetTypeCode(valueType);
+            if (IsIntegerType(typeCode)) // 處理 Enum 型態
+            {
+                if (valueType.IsEnum)
+                {
+                    result = valueType.GetCustomAttribute<FlagsAttribute>() is null
+                           ? EditorGUILayout.EnumPopup(label, value)
+                           : EditorGUILayout.EnumFlagsField(label, value);
+                    return true;
+                }
+            }
+
             switch (typeCode)
             {
                 case TypeCode.Empty:
@@ -160,6 +172,23 @@ namespace NaukriEditor.BetterInspector.Core
             return false;
         }
 
+        private static bool IsIntegerType(TypeCode typeCode)
+        {
+            switch (typeCode)
+            {
+                case TypeCode.Byte:
+                case TypeCode.SByte:
+                case TypeCode.UInt16:
+                case TypeCode.UInt32:
+                case TypeCode.UInt64:
+                case TypeCode.Int16:
+                case TypeCode.Int32:
+                case TypeCode.Int64:
+                    return true;
+                default:
+                    return false;
+            }
+        }
 
         public static string GetDispalyName(string name)
         {
