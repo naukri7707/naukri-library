@@ -23,14 +23,17 @@ namespace NaukriEditor.BetterInspector
         public override void OnInit()
         {
             parameterInfos = MethodInfo.GetParameters().ToArray();
-            parameterValues = parameterInfos
-                .Select(it =>
+            parameterValues = parameterInfos.Select(it =>
                 {
-                    return it.ParameterType.IsSubclassOf(typeof(UnityEngine.Object)) switch
+                    if (it.ParameterType.IsSubclassOf(typeof(UnityEngine.Object)))
                     {
-                        true => null,
-                        false => Activator.CreateInstance(it.ParameterType),
-                    };
+                        return null;
+                    }
+                    else if (it.ParameterType == typeof(string))
+                    {
+                        return "";
+                    }
+                    return Activator.CreateInstance(it.ParameterType);
                 }).ToArray();
         }
 
