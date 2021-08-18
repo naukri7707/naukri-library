@@ -181,6 +181,13 @@ public class Demo
 
 類似於 [`SingletonResource`](#SingletonResource) 但由於只作用於 UnityEditor，所以路徑中不須包含 `Resources` 資料夾。
 
+## Timer
+
+計時器
+
+- `CountdownTimer` 倒數計時器
+- `StopwatchTimer` 正數計時器
+
 ## Toast
 
 在螢幕的特定角落生成提示訊息。
