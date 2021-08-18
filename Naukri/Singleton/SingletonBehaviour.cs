@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using Naukri.Extensions;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Naukri.Singleton
 {
@@ -25,8 +28,6 @@ namespace Naukri.Singleton
                             instance.OnSingletonLoaded();
                         }
                     }
-
-                    return instance;
                 }
 
                 return instance;
