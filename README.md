@@ -237,10 +237,6 @@ public enum DemoFlag
 
 取得基於 Unity 專案的相對路徑
 
-## `YamlUtility`
-
-快速序列化 / 反序列化 yaml 物件。
-
 提醒 / 建議
 
 - 只會序列化 public 欄位 (包含自動實作屬性)
