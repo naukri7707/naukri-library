@@ -73,7 +73,7 @@ namespace Naukri.SceneManagement
                 case LoadingState.Disabled:
                     var uscene = USceneManager.GetSceneAt(scene.buildIndex);
                     var disabled = uscene.GetRootGameObjects()
-                        .FirstOrDefault(it => it.name != DISABLE_ROOT_NAME);
+                        .FirstOrDefault(it => it.name is DISABLE_ROOT_NAME);
                     if (disabled)
                     {
                         foreach (Transform child in disabled.transform)
@@ -82,6 +82,7 @@ namespace Naukri.SceneManagement
                         }
                         GameObject.Destroy(disabled);
                     }
+                    scene.LoadingState = LoadingState.Loaded;
                     break;
                 default:
                     break;
