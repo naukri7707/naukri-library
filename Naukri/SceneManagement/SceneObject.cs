@@ -22,14 +22,14 @@ namespace Naukri.SceneManagement
 
         public string Name => _sceneName;
 
-        [SerializeField, DisplayName("LoadingMode")]
-        private LoadingMode _loadingMode;
+        [SerializeField]
+        private TargetState _targetState;
 
-        public LoadingMode LoadingMode { get => _loadingMode; set => _loadingMode = value; }
+        public TargetState TargetState { get => _targetState; set => _targetState = value; }
 
         public static implicit operator string(SceneObject sceneObject)
         {
-            return sceneObject._sceneName;
+            return sceneObject.Name;
         }
 
         void ISerializationCallbackReceiver.OnBeforeSerialize()
