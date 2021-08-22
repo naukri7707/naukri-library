@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using System.Security;
 using UnityEngine;
 
-namespace Naukri.Serializable
+namespace Naukri.Collections.Generic
 {
     [Serializable]
     public class SerializableHashSet<T> : ISerializationCallbackReceiver, IReadOnlyCollection<T>, ISet<T>, IDeserializationCallback, ISerializable
