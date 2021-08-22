@@ -6,7 +6,7 @@ namespace Naukri.Extensions
 {
     public static class IListMethods
     {
-        public static bool IndexExist(this IList self, int index)
+        public static bool IsIndexValid(this IList self, int index)
         {
             return (index >= 0) & (index < self.Count);
         }
