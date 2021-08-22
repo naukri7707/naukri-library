@@ -31,7 +31,7 @@ namespace Naukri.SceneManagement
 
         private Scene() { }
 
-        public Scene(int buildIndex)
+        internal Scene(int buildIndex)
         {
             loadingState = LoadingState.Unloaded;
             this.buildIndex = buildIndex;
