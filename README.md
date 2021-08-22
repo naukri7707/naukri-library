@@ -72,6 +72,14 @@ private async void Demo()
 
 - `ReadOnly` 使欄位唯讀
 
+## Collections
+
+自定義集合
+
+- `KeyList` 可同時使用索引和鍵值查詢的列表
+- `SerializableDictionary` 可序列化字典
+- `SerializableHashSet` 可序列化唯一集合
+
 ## Extensions
 
 擴充函式
@@ -143,27 +151,21 @@ public class Demo
 
 輔助控制、排程載入 Unity 場景
 
-- `SceneManager` 自動依調用順序排程載入/卸載或啟用/禁用場景
+- `Scene` 用以查詢場景狀態及註冊載入事件，可以通過 `SceneManager` 取得所有 BuildSettings 中的場景
+- `SceneManager` 自動依調用順序排程載入、禁用或卸載場景
+  - Porgress 處理中的場景的載入/卸載進度，只在 Loading、Unloading 狀態中變化
+  - GetSceneByName() 使用場景名稱取得 `Scene`
+  - GetSceneByBuildIndex() 使用場景在 BuildSettings 中的索引取得 `Scene`
   - LoadScene() 載入目標場景
   - UnloadScene() 卸載目標場景
-  - EnableScene() 啟用載入的目標場景
-  - DisableScene() 禁用已載入的目標場景
-  - EnableOrLoadScene() 啟用載入的目標場景，若無則載入之
-  - LoadAndDisableScene() 載入目標場景後立即禁用之
-  - HandleByLoadingMode() 使用 `LoadingMode` 動態選擇場景的處理方式
+  - DisableScene() 禁用目標場景 (若為卸載狀態會自動載入)
+  - HandleScene() 使用 `TargetState` 動態選擇場景的處理方式
 
 - `SceneObject` 透過儲存 `SceneAsset`的 name 輔助存取場景資產
 
     ⚠️ `SceneObject` 與 `SceneAsset` 並沒有綁定關係，所以當 `SceneAsset` 更改名稱時對應的 `SceneObject` 欄位需要重新指定目標否則會找不到目標場景。
 
 - `HandleScenes` 在開始時自動處理已儲存的 SceneObject 來管理場景
-
-## Serializable
-
-透過 `ISerializationCallbackReceiver` 介面自動與 `List` 轉換，以建立適用於 Unity 可序列化的資料結構。
-
-- `SerializableDictionary` 可序列化字典
-- `SerializableHashSet` 可序列化唯一集合
 
 ## Singleton
 
