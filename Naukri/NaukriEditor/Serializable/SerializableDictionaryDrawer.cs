@@ -1,5 +1,5 @@
 ﻿using Naukri.Extensions;
-using Naukri.Serializable;
+using Naukri.Collections.Generic;
 using NaukriEditor.BetterAttribute.Core;
 using NaukriEditor.Factory;
 using UnityEditor;
