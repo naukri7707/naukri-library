@@ -2,8 +2,8 @@
 {
     public enum TargetState
     {
-        Unload,
-        Load,
-        Disable,
+        Unload = LoadingState.Unloaded,
+        Load = LoadingState.Loaded,
+        Disable = LoadingState.Disabled,
     }
 }

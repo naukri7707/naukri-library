@@ -11,24 +11,48 @@ using USceneManager = UnityEngine.SceneManagement.SceneManager;
 
 namespace Naukri.SceneManagement
 {
+    public delegate void SceneChangeCallback(Scene scene);
+
     public static class SceneManager
     {
         private const string DISABLE_ROOT_NAME = "[Disabled]";
 
         private static readonly Queue<(Scene, TargetState)> processQueue = new Queue<(Scene, TargetState)>();
 
-        private static readonly KeyList<string, Scene> scenes;
+        public static Queue<(Scene, TargetState)> ProcessQueue => processQueue;
 
-        private static readonly object processLock = new object();
+        private static readonly KeyList<string, Scene> buildSettingsScenes;
+
+        public static KeyList<string, Scene> BuildSettingsScenes => buildSettingsScenes;
+
+        private static bool isBusy;
+
+        public static bool IsBusy;
 
         private static float progress;
 
         public static float Progress => progress;
 
+        public static event SceneChangeCallback OnSceneUnloaded = s => s.loadingState = LoadingState.Unloaded;
+
+        public static event SceneChangeCallback OnSceneLoaded = s => s.loadingState = LoadingState.Loaded;
+
+        public static event SceneChangeCallback OnSceneDisabled = s => s.loadingState = LoadingState.Disabled;
+
+        public static event SceneChangeCallback OnSceneLoading = s => s.loadingState = LoadingState.Loading;
+
+        public static event SceneChangeCallback OnSceneUnloading = s => s.loadingState = LoadingState.Unloading;
+
         static SceneManager()
         {
-            scenes = GetAllBuildSettingsScenes();
-            scenes[0].LoadingState = LoadingState.Loaded;
+            buildSettingsScenes = GetAllBuildSettingsScenes();
+            foreach (var scene in buildSettingsScenes)
+            {
+                if (USceneManager.GetSceneByBuildIndex(scene.buildIndex).isLoaded)
+                {
+                    OnSceneLoaded(scene);
+                }
+            }
         }
 
         private static readonly Func<Scene, Task>[] processMethod = new Func<Scene, Task>[3]
@@ -49,22 +73,22 @@ namespace Naukri.SceneManagement
 
         private static async Task LoadSceneAsync(Scene scene)
         {
-            switch (scene.LoadingState)
+            switch (scene.loadingState)
             {
                 case LoadingState.Unloaded:
                 case LoadingState.Unloading:
-                    if (scene.LoadingState is LoadingState.Unloading)
+                    if (scene.loadingState is LoadingState.Unloading)
                     {
-                        await new WaitUntil(() => scene.LoadingState is LoadingState.Unloaded);
+                        await new WaitUntil(() => scene.loadingState is LoadingState.Unloaded);
                     }
-                    scene.LoadingState = LoadingState.Loading;
+                    OnSceneLoading(scene);
                     var asop = USceneManager.LoadSceneAsync(scene.buildIndex, LoadSceneMode.Additive);
                     while (!asop.isDone)
                     {
                         progress = asop.progress;
                         await new WaitForUpdate();
                     }
-                    scene.LoadingState = LoadingState.Loaded;
+                    OnSceneLoaded(scene);
                     break;
                 case LoadingState.Loading:
                 case LoadingState.Loaded:
@@ -82,7 +106,7 @@ namespace Naukri.SceneManagement
                         }
                         GameObject.Destroy(disabled);
                     }
-                    scene.LoadingState = LoadingState.Loaded;
+                    OnSceneLoaded(scene);
                     break;
                 default:
                     break;
@@ -97,7 +121,7 @@ namespace Naukri.SceneManagement
 
         private static async Task DisableSceneAsync(Scene scene)
         {
-            if (scene.LoadingState is LoadingState.Disabled) return;
+            if (scene.loadingState is LoadingState.Disabled) return;
             await LoadSceneAsync(scene);
             var uscene = USceneManager.GetSceneAt(scene.buildIndex);
             var disabled = new GameObject(DISABLE_ROOT_NAME);
@@ -107,7 +131,7 @@ namespace Naukri.SceneManagement
             {
                 go.transform.SetParent(disabled.transform, false);
             }
-            scene.LoadingState = LoadingState.Disabled;
+            OnSceneDisabled(scene);
         }
 
         public static void UnloadScene(int buildIndex) => UnloadScene(GetSceneByBuildIndex(buildIndex));
@@ -127,18 +151,18 @@ namespace Naukri.SceneManagement
                 case LoadingState.Loading:
                 case LoadingState.Loaded:
                 case LoadingState.Disabled:
-                    if (scene.LoadingState is LoadingState.Loading)
+                    if (scene.loadingState is LoadingState.Loading)
                     {
-                        await new WaitUntil(() => scene.LoadingState is LoadingState.Loaded);
+                        await new WaitUntil(() => scene.loadingState is LoadingState.Loaded);
                     }
-                    scene.LoadingState = LoadingState.Unloading;
+                    OnSceneUnloading(scene);
                     var asop = USceneManager.UnloadSceneAsync(scene.buildIndex, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
                     while (!asop.isDone)
                     {
                         progress = asop.progress;
                         await new WaitForUpdate();
                     }
-                    scene.LoadingState = LoadingState.Unloaded;
+                    OnSceneUnloaded(scene);
                     break;
                 default:
                     break;
@@ -155,14 +179,16 @@ namespace Naukri.SceneManagement
         {
             static async void HandleProcess()
             {
+                isBusy = true;
                 while (processQueue.Count > 0) // 執行直到佇列中沒有處理對象
                 {
                     (var scene, var state) = processQueue.Dequeue();
                     await processMethod[(int)state].Invoke(scene);
                 }
+                isBusy = false;
             }
             processQueue.Enqueue((scene, targetState));
-            lock (processLock)
+            if (!isBusy)
             {
                 HandleProcess();
             }
@@ -170,12 +196,12 @@ namespace Naukri.SceneManagement
 
         public static Scene GetSceneByName(string sceneName)
         {
-            return scenes[sceneName];
+            return buildSettingsScenes[sceneName];
         }
 
         public static Scene GetSceneByBuildIndex(int buildIndex)
         {
-            return scenes[buildIndex];
+            return buildSettingsScenes[buildIndex];
         }
 
         public static string GetSceneNameByBuildIndex(int buildIndex)

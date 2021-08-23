@@ -6,7 +6,7 @@ using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
-namespace NaukriEditor.Serializable
+namespace NaukriEditor.Collections.Generic
 {
     [CustomPropertyDrawer(typeof(SerializableDictionary<,>), true)]
     public sealed class SerializableDictionaryDrawer : BetterPropertyDrawer

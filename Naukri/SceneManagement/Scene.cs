@@ -1,33 +1,19 @@
-﻿using UnityEngine.SceneManagement;
+﻿using System;
+using UnityEngine.SceneManagement;
 
 namespace Naukri.SceneManagement
 {
-    public delegate void StateChangeEvent(LoadingState oldState, LoadingState newState);
-
     public class Scene
     {
-        private LoadingState loadingState;
+        internal LoadingState loadingState;
 
-        public LoadingState LoadingState
-        {
-            get => loadingState;
-            set
-            {
-                if (value != loadingState)
-                {
-                    OnStateChange?.Invoke(loadingState, value);
-                    loadingState = value;
-                }
-            }
-        }
+        public LoadingState LoadingState => loadingState;
 
         public readonly int buildIndex;
 
         public readonly string scenePath;
 
         public readonly string sceneName;
-
-        public event StateChangeEvent OnStateChange;
 
         private Scene() { }
 
