@@ -85,6 +85,7 @@ private async void Demo()
 擴充函式
 
 - `DeconstructMethods`
+- `DelegateMethods`
 - `EnumMethods`
 - `EnumerableMethods`
 - `IListMethods`
@@ -104,6 +105,7 @@ private async void Demo()
 基於 UnityEditor 的輔助工具，在 MenuItem/Naukri 下可以找到並使用。
 
 - `MissingScriptCleaner` 清除所有選擇的 `GameObject` 中遺失腳本的 `MonoBehaviour`
+- `SceneManager` 在編輯器中控制及監測 SceneManager 所託管的場景
 
 ## Reflection
 
@@ -151,8 +153,8 @@ public class Demo
 
 輔助控制、排程載入 Unity 場景
 
-- `Scene` 用以查詢場景狀態及註冊載入事件，可以通過 `SceneManager` 取得所有 BuildSettings 中的場景
-- `SceneManager` 自動依調用順序排程載入、禁用或卸載場景
+- `Scene` 用以查詢場景狀態，可以通過 `SceneManager` 取得所有 BuildSettings 中的場景
+- `SceneManager` 自動依調用順序排程載入、禁用或卸載場景，並提供對應的回調事件
   - Porgress 處理中的場景的載入/卸載進度，只在 Loading、Unloading 狀態中變化
   - GetSceneByName() 使用場景名稱取得 `Scene`
   - GetSceneByBuildIndex() 使用場景在 BuildSettings 中的索引取得 `Scene`
