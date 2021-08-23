@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Naukri.Collections.Generic
 {
-    public class KeyList<TKey, TValue>
+    public class KeyList<TKey, TValue> : IEnumerable<TValue>
     {
         private readonly List<TValue> values = new List<TValue>();
 
@@ -64,6 +64,19 @@ namespace Naukri.Collections.Generic
                 var removeKey = indexes.First(it => it.Value == index).Key;
                 indexes.Remove(removeKey);
             }
+        }
+
+        public IEnumerator<TValue> GetEnumerator()
+        {
+            foreach (var value in values)
+            {
+                yield return value;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }
