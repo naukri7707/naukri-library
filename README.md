@@ -41,8 +41,8 @@ private async void Demo()
 - `CustomObjectField` 自訂 ObjectField 之 Object Selector 可選擇的目標型態
 - `DisplayName` 改變欄位名稱
 - `DisplayObjectFields` 在子欄位顯示目標 `UnityObject` 欄位
-- `DisplayWhenFieldEqual` 當條件成立時才顯示欄位
-- `DisplayWhenFieldNotEqual` 當條件不成立時才顯示欄位
+- `DisplayWhenFieldEqual` 當任一條件成立時才顯示欄位
+- `DisplayWhenFieldNotEqual` 當所有條件皆不成立時才顯示欄位
 - `ElementName` 改變陣列中元素的前綴
 - `ExpandElement` 直接展開在陣列中的元素
 - `ForkName` 依照不同條件顯示不同欄位名稱
@@ -97,7 +97,6 @@ private async void Demo()
 一些工廠函式
 
 - `ScriptFactory` 腳本工場，透過定義 ScriptTemplate 可以自定義腳本模板，同時能解決因 Unity 預設編碼為 Big5 所導致的中文亂碼錯誤。
-
 - `TextureFactory` 紋理工廠
 
 ## Helper
@@ -105,7 +104,6 @@ private async void Demo()
 基於 UnityEditor 的輔助工具，在 MenuItem/Naukri 下可以找到並使用。
 
 - `MissingScriptCleaner` 清除所有選擇的 `GameObject` 中遺失腳本的 `MonoBehaviour`
-- `SceneManager` 在編輯器中控制及監測 SceneManager 所託管的場景
 
 ## Reflection
 
@@ -153,21 +151,8 @@ public class Demo
 
 輔助控制、排程載入 Unity 場景
 
-- `Scene` 用以查詢場景狀態，可以通過 `SceneManager` 取得所有 BuildSettings 中的場景
-- `SceneManager` 自動依調用順序排程載入、禁用或卸載場景，並提供對應的回調事件
-  - Porgress 處理中的場景的載入/卸載進度，只在 Loading、Unloading 狀態中變化
-  - GetSceneByName() 使用場景名稱取得 `Scene`
-  - GetSceneByBuildIndex() 使用場景在 BuildSettings 中的索引取得 `Scene`
-  - LoadScene() 載入目標場景
-  - UnloadScene() 卸載目標場景
-  - DisableScene() 禁用目標場景 (若為卸載狀態會自動載入)
-  - HandleScene() 使用 `TargetState` 動態選擇場景的處理方式
-
-- `SceneObject` 透過儲存 `SceneAsset`的 name 輔助存取場景資產
-
-    ⚠️ `SceneObject` 與 `SceneAsset` 並沒有綁定關係，所以當 `SceneAsset` 更改名稱時對應的 `SceneObject` 欄位需要重新指定目標否則會找不到目標場景。
-
-- `HandleScenes` 在開始時自動處理已儲存的 SceneObject 來管理場景
+- `AdditiveSceneLoader` 在目標移動到指定範圍時自動載入、卸載場景
+- `SceneObject` 透過儲存 `SceneAsset` 的 name 輔助存取場景資產
 
 ## Singleton
 
