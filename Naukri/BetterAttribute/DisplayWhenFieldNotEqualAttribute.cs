@@ -2,6 +2,6 @@
 {
     public class DisplayWhenFieldNotEqualAttribute : DisplayWhenFieldEqualAttribute
     {
-        public DisplayWhenFieldNotEqualAttribute(string fieldName, object value) : base(fieldName, value) { }
+        public DisplayWhenFieldNotEqualAttribute(string fieldName, params object[] values) : base(fieldName, values) { }
     }
 }
