@@ -1,9 +1,5 @@
-﻿using Naukri;
-using Naukri.BetterAttribute;
-using Naukri.BetterInspector;
-using System;
+﻿using Naukri.BetterAttribute;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,11 +7,9 @@ namespace Naukri.SceneManagement
 {
     public class AdditiveSceneLoader : MonoBehaviour
     {
-        private enum LoadType { Simple, Normal, Advance }
+        private enum LoadType { Unload, Load, Zone, ZoneWithBuffer }
 
         private enum Scope { Unload, Buffer, Load }
-
-        private const float DEFAULT_BUFFER_WIDTH = 0F;
 
         [SerializeField]
         private LoadType loadType;
@@ -25,44 +19,35 @@ namespace Naukri.SceneManagement
         [SerializeField, ExpandElement]
         private SceneObject scene;
 
-        [SerializeField, DisplayWhenFieldEqual(nameof(loadType), LoadType.Normal, LoadType.Advance)]
+        [SerializeField, DisplayWhenFieldEqual(nameof(loadType), LoadType.Zone, LoadType.ZoneWithBuffer)]
         private Transform target;
 
-        [SerializeField, DisplayWhenFieldEqual(nameof(loadType), LoadType.Normal, LoadType.Advance)]
-        private Collider loadScope;
+        [SerializeField, DisplayWhenFieldEqual(nameof(loadType), LoadType.Zone, LoadType.ZoneWithBuffer)]
+        private Collider loadZone;
 
-        [SerializeField, DisplayWhenFieldEqual(nameof(loadType), LoadType.Advance)]
-        private float bufferWidth = DEFAULT_BUFFER_WIDTH;
+        [SerializeField, DisplayWhenFieldEqual(nameof(loadType), LoadType.ZoneWithBuffer)]
+        private float bufferWidth;
+
+        private void OnValidate()
+        {
+            if (loadZone != null)
+            {
+                loadZone.isTrigger = true;
+                loadZone.enabled = false;
+            }
+            if (bufferWidth < 0F)
+            {
+                bufferWidth = 0F;
+            }
+        }
 
         public IEnumerator Start()
         {
-            InitLoader();
             for (; ; )
             {
                 CheckScope();
                 yield return LoadScene();
                 yield return null;
-            }
-        }
-
-        private void InitLoader()
-        {
-            switch (loadType)
-            {
-                case LoadType.Simple:
-                    scope = Scope.Load;
-                    break;
-                case LoadType.Normal:
-                    bufferWidth = DEFAULT_BUFFER_WIDTH;
-                    break;
-                case LoadType.Advance:
-                    if (bufferWidth < 0F)
-                    {
-                        bufferWidth = DEFAULT_BUFFER_WIDTH;
-                    }
-                    break;
-                default:
-                    break;
             }
         }
 
@@ -91,11 +76,21 @@ namespace Naukri.SceneManagement
         {
             switch (loadType)
             {
-                case LoadType.Normal:
-                case LoadType.Advance:
+                case LoadType.Unload:
+                    scope = Scope.Unload;
+                    break;
+                case LoadType.Load:
+                    scope = Scope.Load;
+                    break;
+                case LoadType.Zone:
+                case LoadType.ZoneWithBuffer:
+                    if (target == null || loadZone == null)
+                    {
+                        throw new UnityException($"{nameof(AdditiveSceneLoader)}'s {nameof(target)} and {nameof(loadZone)} can not be null in {loadType} mode.");
+                    }
                     var targetPos = target.position;
-                    var closestPoint = loadScope.ClosestPoint(targetPos);
-                    var distance = Vector2.Distance(closestPoint, targetPos);
+                    var closestPoint = loadZone.ClosestPoint(targetPos);
+                    var distance = Vector3.Distance(closestPoint, targetPos);
                     if (distance is 0F)
                     {
                         scope = Scope.Load;
