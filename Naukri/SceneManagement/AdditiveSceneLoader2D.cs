@@ -7,7 +7,7 @@ namespace Naukri.SceneManagement
 {
     public class AdditiveSceneLoader2D : MonoBehaviour
     {
-        private enum LoadType { Simple, Normal, Advance }
+        private enum LoadType { Unload, Load, Zone, ZoneWithBuffer }
 
         private enum Scope { Unload, Buffer, Load }
 
@@ -19,22 +19,23 @@ namespace Naukri.SceneManagement
         [SerializeField, ExpandElement]
         private SceneObject scene;
 
-        [SerializeField, DisplayWhenFieldEqual(nameof(loadType), LoadType.Normal, LoadType.Advance)]
+        [SerializeField, DisplayWhenFieldEqual(nameof(loadType), LoadType.Zone, LoadType.ZoneWithBuffer)]
         private Transform target;
 
-        [SerializeField, DisplayWhenFieldEqual(nameof(loadType), LoadType.Normal, LoadType.Advance)]
-        private Collider2D loadScope;
+        [SerializeField, DisplayWhenFieldEqual(nameof(loadType), LoadType.Zone, LoadType.ZoneWithBuffer)]
+        private Collider2D loadZone;
 
-        [SerializeField, DisplayWhenFieldEqual(nameof(loadType), LoadType.Advance)]
+        [SerializeField, DisplayWhenFieldEqual(nameof(loadType), LoadType.ZoneWithBuffer)]
         private float bufferWidth;
 
         private void OnValidate()
         {
-            if(loadScope != null)
+            if (loadZone != null)
             {
-                loadScope.isTrigger = true;
+                loadZone.isTrigger = true;
+                loadZone.enabled = false;
             }
-            if(bufferWidth < 0F)
+            if (bufferWidth < 0F)
             {
                 bufferWidth = 0F;
             }
@@ -42,10 +43,6 @@ namespace Naukri.SceneManagement
 
         public IEnumerator Start()
         {
-            if(loadType != LoadType.Simple && (target == null || loadScope == null))
-            {
-                yield break;
-            }
             for (; ; )
             {
                 CheckScope();
@@ -79,13 +76,20 @@ namespace Naukri.SceneManagement
         {
             switch (loadType)
             {
-                case LoadType.Simple:
+                case LoadType.Unload:
+                    scope = Scope.Unload;
+                    break;
+                case LoadType.Load:
                     scope = Scope.Load;
                     break;
-                case LoadType.Normal:
-                case LoadType.Advance:
+                case LoadType.Zone:
+                case LoadType.ZoneWithBuffer:
+                    if (target == null || loadZone == null)
+                    {
+                        throw new UnityException($"{nameof(AdditiveSceneLoader2D)}'s {nameof(target)} and {nameof(loadZone)} can not be null in {loadType} mode.");
+                    }
                     var targetPos = target.position;
-                    var closestPoint = loadScope.ClosestPoint(targetPos);
+                    var closestPoint = loadZone.ClosestPoint(targetPos);
                     var distance = Vector2.Distance(closestPoint, targetPos);
                     if (distance is 0F)
                     {
