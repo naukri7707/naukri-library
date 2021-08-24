@@ -29,7 +29,14 @@ namespace NaukriEditor.BetterAttribute
             var type = target.GetType();
             var value = type.GetField(attr.fieldName ?? "",
                     BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(target);
-            return value?.Equals(attr.value) ^ isNot ?? false;
+            foreach (var compareValue in attr.values)
+            {
+                if(value.Equals(compareValue))
+                {
+                    return !isNot;
+                }
+            }
+            return isNot;
         }
     }
 }

@@ -6,13 +6,13 @@ namespace Naukri.BetterAttribute
     {
         public readonly string fieldName;
 
-        public readonly object value;
+        public readonly object[] values;
 
-        public DisplayWhenFieldEqualAttribute(string fieldName, object value)
+        public DisplayWhenFieldEqualAttribute(string fieldName, params object[] values)
         {
             order = -10000;
             this.fieldName = fieldName;
-            this.value = value;
+            this.values = values;
         }
     }
 }

@@ -1,17 +1,13 @@
-﻿using Naukri;
-using Naukri.BetterAttribute;
+﻿using Naukri.BetterAttribute;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using USceneManager = UnityEngine.SceneManagement.SceneManager;
 
 namespace Naukri.SceneManagement
 {
-
     [Serializable]
     public struct SceneObject : ISerializationCallbackReceiver
     {
+
 #if UNITY_EDITOR
         [SerializeField, CustomObjectField(typeof(UnityEditor.SceneAsset))]
         private UnityEngine.Object _sceneAsset;
@@ -21,11 +17,6 @@ namespace Naukri.SceneManagement
         private string _sceneName;
 
         public string Name => _sceneName;
-
-        [SerializeField]
-        private TargetState _targetState;
-
-        public TargetState TargetState { get => _targetState; set => _targetState = value; }
 
         public static implicit operator string(SceneObject sceneObject)
         {
