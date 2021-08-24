@@ -152,6 +152,7 @@ public class Demo
 輔助控制、排程載入 Unity 場景
 
 - `AdditiveSceneLoader` 在目標移動到指定範圍時自動載入、卸載場景
+  ⚠️ `AdditiveSceneLoader` 會 disable 目標 `Collider` 並將其設為 Trigger 以提升效能
 - `SceneObject` 透過儲存 `SceneAsset` 的 name 輔助存取場景資產
 
 ## Singleton
