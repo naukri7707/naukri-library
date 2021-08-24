@@ -41,30 +41,26 @@ namespace Naukri.SceneManagement
             }
         }
 
-        public IEnumerator Start()
+        private void Update()
         {
-            for (; ; )
-            {
-                CheckScope();
-                yield return LoadScene();
-                yield return null;
-            }
+            CheckScope();
+            LoadScene();
         }
 
-        private IEnumerator LoadScene()
+        private void LoadScene()
         {
             switch (scope)
             {
                 case Scope.Unload:
                     if (SceneManager.GetSceneByName(scene).isLoaded)
                     {
-                        yield return SceneManager.UnloadSceneAsync(scene);
+                        SceneManager.UnloadSceneAsync(scene);
                     }
                     break;
                 case Scope.Load:
                     if (!SceneManager.GetSceneByName(scene).IsValid())
                     {
-                        yield return SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
+                        SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
                     }
                     break;
                 default:
