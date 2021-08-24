@@ -87,8 +87,7 @@ namespace Naukri.SceneManagement
                     var targetPos = target.position;
                     var closestPoint = loadScope.ClosestPoint(targetPos);
                     var distance = Vector2.Distance(closestPoint, targetPos);
-                    Debug.Log($"C={closestPoint}, D={distance}");
-                    if (distance == 0)
+                    if (distance is 0F)
                     {
                         scope = Scope.Load;
                     }
