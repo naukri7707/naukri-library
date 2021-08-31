@@ -24,13 +24,15 @@ namespace NaukriEditor.BetterAttribute.Core
             .GetType("UnityEditor.ScriptAttributeUtility, UnityEditor.CoreModule")
             .GetMethod("GetDrawerTypeForType", binding);
 
+        private static BetterPropertyDrawer currentDrawer;
+
         private BetterPropertyDrawer[] drawers;
+
+        private Rect _position;
 
 #pragma warning disable IDE1006 // 命名樣式
 
-        private static Rect _position;
-
-        public static Rect position => _position;
+        public static Rect position => currentDrawer._position;
 
         public new PropertyAttribute attribute { get; private set; }
 
@@ -46,12 +48,15 @@ namespace NaukriEditor.BetterAttribute.Core
 
         public sealed override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            if (isFramworking) return EditorGUI.GetPropertyHeight(property);
-            using (Scope.SetValue(() => ref isFramworking, true, false))
+            // 嘗試建立唯一框架
+            CreateSingletonFramework(property, label);
+            // 如果不是建立框架的 Drawer 使用預設高度 (subDrawer 不會通過這個通道)
+            if (drawers is null) return EditorGUI.GetPropertyHeight(property, true);
+            // 處理框架
+            var height = 0F;
+            using (Scope.TempReplace(() => ref currentDrawer, this))
             {
-                CreateSubDrawersIfNull(property, label);
                 var isDrawed = false;
-                var height = 0F;
                 var spaceHeight = Space();
                 foreach (var drawer in drawers)
                 {
@@ -62,27 +67,29 @@ namespace NaukriEditor.BetterAttribute.Core
                     }
                     if (isDrawed) return height;
                 }
+                // 在框架關閉前取高度，避免 GetHeight 時被視為已經脫離框架
+                height = EditorGUI.GetPropertyHeight(property, true);
             }
-            return BetterGUILayout.PropertyHeight;
+            return height;
         }
-
-        private static bool isFramworking;
 
         public sealed override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            if (isFramworking)
+            // 如果不是建立框架的 Drawer 使用預設繪製器 (subDrawer 不會通過這個通道)
+            if (drawers is null)
             {
                 EditorGUI.PropertyField(position, property, label);
                 return;
             }
-            if (drawers is null) return;
-            using (Scope.SetValue(() => ref isFramworking, true, false))
+            // 處理框架
+            using (Scope.TempReplace(() => ref currentDrawer, this))
             {
                 _position = position;
                 _position.height = BetterGUILayout.PropertyHeight;
                 var isDrawed = false;
                 var spaceHeight = Space();
                 label = new GUIContent(property.displayName);
+                // 繪製 subDrawer ...
                 foreach (var drawer in drawers)
                 {
                     drawer.OnBeforeGUILayout(property, label);
@@ -99,7 +106,7 @@ namespace NaukriEditor.BetterAttribute.Core
                 // 如果都沒有完成繪製，繪製預設欄位
                 if (!isDrawed)
                 {
-                    var wrapper = BetterGUILayout.PropertyField(property, label);
+                    var wrapper = BetterGUILayout.PropertyField(property, label, true);
                     DrawWrapper(wrapper, spaceHeight.NextValue());
                 }
                 foreach (var drawer in drawers.Reverse())
@@ -121,7 +128,7 @@ namespace NaukriEditor.BetterAttribute.Core
             return base.CreatePropertyGUI(property);
         }
 
-        private void CreateSubDrawersIfNull(SerializedProperty property, GUIContent label)
+        private void CreateSingletonFramework(SerializedProperty property, GUIContent label)
         {
             // 因為在複數個 Attribute 的情況下 unity editor 無法利用 order 抓取最優先項
             // 故在讀取到首項後生成全部 attribute 的對應 drawer (包含和首項相同的 drawer) 並排序之
@@ -133,6 +140,8 @@ namespace NaukriEditor.BetterAttribute.Core
                     .GetCustomAttributes<PropertyAttribute>(true)
                     .OrderBy(it => -it.order)
                     .ToArray();
+            // 如果不是最高優先序的 Drawer 則不展開框架以保持框架對欄位的唯一性
+            if (!base.attribute.Match(attrs[0])) return;
             foreach (var attr in attrs)
             {
                 var drawerType = GetDrawerTypeForType(attr.GetType());

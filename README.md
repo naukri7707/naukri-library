@@ -28,13 +28,19 @@ private async void Demo()
 
 ## BetterAttribute
 
-`PropertyDrawer` 輔助開發框架，透過在 `BetterPropertyDrawer` 使用 `BetterGUILayout` 下的函式，將 `EditorGUI` 模擬為 `EditorGUILayout`。這可以讓 `BetterPropertyDrawer` 下的 `GetPropertyHeight()` 和 `OnGUI()` 描述合二唯一，使之維護更為便利。並且解放了單一欄位只能對應一個 `PropertyDrawer` 的限制，基於 `BetterPropertyDrawer` 所實現的自定義屬性可以在不衝突的前提下同時作用於對應欄位。
+`PropertyDrawer` 輔助開發框架，透過 `BetterGUIWrapper` 包裝將 `GetPropertyHeight()` 和 `OnGUI()` 描述合二唯一成 `OnGUILayout`，使之維護更為便利。並且解放了單一欄位只能對應一個 `PropertyDrawer` 的限制，基於 `BetterPropertyDrawer` 所定義屬性可以在不衝突的前提下同時作用於對應欄位。
 
+- 在繪製任何欄位時皆需要在 `BetterGUILayout` 下以包裝好的欄位或使用 `BetterGUILayout.Wrapper()` 做包裝，並用 `yield return` 回傳給框架
+- 原本 `OnGUI()` 所傳遞的參數 `position` 會被 `BetterPropertyDrawer.position` 所替代
+- `position.y` 會在每次繪製後結束後自動換行 (+18F)
+- `position.height` 永遠為 18F 只有在繪製包裝器的匿名函式時會變為包裝器所定義的高度
+- `position.x` 、`position.width` 永遠與 `OnGUI()` 所傳遞的參數 `position` 相同
+- 框架只會在優先序最高的 Drawer 中展開，其餘 Drawer 則會使用預設繪製器進行繪製 (避免 Unity 指定的繪製器不是優先序最高的)
+- 框架展開後會取得包含自己在內的所有指定 Drawer 的克隆體，並使用這些克龍體產生實際繪製行為
 - `OnInit()` 初始化 `BetterPropertyDrawer`
-- `OnGUILayout()` 繪製欄位，如果完成繪製及回傳 true ， 若為 false 則會依 `PropertyAttribute` 的 order 順延至下一個 `BetterPropertyDrawer` 直到回傳 true 中止，若都沒有完成繪製則會使用預設欄位進行繪製
+- `OnGUILayout()` 使用 `yield return BetterGUIWrapper` 繪製欄位、或用 `yield break` 中斷繪製，如果繪製器尚未完成過繪製，會嘗試繪製下一個優先序的 `BetterPropertyDrawer` 直到繪製完成或沒有其他的繪製器，若直到結束都沒有完成過繪製則會使用預設方法進行繪製
 - `OnBeforeGUILayout()` 用以修改對這個欄位的 GUI 參數及開啟 GUI Scope
 - `OnAfterGUILayout()` 用以回復 `OnBeforeGUILayout()` 所修改的 GUI 參數及關閉 GUI Scope
-- `LayoutWrapper()` 用以包裝沒有被寫進 `BetterGUILayout` 的 EditorGUIField
 
 ### 擴充屬性
 
@@ -43,9 +49,11 @@ private async void Demo()
 - `DisplayObjectFields` 在子欄位顯示目標 `UnityObject` 欄位
 - `DisplayWhenFieldEqual` 當任一條件成立時才顯示欄位
 - `DisplayWhenFieldNotEqual` 當所有條件皆不成立時才顯示欄位
+- `DisplayWhenHasFlag` 當擁有定應旗標時顯示欄位
 - `ElementName` 改變陣列中元素的前綴
 - `ExpandElement` 直接展開在陣列中的元素
 - `ForkName` 依照不同條件顯示不同欄位名稱
+- `LongFlag` 將 `long` 欄位繪製成對應的 `Enum`
 - `ReadOnly` 使欄位唯讀
 
 ## BetterInspector
@@ -76,6 +84,7 @@ private async void Demo()
 
 自定義集合
 
+- `Heap` 堆積的抽象類別，可以使用預設的 `MaxHeap` 、 `MinHeap` 或繼承並實作自定義堆積
 - `KeyList` 可同時使用索引和鍵值查詢的列表
 - `SerializableDictionary` 可序列化字典
 - `SerializableHashSet` 可序列化唯一集合
@@ -89,8 +98,10 @@ private async void Demo()
 - `EnumMethods`
 - `EnumerableMethods`
 - `IListMethods`
+- `LinqMethods`
 - `StringMethods`
 - `TypeMethods`
+- `UnityMethods`
 
 ## Factory
 
@@ -155,6 +166,31 @@ public class Demo
   ⚠️ `AdditiveSceneLoader` 會 disable 目標 `Collider` 並將其設為 Trigger 以提升效能
 - `SceneObject` 透過儲存 `SceneAsset` 的 name 輔助存取場景資產
 
+## Scope
+
+配合 using 在區域進入及離開時產生特定行為
+
+使用範例
+
+```cs
+    int value = 0;
+
+    void Test()
+    {
+        using (Scope.TempReplace(()=> ref value, 10))
+        {
+            // now value is 10
+            value = 5;
+            // now value is 5
+        }
+        // now value is 0;
+    }
+```
+
+- `Event()` 在進入、離開區域時將調用目標函式
+- `SetValue()` 在進入、離開區域時將目標參考設為對應的值
+- `TempReplace()` 在進入區域時將目標參考設為對應的值，並在離開時還原
+
 ## Singleton
 
 適用於 Unity 的單例模式，會在腳本建置時在目標位置自動生成所需的 `.asset` 檔，也可以點擊 `MenuItem/Naukri/Create Singleton Asset` 手動生成。
@@ -194,7 +230,7 @@ public class Demo
 
 ## `Flag`
 
-用以增加 EnumFlag 的可讀性
+用來定義 EnumFlag 以增加其可讀性
 
 ```cs
 using Naukri;
@@ -208,6 +244,9 @@ public enum DemoFlag
     Flag2 = Flag.BIT01,
 }
 ```
+
+- `Flag` 用以定義基底類型為 `int` 、 `uint` 的類型，其基底類型為 `uint`
+- `LongFlag` 用以定義基底類型為 `long` 、 `ulong` 的類型，其基底類型為 `ulong`
 
 ## `Interpolation`
 
@@ -234,3 +273,7 @@ public enum DemoFlag
 - 可以透過 `YamlMember` 改變一些基礎屬性
 - 建立一個序列化專用的物件並映射到目標物件上，而不是直接序列化目標物件
 - 引用 `YamlDotNet-11.1.1` 函式庫
+
+## Utility
+
+通用的輔助函式
