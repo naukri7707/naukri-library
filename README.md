@@ -266,14 +266,6 @@ public enum DemoFlag
 
 取得基於 Unity 專案的相對路徑
 
-提醒 / 建議
-
-- 只會序列化 public 欄位 (包含自動實作屬性)
-- 可以使用 `YamlIgnore` 排除不想序列化的 public 欄位
-- 可以透過 `YamlMember` 改變一些基礎屬性
-- 建立一個序列化專用的物件並映射到目標物件上，而不是直接序列化目標物件
-- 引用 `YamlDotNet-11.1.1` 函式庫
-
 ## Utility
 
 通用的輔助函式
