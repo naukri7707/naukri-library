@@ -5,6 +5,7 @@ using NaukriEditor.Factory;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace NaukriEditor.Collections.Generic
 {
@@ -84,50 +85,53 @@ namespace NaukriEditor.Collections.Generic
             };
         }
 
-        public override bool OnGUILayout(SerializedProperty property, GUIContent label)
+        public override IEnumerable<BetterGUIWrapper> OnGUILayout(SerializedProperty property, GUIContent label, bool isOnGUI)
         {
             if (property.isExpanded)
             {
-                LayoutWrapper(rect => reorderableList.DoList(rect), reorderableList.GetHeight());
-                if (IsGUI)
+                var lastPosition = Rect.zero;
+                yield return BetterGUILayout.Wrapper(
+                    reorderableList.GetHeight(),
+                    () => reorderableList.DoList(position)
+                    );
+                if (isOnGUI)
                 {
+                    const float arrowWidth = 20;
+                    const float prefixWidth = 65F;
                     var newDataSP = property.FindPropertyRelative("newData");
                     var newKeySP = newDataSP.FindPropertyRelative("key");
                     var newValueSP = newDataSP.FindPropertyRelative("value");
                     var rect = position;
                     rect.width = rect.width - 70F;
                     rect.yMin = rect.yMax - 18F;
-                    const float arrowWidth = 20;
-                    const float prefixWidth = 65F;
 
                     var keyWidth = (rect.width - arrowWidth - prefixWidth) * 0.3F;
                     var valueWidth = rect.width - keyWidth - arrowWidth - prefixWidth;
                     EditorGUI.LabelField(
                         new Rect(rect.xMin, rect.yMin, prefixWidth, rect.height),
                         new GUIContent("New Data")
-                    );
+                        );
                     rect.xMin += prefixWidth;
                     EditorGUI.PropertyField(
                         new Rect(rect.xMin, rect.yMin, keyWidth, rect.height),
                         newKeySP, GUIContent.none
-                    );
+                        );
                     rect.xMin += keyWidth;
                     EditorGUI.PrefixLabel(
                         new Rect(rect.xMin, rect.yMin, arrowWidth, rect.height),
                         new GUIContent(ArrowText)
-                    );
+                        );
                     rect.xMin += arrowWidth;
                     EditorGUI.PropertyField(
                         new Rect(rect.xMin, rect.yMin, valueWidth, rect.height),
                         newValueSP, GUIContent.none
-                    );
+                        );
                 }
             }
             else
             {
-                BetterGUILayout.PropertyField(property, label);
+                yield return BetterGUILayout.PropertyField(property, label);
             }
-            return true;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Naukri.BetterAttribute;
 using NaukriEditor.BetterAttribute.Core;
 using UnityEditor;
@@ -20,61 +21,55 @@ namespace NaukriEditor.BetterAttribute
             }
         }
 
-        public override bool OnGUILayout(SerializedProperty property, GUIContent label)
+        public override IEnumerable<BetterGUIWrapper> OnGUILayout(SerializedProperty property, GUIContent label, bool isOnGUI)
         {
-            if (property.propertyType != SerializedPropertyType.ObjectReference) // 若目標不是 UnityObject 則不繪製
+            // 若目標不是 UnityObject 則不繪製
+            if (property.propertyType != SerializedPropertyType.ObjectReference) yield break;
+            var foldOutRect = new Rect(position)
             {
-                return false;
-            }
-            using (var propScope = new EditorGUI.PropertyScope(position, label, property))
+                width = EditorGUIUtility.labelWidth
+            };
+            if (isOnGUI) property.isExpanded = EditorGUI.Foldout(foldOutRect, property.isExpanded, "", true);
+            
+            yield return BetterGUILayout.PropertyField(property, label);
+            if (property.isExpanded)
             {
-                BetterGUILayout.PropertyField(property, label);
-                if (IsGUI)
+                yield return BetterGUILayout.SeparatorLine(2, 4);
+                using (new EditorGUI.DisabledScope(attr.readOnlyFields))
                 {
-                    property.isExpanded = BetterGUILayout.Foldout(property.isExpanded, "", true);
-                }
-                if (property.isExpanded)
-                {
-                    BetterGUILayout.SeparatorLine(2, 4);
-                    using (new EditorGUI.DisabledScope(attr.readOnlyFields))
+                    var data = property.objectReferenceValue;
+                    if (data is null) yield break;
+                    //
+                    var dataSO = new SerializedObject(data);
+                    var dataSP = dataSO.GetIterator();
+                    //
+                    using (new EditorGUI.IndentLevelScope(1))
                     {
-                        var data = property.objectReferenceValue;
-                        if (data is null)
+                        dataSP.NextVisible(true);
+                        if (!attr.skipScriptField)
                         {
-                            return true;
-                        }
-                        var dataSO = new SerializedObject(data);
-                        var dataSP = dataSO.GetIterator();
-                        using (new EditorGUI.IndentLevelScope(1))
-                        {
-                            EditorGUI.indentLevel++;
-                            dataSP.NextVisible(true);
-                            if (!attr.skipScriptField)
+                            using (new EditorGUI.DisabledScope(true))
                             {
-                                using (new EditorGUI.DisabledScope(true))
+                                yield return BetterGUILayout.PropertyField(dataSP);
+                            }
+                        }
+                        using (var check = new EditorGUI.ChangeCheckScope())
+                        {
+
+                            while (dataSP.NextVisible(false))
+                            {
+                                if (!attr.skipFieldNames.Contains(dataSP.name))
                                 {
-                                    BetterGUILayout.PropertyField(dataSP);
+                                    yield return BetterGUILayout.PropertyField(dataSP);
                                 }
                             }
-                            using (var check = new EditorGUI.ChangeCheckScope())
+                            if (check.changed)
                             {
-
-                                while (dataSP.NextVisible(false))
-                                {
-                                    if (!attr.skipFieldNames.Contains(dataSP.name))
-                                    {
-                                        BetterGUILayout.PropertyField(dataSP);
-                                    }
-                                }
-                                if (check.changed)
-                                {
-                                    dataSP.serializedObject.ApplyModifiedProperties();
-                                }
+                                dataSP.serializedObject.ApplyModifiedProperties();
                             }
                         }
                     }
                 }
-                return true;
             }
         }
     }

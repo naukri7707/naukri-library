@@ -1,30 +1,31 @@
 ﻿using Naukri.BetterAttribute;
 using NaukriEditor.BetterAttribute.Core;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 namespace NaukriEditor.BetterAttribute
 {
+
     [CustomPropertyDrawer(typeof(CustomObjectFieldAttribute))]
     public class CustomObjectFieldDrawer : BetterPropertyDrawer
     {
-        public override bool OnGUILayout(SerializedProperty property, GUIContent label)
+        public override IEnumerable<BetterGUIWrapper> OnGUILayout(SerializedProperty property, GUIContent label, bool isOnGUI)
         {
             if (property.propertyType == SerializedPropertyType.ObjectReference)
             {
                 var attr = attribute as CustomObjectFieldAttribute;
-                LayoutWrapper(
-                  rect => property.objectReferenceValue = EditorGUI.ObjectField(
-                      rect,
-                      property.displayName,
-                      property.objectReferenceValue,
-                      attr.type,
-                      attr.allowSceneObject),
-                  EditorGUI.GetPropertyHeight(property)
-                  );
-                return true;
+                yield return BetterGUILayout.Wrapper(() =>
+                {
+                    property.objectReferenceValue = EditorGUI.ObjectField(
+                        position,
+                        property.displayName,
+                        property.objectReferenceValue,
+                        attr.type,
+                        attr.allowSceneObject
+                        );
+                });
             }
-            return false;
         }
     }
 }

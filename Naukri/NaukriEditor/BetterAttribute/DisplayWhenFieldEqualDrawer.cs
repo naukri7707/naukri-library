@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Reflection;
 using Naukri.BetterAttribute;
 using NaukriEditor.BetterAttribute.Core;
 using UnityEditor;
@@ -10,9 +11,9 @@ namespace NaukriEditor.BetterAttribute
     [CustomPropertyDrawer(typeof(DisplayWhenFieldEqualAttribute), true)]
     public class DisplayWhenFieldEqualDrawer : BetterPropertyDrawer
     {
-        public override bool OnGUILayout(SerializedProperty property, GUIContent label)
+        public override IEnumerable<BetterGUIWrapper> OnGUILayout(SerializedProperty property, GUIContent label, bool isOnGUI)
         {
-            return !CheckValue(property);
+            if (!CheckValue(property)) yield return BetterGUILayout.EmptyField(0);
         }
 
         private bool CheckValue(SerializedProperty property)
@@ -31,7 +32,7 @@ namespace NaukriEditor.BetterAttribute
                     BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(target);
             foreach (var compareValue in attr.values)
             {
-                if(value.Equals(compareValue))
+                if (value.Equals(compareValue))
                 {
                     return !isNot;
                 }

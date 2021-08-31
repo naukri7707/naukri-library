@@ -1,5 +1,6 @@
 ﻿using Naukri.BetterAttribute;
 using NaukriEditor.BetterAttribute.Core;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ namespace NaukriEditor.BetterAttribute
     [CustomPropertyDrawer(typeof(ExpandElementAttribute))]
     public class ExpandElementDrawer : BetterPropertyDrawer
     {
-        public override bool OnGUILayout(SerializedProperty property, GUIContent label)
+        public override IEnumerable<BetterGUIWrapper> OnGUILayout(SerializedProperty property, GUIContent label, bool isOnGUI)
         {
             var nextProperty = property.Copy();
             var hasNextProperty = nextProperty.Next(false);
@@ -18,10 +19,8 @@ namespace NaukriEditor.BetterAttribute
                 {
                     break;
                 }
-                BetterGUILayout.PropertyField(property, label, true);
+                yield return BetterGUILayout.PropertyField(property, label, true);
             }
-
-            return true;
         }
     }
 }
