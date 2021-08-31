@@ -1,4 +1,5 @@
 ﻿using Naukri.Scopes;
+using System;
 
 namespace Naukri
 {
@@ -6,6 +7,11 @@ namespace Naukri
 
     public static class Scope
     {
+        public static EventScope Event(Action onEnter, Action onLeave)
+        {
+            return new EventScope(onEnter, onLeave);
+        }
+
         public static SetValueScope<T> SetValue<T>(RefGetter<T> refGetter, T enterValue, T leaveValue)
         {
             return new SetValueScope<T>(refGetter, enterValue, leaveValue);
