@@ -58,7 +58,7 @@ namespace Naukri.Collections.Generic
 
         public void RemoveAt(int index)
         {
-            if (values.IsIndexValid(index))
+            if (values.ValidateIndex(index))
             {
                 values.RemoveAt(index);
                 var removeKey = indexes.First(it => it.Value == index).Key;

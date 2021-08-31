@@ -6,7 +6,7 @@ namespace Naukri.Extensions
 {
     public static class IListMethods
     {
-        public static bool IsIndexValid(this IList self, int index)
+        public static bool ValidateIndex(this IList self, int index)
         {
             return (index >= 0) & (index < self.Count);
         }
@@ -14,6 +14,13 @@ namespace Naukri.Extensions
         public static bool HasElement(this IList self)
         {
             return self.Count > 0;
+        }
+        
+        public static void Swap<T>(this IList<T> self, int lhs, int rhs)
+        {
+            T tmp = self[lhs];
+            self[lhs] = self[rhs];
+            self[rhs] = tmp;
         }
 
         public static void CompareTo<T>(this List<T> self, IEnumerable<T> other, out List<T> keep, out List<T> add, out List<T> remove)
