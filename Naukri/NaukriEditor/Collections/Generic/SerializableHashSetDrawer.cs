@@ -5,6 +5,7 @@ using NaukriEditor.Factory;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace NaukriEditor.Collections.Generic
 {
@@ -23,7 +24,7 @@ namespace NaukriEditor.Collections.Generic
         {
             transparentStyle = new GUIStyle
             {
-                normal = {background = TextureFactory.SolidColor(new Color32(0, 0, 0, 0))}
+                normal = { background = TextureFactory.SolidColor(new Color32(0, 0, 0, 0)) }
             };
             // set display label
             var dataSP = property.FindPropertyRelative("newData").type;
@@ -60,12 +61,12 @@ namespace NaukriEditor.Collections.Generic
             };
         }
 
-        public override bool OnGUILayout(SerializedProperty property, GUIContent label)
+        public override IEnumerable<BetterGUIWrapper> OnGUILayout(SerializedProperty property, GUIContent label, bool isOnGUI)
         {
             if (property.isExpanded)
             {
-                LayoutWrapper(rect => reorderableList.DoList(rect), reorderableList.GetHeight());
-                if (IsGUI)
+                yield return BetterGUILayout.Wrapper(reorderableList.GetHeight(), () => reorderableList.DoList(position));
+                if (isOnGUI)
                 {
                     var newDataSP = property.FindPropertyRelative("newData");
                     var rect = position;
@@ -76,9 +77,8 @@ namespace NaukriEditor.Collections.Generic
             }
             else
             {
-                BetterGUILayout.PropertyField(property, displayLabel);
+                yield return BetterGUILayout.PropertyField(property, displayLabel);
             }
-            return true;
         }
     }
 }

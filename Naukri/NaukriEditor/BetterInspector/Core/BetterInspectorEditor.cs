@@ -153,11 +153,13 @@ namespace NaukriEditor.BetterInspector.Core
 
         private void GetInspectedMembers(out List<MemberInfo> propertyInfos, out List<MemberInfo> methodInfos)
         {
-            propertyInfos = new List<MemberInfo>();
-            methodInfos = new List<MemberInfo>();
+            var propertyInfoDict = new Dictionary<string, MemberInfo>();
+            var methodInfoDict = new Dictionary<string, MemberInfo>();
             var targetType = target.GetType();
             if (targetType == typeof(UnityEngine.Object))
             {
+                propertyInfos = null;
+                methodInfos = null;
                 return; // 過濾掉 Unity 在按下 Play 鍵後要求繪製用 BetterInspector 繪製 UnityObject 物件的情況
             }
             var inspectedTypes = new List<Type>();
@@ -172,9 +174,18 @@ namespace NaukriEditor.BetterInspector.Core
             inspectedTypes.Reverse(); // 反轉，從開始檢查的類別開始
             foreach (var inspectedType in inspectedTypes)
             {
-                propertyInfos.AddRange(inspectedType.GetProperties(bindingAllDeclaredMember));
-                methodInfos.AddRange(inspectedType.GetMethods(bindingAllDeclaredMember).Where(it => !it.IsSpecialName)); // 略過 Property 的 getter 和 setter
+                foreach (var info in inspectedType.GetProperties(bindingAllDeclaredMember))
+                {
+                    propertyInfoDict[info.Name] = info;
+                }
+                foreach (var info in inspectedType.GetMethods(bindingAllDeclaredMember).Where(it => !it.IsSpecialName))  // 略過 Property 的 getter 和 setter
+                {
+                    propertyInfoDict[info.Name] = info;
+                }
             }
+            // 因為 dictionary 沒有刪除過所以會依 key 加入的順序排列
+            propertyInfos = propertyInfoDict.Values.ToList();
+            methodInfos = methodInfoDict.Values.ToList();
         }
 
         private List<(MemberInfo, InspectorMemberDrawer[])> BuildDrawerCache(List<MemberInfo> infos)

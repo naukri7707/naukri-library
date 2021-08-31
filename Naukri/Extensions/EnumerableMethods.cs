@@ -5,6 +5,12 @@ namespace Naukri.Extensions
 {
     public static class EnumerableMethods
     {
+        public static T NextValue<T>(this IEnumerator<T> self)
+        {
+            if (self.MoveNext()) return self.Current;
+            throw new System.ArgumentOutOfRangeException();
+        }
+
         public static IEnumerable<(T value, int index)> WithIndex<T>(this IEnumerable<T> self)
         {
             int idx = 0;

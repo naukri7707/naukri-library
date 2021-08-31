@@ -1,19 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Naukri.Reflection;
 
 namespace Naukri.Extensions
 {
     public static class EnumMethods
     {
+        public static bool NoneFlag<T>(this T self) where T : Enum
+        {
+            return CastTo<ulong>.From(self) == 0UL;
+        }
+
         public static T AddFlag<T>(this T self, T addFlag) where T : Enum
         {
-            return CastTo<T>.From(CastTo<int>.From(self) | CastTo<int>.From(addFlag));
+            return CastTo<T>.From(CastTo<ulong>.From(self) | CastTo<ulong>.From(addFlag));
         }
 
         public static T RemoveFlag<T>(this T self, T removeFlag) where T : Enum
         {
-            return CastTo<T>.From(CastTo<int>.From(self) & ~CastTo<int>.From(removeFlag));
+            return CastTo<T>.From(CastTo<ulong>.From(self) & ~CastTo<ulong>.From(removeFlag));
         }
 
         public static T SetFlag<T>(this T self, T targetFlag, bool targetState) where T : Enum
@@ -21,19 +27,19 @@ namespace Naukri.Extensions
             return targetState ? self.AddFlag(targetFlag) : self.RemoveFlag(targetFlag);
         }
 
-        public static T HasFlag<T>(this T self, T checkFlag) where T : Enum
+        public static bool HasFlag<T>(this T self, T checkFlag) where T : Enum
         {
-            return CastTo<T>.From(CastTo<int>.From(self) & CastTo<int>.From(checkFlag));
+            return (CastTo<ulong>.From(self) & CastTo<ulong>.From(checkFlag)) != 0UL;
         }
 
         public static T SwitchFlag<T>(this T self, T switchFlag) where T : Enum
         {
-            return CastTo<T>.From(CastTo<int>.From(self) ^ CastTo<int>.From(switchFlag));
+            return CastTo<T>.From(CastTo<ulong>.From(self) ^ CastTo<ulong>.From(switchFlag));
         }
 
         public static T ReverseFlag<T>(this T self) where T : Enum
         {
-            return CastTo<T>.From(~CastTo<int>.From(self));
+            return CastTo<T>.From(~CastTo<ulong>.From(self));
         }
 
         public static T AddFlags<T>(this T self, params T[] addFlags) where T : Enum
@@ -98,20 +104,55 @@ namespace Naukri.Extensions
             return self;
         }
 
-        public static T[] GetAllFlags<T>(this T self) where T : Enum
+        public static IEnumerable<T> GetAllFlags<T>(this T self) where T : Enum
         {
-            var res = new List<T>();
-            var flag = CastTo<int>.From(self);
-            for (var i = 0; i < 32; i++)
+            var flag = CastTo<ulong>.From(self);
+            for (var i = 0; i < 64; i++)
             {
-                var currentFlag = 1 << i;
+                var currentFlag = 1UL << i;
                 if ((flag & currentFlag) != 0)
                 {
-                    res.Add(CastTo<T>.From(currentFlag));
+                    yield return CastTo<T>.From(currentFlag);
                 }
             }
+        }
 
-            return res.ToArray();
+        public static int GetMinFlagBit<T>(this T self) where T : Enum
+        {
+            return GetAllFlagBits(self).FirstOrDefault(-1);
+        }
+
+        public static int GetMaxFlagBit<T>(this T self) where T : Enum
+        {
+
+            return GetAllFlagBits(self).LastOrDefault(-1);
+        }
+
+        public static IEnumerable<int> GetAllFlagBits<T>(this T self) where T : Enum
+        {
+            return GetAllFlagBits(self, ulong.MaxValue);
+        }
+
+        public static IEnumerable<int> GetAllFlagBits<T>(this T self, T everythingFlag) where T : Enum
+        {
+            return GetAllFlagBits(self, CastTo<ulong>.From(everythingFlag));
+        }
+
+        public static IEnumerable<int> GetAllFlagBits<T>(this T self, ulong everythingFlag) where T : Enum
+        {
+            var flag = Math.Min(
+                CastTo<ulong>.From(self),
+                everythingFlag
+                );
+
+            for (var i = 0; i < 64; i++)
+            {
+                var currentFlag = 1UL << i;
+                if ((flag & currentFlag) != 0)
+                {
+                    yield return i;
+                }
+            }
         }
     }
 }

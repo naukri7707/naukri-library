@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class #SCRIPTNAME# : SingletonBehaviour<#SCRIPTNAME#>
+public sealed class #SCRIPTNAME# : SingletonBehaviour<#SCRIPTNAME#>
 {
 	#NOTRIM#
 }
