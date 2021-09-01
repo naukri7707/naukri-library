@@ -15,6 +15,8 @@ namespace NaukriEditor.Helper
         public static void ShowWindow()
         {
             var window = GetWindow<MissingScriptCleanerWindow>("Missing Script Cleaner");
+            window.objectsToClean = new List<GameObject>();
+            window.missingScriptObjects = new List<GameObject>();
         }
 
         public List<GameObject> objectsToClean;
