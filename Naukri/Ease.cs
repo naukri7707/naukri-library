@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Naukri
 {
-    public enum InterpolationType
+    public enum EaseType
     {
         Linear,
 
@@ -58,45 +58,45 @@ namespace Naukri
         InOutBounce
     }
 
-    public static class Interpolation
+    public static class Ease
     {
         public static float EPS = float.Epsilon;
 
-        public static float HandleByType(float start, float end, float ratio, InterpolationType interpolationType)
+        public static float HandleByType(float start, float end, float ratio, EaseType interpolationType)
         {
             return interpolationType switch
             {
-                InterpolationType.Linear => Linear(start, end, ratio),
-                InterpolationType.InSine => InSine(start, end, ratio),
-                InterpolationType.OutSine => OutSine(start, end, ratio),
-                InterpolationType.InOutSine => InOutSine(start, end, ratio),
-                InterpolationType.InQuad => InQuad(start, end, ratio),
-                InterpolationType.OutQuad => OutQuad(start, end, ratio),
-                InterpolationType.InOutQuad => InOutQuad(start, end, ratio),
-                InterpolationType.InCubic => InCubic(start, end, ratio),
-                InterpolationType.OutCubic => OutCubic(start, end, ratio),
-                InterpolationType.InOutCubic => InOutCubic(start, end, ratio),
-                InterpolationType.InQuart => InQuart(start, end, ratio),
-                InterpolationType.OutQuart => OutQuart(start, end, ratio),
-                InterpolationType.InOutQuart => InOutQuart(start, end, ratio),
-                InterpolationType.InQuint => InQuint(start, end, ratio),
-                InterpolationType.OutQuint => OutQuint(start, end, ratio),
-                InterpolationType.InOutQuint => InOutQuint(start, end, ratio),
-                InterpolationType.InExpo => InExpo(start, end, ratio),
-                InterpolationType.OutExpo => OutExpo(start, end, ratio),
-                InterpolationType.InOutExpo => InOutExpo(start, end, ratio),
-                InterpolationType.InCirc => InCirc(start, end, ratio),
-                InterpolationType.OutCirc => OutCirc(start, end, ratio),
-                InterpolationType.InOutCirc => InOutCirc(start, end, ratio),
-                InterpolationType.InBack => InBack(start, end, ratio),
-                InterpolationType.OutBack => OutBack(start, end, ratio),
-                InterpolationType.InOutBack => InOutBack(start, end, ratio),
-                InterpolationType.InElastic => InElastic(start, end, ratio),
-                InterpolationType.OutElastic => OutElastic(start, end, ratio),
-                InterpolationType.InOutElastic => InOutElastic(start, end, ratio),
-                InterpolationType.InBounce => InBounce(start, end, ratio),
-                InterpolationType.OutBounce => OutBounce(start, end, ratio),
-                InterpolationType.InOutBounce => InOutBounce(start, end, ratio),
+                EaseType.Linear => Linear(start, end, ratio),
+                EaseType.InSine => InSine(start, end, ratio),
+                EaseType.OutSine => OutSine(start, end, ratio),
+                EaseType.InOutSine => InOutSine(start, end, ratio),
+                EaseType.InQuad => InQuad(start, end, ratio),
+                EaseType.OutQuad => OutQuad(start, end, ratio),
+                EaseType.InOutQuad => InOutQuad(start, end, ratio),
+                EaseType.InCubic => InCubic(start, end, ratio),
+                EaseType.OutCubic => OutCubic(start, end, ratio),
+                EaseType.InOutCubic => InOutCubic(start, end, ratio),
+                EaseType.InQuart => InQuart(start, end, ratio),
+                EaseType.OutQuart => OutQuart(start, end, ratio),
+                EaseType.InOutQuart => InOutQuart(start, end, ratio),
+                EaseType.InQuint => InQuint(start, end, ratio),
+                EaseType.OutQuint => OutQuint(start, end, ratio),
+                EaseType.InOutQuint => InOutQuint(start, end, ratio),
+                EaseType.InExpo => InExpo(start, end, ratio),
+                EaseType.OutExpo => OutExpo(start, end, ratio),
+                EaseType.InOutExpo => InOutExpo(start, end, ratio),
+                EaseType.InCirc => InCirc(start, end, ratio),
+                EaseType.OutCirc => OutCirc(start, end, ratio),
+                EaseType.InOutCirc => InOutCirc(start, end, ratio),
+                EaseType.InBack => InBack(start, end, ratio),
+                EaseType.OutBack => OutBack(start, end, ratio),
+                EaseType.InOutBack => InOutBack(start, end, ratio),
+                EaseType.InElastic => InElastic(start, end, ratio),
+                EaseType.OutElastic => OutElastic(start, end, ratio),
+                EaseType.InOutElastic => InOutElastic(start, end, ratio),
+                EaseType.InBounce => InBounce(start, end, ratio),
+                EaseType.OutBounce => OutBounce(start, end, ratio),
+                EaseType.InOutBounce => InOutBounce(start, end, ratio),
                 _ => 0F
             };
         }
