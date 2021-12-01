@@ -117,6 +117,21 @@ namespace Naukri.Extensions
             }
         }
 
+        public static int GetMinFlag<T>(this T self) where T : Enum
+        {
+            var bit = GetMinFlagBit(self);
+
+            if (bit is -1) return -1;
+            return  1 << bit;
+        }
+        public static int GetMaxFlag<T>(this T self) where T : Enum
+        {
+            var bit = GetMaxFlagBit(self);
+
+            if (bit is -1) return -1;
+            return 1 << bit;
+        }
+
         public static int GetMinFlagBit<T>(this T self) where T : Enum
         {
             return GetAllFlagBits(self).FirstOrDefault(-1);
@@ -124,7 +139,6 @@ namespace Naukri.Extensions
 
         public static int GetMaxFlagBit<T>(this T self) where T : Enum
         {
-
             return GetAllFlagBits(self).LastOrDefault(-1);
         }
 

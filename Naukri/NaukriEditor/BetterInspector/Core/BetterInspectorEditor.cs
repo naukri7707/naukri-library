@@ -180,7 +180,7 @@ namespace NaukriEditor.BetterInspector.Core
                 }
                 foreach (var info in inspectedType.GetMethods(bindingAllDeclaredMember).Where(it => !it.IsSpecialName))  // 略過 Property 的 getter 和 setter
                 {
-                    propertyInfoDict[info.Name] = info;
+                    methodInfoDict[info.Name] = info;
                 }
             }
             // 因為 dictionary 沒有刪除過所以會依 key 加入的順序排列

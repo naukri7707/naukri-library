@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Naukri
+namespace Naukri.Event
 {
     public class EventInvoker : MonoBehaviour
     {
