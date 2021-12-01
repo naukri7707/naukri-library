@@ -12,8 +12,6 @@ namespace NaukriEditor.BetterInspector
     [CustomInspectorDrawer(typeof(DisplayMethodAttribute), true)]
     public class DisplayMethodDrawer : InspectorMethodDrawer
     {
-        private EditorGUI.DisabledScope disableScope;
-
         private bool foldout;
 
         private ParameterInfo[] parameterInfos;
@@ -54,7 +52,7 @@ namespace NaukriEditor.BetterInspector
             {
                 using (var horizontal = new EditorGUILayout.HorizontalScope())
                 {
-                    foldout = EditorGUILayout.Foldout(foldout, label);
+                    foldout = EditorGUILayout.Foldout(foldout, label, true);
                     if (GUILayout.Button("Invoke", GUILayout.Width(80)))
                     {
                         MethodInfo.Invoke(Target, parameterValues);
