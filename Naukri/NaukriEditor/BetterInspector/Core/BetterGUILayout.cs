@@ -25,11 +25,12 @@ namespace NaukriEditor.BetterInspector.Core
             }
         }
 
-        public static void LableSeparator(string label, float thickness = 1.6F, int padleft = 30)
+        public static Rect LableSeparator(string label, float thickness = 1.6F, float padleft = 30F, int indent = 0)
         {
             using (new EditorGUI.DisabledScope(true))
             {
                 var rect = EditorGUILayout.GetControlRect();
+                rect.xMin += indent * 14F;
                 var leftRect = new Rect(rect)
                 {
                     width = padleft,
@@ -50,6 +51,7 @@ namespace NaukriEditor.BetterInspector.Core
                     height = leftRect.height
                 };
                 EditorGUI.DrawRect(rightRect, new Color(0.5F, 0.5F, 0.5F, 1));
+                return rect;
             }
         }
 
