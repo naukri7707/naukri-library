@@ -1,3 +1,4 @@
+using Naukri;
 using Naukri.BetterInspector;
 using Naukri.BetterInspector.Core;
 using System;
@@ -34,23 +35,11 @@ namespace NaukriEditor.BetterInspector.Core
 
         private bool defaultInspector;
 
-        public bool DisplayFields
-        {
-            get => BetterInspectorSettings.Instance.displayFields;
-            set => BetterInspectorSettings.Instance.displayFields = value;
-        }
+        private bool displayField;
 
-        public bool DisplayProperties
-        {
-            get => BetterInspectorSettings.Instance.displayProperties;
-            set => BetterInspectorSettings.Instance.displayProperties = value;
-        }
+        private bool displayProperty;
 
-        public bool DisplayMethods
-        {
-            get => BetterInspectorSettings.Instance.displayMethods;
-            set => BetterInspectorSettings.Instance.displayMethods = value;
-        }
+        private bool displayMethod;
 
         private static Dictionary<Type, Type> CreateDrawerTypeForTypeDictionary()
         {
@@ -105,49 +94,29 @@ namespace NaukriEditor.BetterInspector.Core
                 DrawDefaultInspector();
                 return;
             }
-
-            ControlPanel();
-            if (DisplayFields)
+            var fieldRect = BetterGUILayout.LableSeparator("Fields", 1.6F, 30F, -1);
+            displayField = EditorGUI.Foldout(fieldRect, displayField, "", true, GUIStyle.none);
+            if (displayField)
             {
-                BetterGUILayout.LableSeparator("Fields");
                 DrawDefaultInspector();
             }
-            if (DisplayProperties)
+            if (propertyDrawerCache.Count > 0)
             {
-                BetterGUILayout.LableSeparator("Properties");
-                DrawDrawers(propertyDrawerCache);
+                var propertyRect = BetterGUILayout.LableSeparator("Properties", 1.6F, 30F, -1);
+                displayProperty = EditorGUI.Foldout(propertyRect, displayProperty, "", true, GUIStyle.none);
+                if (displayProperty)
+                {
+                    DrawDrawers(propertyDrawerCache);
+                }
             }
-            if (DisplayMethods)
+            if (methodDrawerCache.Count > 0)
             {
-                BetterGUILayout.LableSeparator("Methods");
-                DrawDrawers(methodDrawerCache);
-            }
-        }
-
-
-        private void ControlPanel()
-        {
-            using (new EditorGUILayout.HorizontalScope())
-            {
-                var toggleBoxWidthOption = GUILayout.Width(12F);
-                var spacing = 2;
-                EditorGUILayout.LabelField("Display", GUILayout.Width(EditorStyles.label.CalcSize(new GUIContent("Display")).x + spacing));
-                GUILayout.FlexibleSpace();
-                DisplayFields = EditorGUILayout.Toggle(DisplayFields, toggleBoxWidthOption);
-                EditorGUILayout.LabelField(
-                    "Field",
-                    GUILayout.Width(EditorStyles.label.CalcSize(new GUIContent("Field")).x + spacing)
-                    );
-                DisplayProperties = EditorGUILayout.Toggle(DisplayProperties, toggleBoxWidthOption);
-                EditorGUILayout.LabelField(
-                    "Property",
-                    GUILayout.Width(EditorStyles.label.CalcSize(new GUIContent("Property")).x + spacing)
-                    );
-                DisplayMethods = EditorGUILayout.Toggle(DisplayMethods, toggleBoxWidthOption);
-                EditorGUILayout.LabelField(
-                   "Method",
-                   GUILayout.Width(EditorStyles.label.CalcSize(new GUIContent("Method")).x)
-                   );
+                var methodRect = BetterGUILayout.LableSeparator("Methods", 1.6F, 30F, -1);
+                displayMethod = EditorGUI.Foldout(methodRect, displayMethod, "", true, GUIStyle.none);
+                if (displayMethod)
+                {
+                    DrawDrawers(methodDrawerCache);
+                }
             }
         }
 
@@ -223,6 +192,9 @@ namespace NaukriEditor.BetterInspector.Core
             GetInspectedMembers(out var propertyInfos, out var methodInfos);
             propertyDrawerCache = BuildDrawerCache(propertyInfos);
             methodDrawerCache = BuildDrawerCache(methodInfos);
+            displayField = BetterInspectorSettings.Instance.displayFields;
+            displayProperty = BetterInspectorSettings.Instance.displayProperties;
+            displayMethod = BetterInspectorSettings.Instance.displayMethods;
         }
 
         public void DrawDrawers(List<(MemberInfo, InspectorMemberDrawer[])> drawerCache)
