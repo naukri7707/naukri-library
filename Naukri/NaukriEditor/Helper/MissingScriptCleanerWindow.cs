@@ -3,7 +3,6 @@ using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.Networking.Types;
-using Codice.Client.Common;
 using System.Reflection;
 using UnityEditor.SceneManagement;
 
